@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seger.in - Fresh Juice & Loyalty Rewards</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Poppins & Montserrat -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK (Compat Version) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -90,11 +95,11 @@
 
                 <!-- Auth Modal Triggers -->
                 <div id="userBadgeArea" class="flex items-center space-x-2">
-                    <button onclick="openLoginModal()" class="bg-brand-orange hover:bg-orange-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-sm">
-                        <i class="fa-solid fa-user-circle mr-1"></i> Masuk Siswa
+                    <button onclick="openLoginModal()" class="bg-brand-orange hover:bg-orange-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-sm flex items-center">
+                        <i class="fa-solid fa-user-circle mr-1.5"></i> Masuk Siswa
                     </button>
-                    <button onclick="openAdminLoginModal()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-sm">
-                        <i class="fa-solid fa-lock mr-1"></i> Admin
+                    <button onclick="openAdminLoginModal()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-sm flex items-center">
+                        <i class="fa-solid fa-lock mr-1.5"></i> Admin
                     </button>
                 </div>
             </div>
@@ -132,7 +137,7 @@
         <!-- SESSION WELCOME BAR -->
         <div id="sessionStatus" class="hidden mb-6 bg-white p-4 rounded-2xl border border-emerald-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div class="flex items-center space-x-3">
-                <div id="userAvatar" class="w-10 h-10 rounded-full bg-emerald-100 text-brand-darkgreen font-bold flex items-center justify-center text-lg">
+                <div id="userAvatar" class="w-10 h-10 rounded-full bg-emerald-100 text-brand-darkgreen font-bold flex items-center justify-center text-lg overflow-hidden border border-emerald-200">
                     S
                 </div>
                 <div>
@@ -151,26 +156,48 @@
         </div>
 
         <!-- ==================== USER PAGE: MENU CATALOG ==================== -->
-        <section id="catalogPage" class="space-y-6">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h3 class="text-2xl font-heading font-extrabold text-slate-800">Menu Jus Buah Segar</h3>
-                    <p class="text-xs sm:text-sm text-slate-500">Pilih jus buah bergizi & topping lezat kesukaanmu</p>
-                </div>
-                <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl text-xs flex items-center space-x-3">
-                    <div class="w-8 h-8 rounded-xl bg-amber-400 text-slate-900 font-bold flex items-center justify-center">
-                        <i class="fa-solid fa-coins text-sm"></i>
-                    </div>
+        <section id="catalogPage" class="space-y-10">
+            <div>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <div>
-                        <p class="font-bold text-slate-800">Sistem Poin Loyalitas</p>
-                        <p class="text-[11px] text-slate-600">Selesai 1 Pesanan = <span class="font-bold text-brand-orange">+20 s/d +50 Poin</span></p>
+                        <h3 class="text-2xl font-heading font-extrabold text-slate-800">Menu Jus Buah Segar</h3>
+                        <p class="text-xs sm:text-sm text-slate-500">Pilih jus buah bergizi & topping lezat kesukaanmu</p>
                     </div>
+                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl text-xs flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-amber-400 text-slate-900 font-bold flex items-center justify-center">
+                            <i class="fa-solid fa-coins text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-800">Sistem Poin Loyalitas (Cloud Live)</p>
+                            <p class="text-[11px] text-slate-600">Selesai 1 Pesanan = <span class="font-bold text-brand-orange">+20 s/d +50 Poin</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Juice Cards Grid -->
+                <div id="juiceGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic render from JS / Firestore -->
                 </div>
             </div>
 
-            <!-- Juice Cards Grid -->
-            <div id="juiceGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamic render from JS -->
+            <!-- TESTIMONIALS & REVIEWS SECTION -->
+            <div class="bg-white rounded-3xl border border-emerald-100 shadow-lg p-6 sm:p-8 space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4">
+                    <div>
+                        <span class="bg-emerald-100 text-brand-darkgreen text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">Suara Pelanggan</span>
+                        <h3 class="text-2xl font-heading font-extrabold text-slate-800 mt-1">Ulasan & Testimoni Seger.in</h3>
+                        <p class="text-xs text-slate-500">Lihat apa kata teman-temanmu tentang jus buatan kami!</p>
+                    </div>
+                    <button onclick="openReviewModal()" class="bg-brand-darkgreen hover:bg-emerald-800 text-white font-bold text-xs px-5 py-3 rounded-xl transition flex items-center space-x-2 self-start md:self-auto shadow-sm">
+                        <i class="fa-solid fa-pen"></i>
+                        <span>Tulis Ulasan Kamu</span>
+                    </button>
+                </div>
+
+                <!-- Reviews Summary & Grid -->
+                <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamically populated from Firestore -->
+                </div>
             </div>
         </section>
 
@@ -182,17 +209,18 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 mb-6 gap-4">
                     <div>
                         <div class="flex items-center space-x-2">
-                            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-md">Mode Admin</span>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-md">Mode Admin Cloud</span>
                             <h2 class="text-2xl font-heading font-black text-slate-800">Dashboard Seger.in</h2>
                         </div>
                         <p id="activeAdminText" class="text-xs text-slate-500 mt-1">Logged in as: Admin</p>
                     </div>
                     <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <button onclick="openAddMenuModal()" class="bg-brand-green hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center space-x-1 shadow-sm">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Tambah Menu Baru</span>
+                        </button>
                         <button onclick="showCatalogPage()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition">
                             <i class="fa-solid fa-store mr-1"></i> Katalog
-                        </button>
-                        <button onclick="clearAllOrders()" class="bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold px-4 py-2.5 rounded-xl border border-red-200 transition">
-                            <i class="fa-solid fa-trash mr-1"></i> Reset Data
                         </button>
                     </div>
                 </div>
@@ -206,7 +234,7 @@
                         <i class="fa-solid fa-chart-line mr-2"></i>Laporan Penjualan
                     </button>
                     <button id="tabBtnStocks" onclick="switchAdminTab('stocks')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-                        <i class="fa-solid fa-boxes-stacked mr-2"></i>Manajemen Stok
+                        <i class="fa-solid fa-boxes-stacked mr-2"></i>Kelola Menu & Stok
                     </button>
                     <button id="tabBtnPoints" onclick="switchAdminTab('points')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-star mr-2"></i>Data Poin Pelanggan
@@ -263,7 +291,7 @@
                 <div id="adminTabReports" class="hidden space-y-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
                         <div>
-                            <h3 class="font-bold text-slate-800 text-lg">Laporan Penjualan Otomatis</h3>
+                            <h3 class="font-bold text-slate-800 text-lg">Laporan Penjualan Otomatis (Realtime)</h3>
                             <p class="text-xs text-slate-500">Filter data penjualan dan unduh/cetak laporan</p>
                         </div>
                         <div class="flex items-center space-x-2 w-full sm:w-auto">
@@ -326,16 +354,24 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: STOCKS MANAGEMENT -->
+                <!-- TAB 3: STOCKS & MENU MANAGEMENT -->
                 <div id="adminTabStocks" class="hidden space-y-4">
                     <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-5">
-                        <h4 class="text-sm font-bold text-slate-800 mb-1 flex items-center">
-                            <i class="fa-solid fa-boxes-stacked text-brand-darkgreen mr-2"></i>
-                            Kelola Stok Porsi Bahan Jus Buah
-                        </h4>
-                        <p class="text-xs text-slate-500 mb-4">Ubah persediaan porsi buah. Jika stok 0, produk otomatis ditandai "Stok Habis".</p>
-                        <div id="stockControlsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <!-- Stock inputs dynamically rendered here -->
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800 mb-1 flex items-center">
+                                    <i class="fa-solid fa-boxes-stacked text-brand-darkgreen mr-2"></i>
+                                    Kelola Menu & Stok Bahan Jus
+                                </h4>
+                                <p class="text-xs text-slate-500">Atur ketersediaan porsi atau hapus menu dari database.</p>
+                            </div>
+                            <button onclick="openAddMenuModal()" class="bg-brand-green hover:bg-emerald-600 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm">
+                                + Tambah Menu Baru
+                            </button>
+                        </div>
+
+                        <div id="stockControlsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Stock & Product controls dynamically rendered here -->
                         </div>
                     </div>
                 </div>
@@ -344,8 +380,8 @@
                 <div id="adminTabPoints" class="hidden space-y-4">
                     <div class="flex justify-between items-center bg-amber-50 p-4 rounded-2xl border border-amber-200">
                         <div>
-                            <h4 class="font-bold text-slate-800 text-sm">Data Poin Loyalitas Pelanggan</h4>
-                            <p class="text-xs text-slate-500">Poin terkumpul dari pesanan selesai berdasarkan Nomor HP / Akun</p>
+                            <h4 class="font-bold text-slate-800 text-sm">Data Poin Loyalitas Pelanggan (Firestore)</h4>
+                            <p class="text-xs text-slate-500">Poin terkumpul berdasarkan akun terdaftar di cloud database</p>
                         </div>
                         <span class="bg-amber-200 text-amber-900 text-xs font-bold px-3 py-1 rounded-full">
                             Tukar: 1.000 Poin = 1 Jus Komplit
@@ -358,7 +394,7 @@
                                 <tr>
                                     <th class="p-3.5">Nama Siswa</th>
                                     <th class="p-3.5">Kelas</th>
-                                    <th class="p-3.5">Nomor WA</th>
+                                    <th class="p-3.5">Nomor WA / Email</th>
                                     <th class="p-3.5">Total Poin</th>
                                     <th class="p-3.5">Status Penukaran</th>
                                     <th class="p-3.5 text-center">Aksi Verifikasi</th>
@@ -401,37 +437,80 @@
 
     <!-- ==================== MODALS & DRAWERS ==================== -->
 
-    <!-- LOGIN SISWA MODAL -->
-    <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
+    <!-- LOGIN SISWA MODAL (With Google Sign-In & Email/Password) -->
+    <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative my-8">
             <button onclick="closeLoginModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
+
+            <!-- Mode Switcher -->
+            <div class="flex justify-center border-b border-slate-100 pb-3 mb-6 space-x-6 text-sm font-bold">
+                <button id="authTabLogin" onclick="switchAuthTab('login')" class="text-brand-darkgreen border-b-2 border-brand-darkgreen pb-1">Masuk</button>
+                <button id="authTabRegister" onclick="switchAuthTab('register')" class="text-slate-400 hover:text-slate-600 pb-1">Daftar Akun Baru</button>
+            </div>
+
+            <!-- Header -->
             <div class="text-center mb-6">
                 <div class="w-12 h-12 bg-emerald-100 text-brand-darkgreen rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl">
                     <i class="fa-solid fa-user-graduate"></i>
                 </div>
-                <h3 class="text-2xl font-heading font-black text-slate-800">Login Siswa</h3>
-                <p class="text-xs text-slate-500 mt-1">Masukkan data diri untuk pengantaran jus & pengumpulan poin reward.</p>
+                <h3 id="authModalTitle" class="text-2xl font-heading font-black text-slate-800">Login Siswa</h3>
+                <p class="text-xs text-slate-500 mt-1">Akses akun & kumpulkan poin reward secara online.</p>
             </div>
-            <form onsubmit="handleCustomerLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Lengkap</label>
-                    <input type="text" id="inputName" required placeholder="Contoh: Budi Santoso" 
-                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-sm">
+
+            <!-- GOOGLE SIGN-IN BUTTON -->
+            <button onclick="handleGoogleSignIn()" class="w-full bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold py-3 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 shadow-sm transition mb-4">
+                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span>Masuk dengan Google</span>
+            </button>
+
+            <div class="relative flex py-2 items-center mb-4">
+                <div class="flex-grow border-t border-slate-200"></div>
+                <span class="flex-shrink mx-3 text-[10px] text-slate-400 font-bold uppercase">Atau Email & Password</span>
+                <div class="flex-grow border-t border-slate-200"></div>
+            </div>
+
+            <!-- EMAIL / PASS FORM -->
+            <form onsubmit="handleEmailAuth(event)" class="space-y-3">
+                <div id="registerExtraFields" class="space-y-3 hidden">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nama Lengkap</label>
+                        <input type="text" id="inputName" placeholder="Contoh: Budi Santoso" 
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Kelas / Ruangan</label>
+                        <input type="text" id="inputClass" placeholder="Contoh: XII IPA 2" 
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                    </div>
                 </div>
+
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Kelas / Ruangan</label>
-                    <input type="text" id="inputClass" required placeholder="Contoh: XII IPA 2" 
-                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-sm">
+                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Email Siswa</label>
+                    <input type="email" id="inputEmail" required placeholder="nama@siswa.com" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
                 </div>
+
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nomor WhatsApp</label>
+                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Password</label>
+                    <input type="password" id="inputPassword" required placeholder="Minimal 6 karakter" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nomor WhatsApp</label>
                     <input type="tel" id="inputPhone" required placeholder="Contoh: 08123456789" 
-                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-sm">
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-brand-green to-emerald-600 hover:opacity-95 text-white font-bold py-3 rounded-xl text-sm shadow-md transition mt-2">
-                    Mulai Belanja Jus & Dapatkan Poin <i class="fa-solid fa-arrow-right ml-1"></i>
+
+                <button type="submit" id="btnSubmitAuth" class="w-full bg-gradient-to-r from-brand-green to-emerald-600 hover:opacity-95 text-white font-bold py-3 rounded-xl text-xs shadow-md transition mt-2">
+                    Masuk Sekarang <i class="fa-solid fa-arrow-right ml-1"></i>
                 </button>
             </form>
         </div>
@@ -472,6 +551,97 @@
         </div>
     </div>
 
+    <!-- ADMIN: ADD / EDIT MENU MODAL -->
+    <div id="addMenuModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative my-8">
+            <button onclick="closeAddMenuModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-emerald-100 text-brand-darkgreen rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl">
+                    <i class="fa-solid fa-wine-glass"></i>
+                </div>
+                <h3 class="text-xl font-heading font-black text-slate-800">Tambah Menu Jus Baru</h3>
+                <p class="text-xs text-slate-500">Masukkan rincian buah, foto gambar, dan persediaan stok</p>
+            </div>
+            <form onsubmit="handleSaveNewMenu(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Menu Jus</label>
+                    <input type="text" id="newMenuName" required placeholder="Contoh: Jus Alpukat Kocok" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Kategori</label>
+                        <input type="text" id="newMenuCategory" required placeholder="Contoh: Premium" 
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Stok Awal (Porsi)</label>
+                        <input type="number" id="newMenuStock" min="0" required placeholder="30" 
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL Foto Gambar Jus</label>
+                    <input type="url" id="newMenuImageUrl" required placeholder="https://images.unsplash.com/photo-..." 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                    <p class="text-[10px] text-slate-400 mt-1">Salin link gambar dari Unsplash atau sumber publik lainnya.</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Manfaat Kesehatan</label>
+                    <input type="text" id="newMenuBenefit" required placeholder="Contoh: Kaya Lemak Baik & Energi" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Deskripsi Ringkas</label>
+                    <textarea id="newMenuDesc" rows="2" required placeholder="Penjelasan kelezatan buah segar..." 
+                              class="w-full p-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-green focus:outline-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-green hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
+                    Simpan Ke Database Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- REVIEW / TESTIMONIAL MODAL -->
+    <div id="reviewModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="closeReviewModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <h3 class="text-xl font-heading font-black text-slate-800">Tulis Testimoni Kamu</h3>
+                <p class="text-xs text-slate-500">Berikan penilaian & pengalamanmu minum jus Seger.in!</p>
+            </div>
+            <form onsubmit="handleSubmitReview(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Rating Bintang</label>
+                    <div class="flex justify-center space-x-2 text-2xl text-slate-300" id="starRatingInput">
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(1)"></i>
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(2)"></i>
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(3)"></i>
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(4)"></i>
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(5)"></i>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Ulasan / Kesan Pesan</label>
+                    <textarea id="inputReviewContent" rows="3" required placeholder="Jusnya manis alami, kejunyah melimpah banget..." 
+                              class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-400 focus:outline-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-brand-orange hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
+                    Kirim Ulasan Saya <i class="fa-solid fa-paper-plane ml-1"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- POINTS LOYALTY MODAL (FOR CUSTOMER) -->
     <div id="pointsModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
@@ -490,7 +660,7 @@
             <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 p-5 rounded-2xl mb-6 text-center">
                 <p class="text-xs font-bold text-amber-800 uppercase tracking-wide">Poin Terkumpul Saat Ini</p>
                 <h2 id="modalPointsAmount" class="text-4xl font-heading font-black text-brand-orange my-1">0</h2>
-                <p class="text-[11px] text-slate-600">Terdaftar nomor: <span id="modalPointsPhone" class="font-bold text-slate-800">-</span></p>
+                <p class="text-[11px] text-slate-600">Akun: <span id="modalPointsPhone" class="font-bold text-slate-800">-</span></p>
                 
                 <!-- Progress Bar to 1000 -->
                 <div class="mt-4">
@@ -557,7 +727,7 @@
 
                 <button onclick="submitOrder()" class="w-full bg-gradient-to-r from-brand-orange to-amber-500 hover:opacity-95 text-white font-bold py-3 rounded-2xl text-sm shadow-md transition flex items-center justify-center space-x-2">
                     <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span>Kirim Pesanan (Simpan & WA)</span>
+                    <span>Kirim Pesanan (Simpan Database & WA)</span>
                 </button>
             </div>
         </div>
@@ -569,42 +739,23 @@
         <span id="toastMsg">Notifikasi</span>
     </div>
 
-    <!-- APPLICATION LOGIC -->
+    <!-- APPLICATION LOGIC & FIREBASE INTEGRATION -->
     <script>
-        // --- 1. DATA PRODUCTS & TOPPINGS ---
-        const PRODUCTS = [
-            {
-                id: 1,
-                name: "Jus Buah Naga",
-                category: "Favorit Sehat",
-                benefit: "Kaya Antioksidan & Sehat untuk Pencernaan",
-                desc: "Buah naga merah segar pilihan dengan es batu dingin dan sensasi menyegarkan.",
-                stockKey: "naga",
-                imageUrl: "https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80",
-                fallbackBg: "#EC4899"
-            },
-            {
-                id: 2,
-                name: "Jus Mangga",
-                category: "Manis Segar",
-                benefit: "Tinggi Vitamin C untuk Daya Tahan Tubuh",
-                desc: "Mangga harum manis segar yang di-blend lembut dengan kelezatan alami.",
-                stockKey: "mangga",
-                imageUrl: "https://images.unsplash.com/photo-1546173159-315724a31696?auto=format&fit=crop&w=600&q=80",
-                fallbackBg: "#F59E0B"
-            },
-            {
-                id: 3,
-                name: "Jus Jambu",
-                category: "Kaya Vitamin",
-                benefit: "Meningkatkan Trombosit & Kesegaran Tubuh",
-                desc: "Jambu biji merah manis kaya vitamin C tanpa zat pengawet buatan.",
-                stockKey: "jambu",
-                imageUrl: "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&w=600&q=80",
-                fallbackBg: "#EF4444"
-            }
-        ];
+        // --- 1. FIREBASE CONFIGURATION & INITIALIZATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjs6W7r_MW_TVHDuaOa8ybHRxT4cDR_LY",
+            authDomain: "segerin-28ba8.firebaseapp.com",
+            projectId: "segerin-28ba8",
+            storageBucket: "segerin-28ba8.firebasestorage.app",
+            messagingSenderId: "808276728764",
+            appId: "1:808276728764:web:dc6e5dc1991e1c9991e9b9"
+        };
 
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // --- CONSTANTS ---
         const TOPPING_OPTIONS = [
             { id: "none", name: "Jus Biasa (Original)", price: 5000 },
             { id: "keju", name: "Jus + Keju", price: 6000 },
@@ -621,24 +772,26 @@
 
         const ADMIN_PASSWORD = "Juspastienak";
 
-        // --- 2. GLOBAL STATE ---
-        let currentUser = JSON.parse(localStorage.getItem('segerin_user')) || null;
+        // --- GLOBAL STATE ---
+        let currentUser = null; // Firebase auth user combined with profile
         let activeAdmin = JSON.parse(localStorage.getItem('segerin_admin')) || null;
-        let cart = JSON.parse(localStorage.getItem('segerin_cart')) || [];
-        let orders = JSON.parse(localStorage.getItem('segerin_orders')) || [];
-        let stocks = JSON.parse(localStorage.getItem('segerin_stocks')) || { naga: 30, mangga: 30, jambu: 30 };
-        let pointsData = JSON.parse(localStorage.getItem('segerin_points')) || {}; // { phone: { points: 150, name: 'Budi', class: 'XII' } }
+        let cart = [];
+        let products = [];
+        let orders = [];
+        let reviews = [];
+        let pointsData = {};
         let selectedToppings = {};
+        let currentRatingInput = 5;
+        let authMode = 'login';
 
-        // --- 3. INITIALIZATION ---
+        // --- INITIALIZATION ---
         window.onload = function() {
             populateAdminDropdown();
-            renderProductGrid();
-            updateUserUI();
-            updateCartBadge();
-            renderOrdersTable();
-            renderStockControls();
-            renderPointsTable();
+            initAuthListener();
+            listenToProductsCloud();
+            listenToOrdersCloud();
+            listenToReviewsCloud();
+            listenToPointsCloud();
         };
 
         function populateAdminDropdown() {
@@ -646,11 +799,204 @@
             select.innerHTML = AUTHORIZED_ADMINS.map(name => `<option value="${name}">${name}</option>`).join('');
         }
 
-        // --- 4. CATALOG RENDERING ---
+        // --- 2. FIREBASE AUTHENTICATION ---
+        function initAuthListener() {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    db.collection('users').doc(user.uid).get().then(docSnap => {
+                        let profile = docSnap.exists ? docSnap.data() : {};
+                        currentUser = {
+                            uid: user.uid,
+                            name: profile.name || user.displayName || "Siswa",
+                            class: profile.class || "Umum",
+                            phone: profile.phone || "08123456789",
+                            email: user.email,
+                            photoURL: user.photoURL
+                        };
+                        updateUserUI();
+                        updateCartBadge();
+                    });
+                } else {
+                    currentUser = null;
+                    updateUserUI();
+                    updateCartBadge();
+                }
+            });
+        }
+
+        function switchAuthTab(mode) {
+            authMode = mode;
+            const tabLogin = document.getElementById('authTabLogin');
+            const tabRegister = document.getElementById('authTabRegister');
+            const extraFields = document.getElementById('registerExtraFields');
+            const submitBtn = document.getElementById('btnSubmitAuth');
+            const title = document.getElementById('authModalTitle');
+
+            if (mode === 'register') {
+                tabRegister.className = "text-brand-darkgreen border-b-2 border-brand-darkgreen pb-1";
+                tabLogin.className = "text-slate-400 hover:text-slate-600 pb-1";
+                extraFields.classList.remove('hidden');
+                submitBtn.innerText = "Daftar Akun Baru";
+                title.innerText = "Registrasi Siswa";
+            } else {
+                tabLogin.className = "text-brand-darkgreen border-b-2 border-brand-darkgreen pb-1";
+                tabRegister.className = "text-slate-400 hover:text-slate-600 pb-1";
+                extraFields.classList.add('hidden');
+                submitBtn.innerText = "Masuk Sekarang";
+                title.innerText = "Login Siswa";
+            }
+        }
+
+        function handleGoogleSignIn() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then(result => {
+                const user = result.user;
+                const userRef = db.collection('users').doc(user.uid);
+                
+                userRef.get().then(docSnap => {
+                    if (!docSnap.exists) {
+                        userRef.set({
+                            name: user.displayName,
+                            email: user.email,
+                            phone: "08814187481",
+                            class: "Siswa",
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                });
+
+                closeLoginModal();
+                showToast(`Selamat datang, ${user.displayName}!`);
+            }).catch(err => {
+                showToast(`Gagal login Google: ${err.message}`, "error");
+            });
+        }
+
+        function handleEmailAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('inputEmail').value.trim();
+            const password = document.getElementById('inputPassword').value.trim();
+            const phone = document.getElementById('inputPhone').value.trim();
+
+            if (authMode === 'register') {
+                const name = document.getElementById('inputName').value.trim();
+                const studentClass = document.getElementById('inputClass').value.trim();
+
+                auth.createUserWithEmailAndPassword(email, password).then(res => {
+                    return db.collection('users').doc(res.user.uid).set({
+                        name: name,
+                        class: studentClass,
+                        phone: phone,
+                        email: email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }).then(() => {
+                    closeLoginModal();
+                    showToast("Akun berhasil dibuat!");
+                }).catch(err => {
+                    showToast(err.message, "error");
+                });
+            } else {
+                auth.signInWithEmailAndPassword(email, password).then(() => {
+                    closeLoginModal();
+                    showToast("Berhasil login!");
+                }).catch(err => {
+                    showToast("Email/Password salah", "error");
+                });
+            }
+        }
+
+        // --- 3. CLOUD FIRESTORE REALTIME LISTENERS ---
+        function listenToProductsCloud() {
+            db.collection('products').onSnapshot(snapshot => {
+                if (snapshot.empty) {
+                    seedInitialProducts();
+                    return;
+                }
+                products = [];
+                snapshot.forEach(doc => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+                renderProductGrid();
+                renderStockControls();
+            });
+        }
+
+        function seedInitialProducts() {
+            const defaultProducts = [
+                {
+                    name: "Jus Buah Naga",
+                    category: "Favorit Sehat",
+                    benefit: "Kaya Antioksidan & Sehat untuk Pencernaan",
+                    desc: "Buah naga merah segar pilihan dengan es batu dingin dan sensasi menyegarkan.",
+                    stock: 30,
+                    imageUrl: "https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                    name: "Jus Mangga",
+                    category: "Manis Segar",
+                    benefit: "Tinggi Vitamin C untuk Daya Tahan Tubuh",
+                    desc: "Mangga harum manis segar yang di-blend lembut dengan kelezatan alami.",
+                    stock: 30,
+                    imageUrl: "https://images.unsplash.com/photo-1546173159-315724a31696?auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                    name: "Jus Jambu",
+                    category: "Kaya Vitamin",
+                    benefit: "Meningkatkan Trombosit & Kesegaran Tubuh",
+                    desc: "Jambu biji merah manis kaya vitamin C tanpa zat pengawet buatan.",
+                    stock: 30,
+                    imageUrl: "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&w=600&q=80"
+                }
+            ];
+
+            defaultProducts.forEach(p => db.collection('products').add(p));
+        }
+
+        function listenToOrdersCloud() {
+            db.collection('orders').onSnapshot(snapshot => {
+                orders = [];
+                snapshot.forEach(doc => {
+                    orders.push({ docId: doc.id, ...doc.data() });
+                });
+                renderOrdersTable();
+                if (!document.getElementById('adminTabReports').classList.contains('hidden')) {
+                    renderSalesReport();
+                }
+            });
+        }
+
+        function listenToReviewsCloud() {
+            db.collection('reviews').onSnapshot(snapshot => {
+                reviews = [];
+                snapshot.forEach(doc => {
+                    reviews.push({ id: doc.id, ...doc.data() });
+                });
+                renderReviews();
+            });
+        }
+
+        function listenToPointsCloud() {
+            db.collection('points').onSnapshot(snapshot => {
+                pointsData = {};
+                snapshot.forEach(doc => {
+                    pointsData[doc.id] = doc.data();
+                });
+                renderPointsTable();
+                updateUserUI();
+            });
+        }
+
+        // --- 4. CATALOG & DYNAMIC MENU MANAGEMENT ---
         function renderProductGrid() {
             const grid = document.getElementById('juiceGrid');
-            grid.innerHTML = PRODUCTS.map(item => {
-                const availableStock = stocks[item.stockKey] || 0;
+            if (products.length === 0) {
+                grid.innerHTML = '<div class="col-span-3 text-center py-10 text-slate-400">Memuat menu jus...</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(item => {
+                const availableStock = item.stock || 0;
                 const isOutOfStock = availableStock <= 0;
                 const currentToppingId = selectedToppings[item.id] || "none";
                 const activeTopping = TOPPING_OPTIONS.find(t => t.id === currentToppingId) || TOPPING_OPTIONS[0];
@@ -663,7 +1009,7 @@
                                 <img src="${item.imageUrl}" 
                                      alt="${item.name}"
                                      class="w-full h-full object-cover transition transform hover:scale-105 duration-500"
-                                     onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full flex flex-col items-center justify-center text-white font-bold text-xl p-4 text-center\' style=\'background:${item.fallbackBg}\'><i class=\'fa-solid fa-wine-glass text-4xl mb-2\'></i>${item.name}</div>';" />
+                                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/10B981/FFF?text=Jus+Seger';" />
                                 
                                 <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-brand-darkgreen text-[10px] font-bold uppercase px-2.5 py-1 rounded-full border border-emerald-100 shadow-sm">
                                     ${item.category}
@@ -698,7 +1044,7 @@
                                             const isSelected = currentToppingId === top.id;
                                             return `
                                                 <button type="button" 
-                                                        onclick="selectTopping(${item.id}, '${top.id}')"
+                                                        onclick="selectTopping('${item.id}', '${top.id}')"
                                                         class="text-[11px] p-2 rounded-xl border text-left transition font-semibold flex flex-col justify-between ${
                                                             isSelected 
                                                             ? 'bg-brand-darkgreen text-white border-brand-darkgreen shadow-sm' 
@@ -717,7 +1063,7 @@
                         </div>
 
                         <div class="p-5 pt-0">
-                            <button onclick="addToCart(${item.id})" 
+                            <button onclick="addToCart('${item.id}')" 
                                     ${isOutOfStock ? 'disabled' : ''} 
                                     class="w-full ${isOutOfStock ? 'bg-slate-300 cursor-not-allowed text-slate-500' : 'bg-slate-900 hover:bg-brand-darkgreen text-white'} font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 transition shadow-md">
                                 <i class="fa-solid fa-cart-plus text-sm"></i>
@@ -734,7 +1080,38 @@
             renderProductGrid();
         }
 
-        // --- 5. CART SYSTEM ---
+        function openAddMenuModal() { document.getElementById('addMenuModal').classList.remove('hidden'); }
+        function closeAddMenuModal() { document.getElementById('addMenuModal').classList.add('hidden'); }
+
+        function handleSaveNewMenu(e) {
+            e.preventDefault();
+            const name = document.getElementById('newMenuName').value.trim();
+            const category = document.getElementById('newMenuCategory').value.trim();
+            const stock = parseInt(document.getElementById('newMenuStock').value) || 0;
+            const imageUrl = document.getElementById('newMenuImageUrl').value.trim();
+            const benefit = document.getElementById('newMenuBenefit').value.trim();
+            const desc = document.getElementById('newMenuDesc').value.trim();
+
+            db.collection('products').add({
+                name, category, stock, imageUrl, benefit, desc,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                closeAddMenuModal();
+                showToast("Menu baru berhasil disimpan ke Database Cloud!");
+            }).catch(err => {
+                showToast(`Gagal menyimpan: ${err.message}`, "error");
+            });
+        }
+
+        function deleteProduct(productId) {
+            if (confirm("Yakin ingin menghapus menu ini dari database?")) {
+                db.collection('products').doc(productId).delete().then(() => {
+                    showToast("Menu dihapus.");
+                });
+            }
+        }
+
+        // --- 5. CART & ORDERS ---
         function addToCart(productId) {
             if (!currentUser) {
                 openLoginModal();
@@ -742,10 +1119,10 @@
                 return;
             }
 
-            const product = PRODUCTS.find(p => p.id === productId);
-            const currentStock = stocks[product.stockKey] || 0;
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
 
-            if (currentStock <= 0) {
+            if (product.stock <= 0) {
                 showToast("Maaf, stok bahan jus ini habis!", "error");
                 return;
             }
@@ -763,14 +1140,12 @@
                     cartItemId: cartItemId,
                     id: product.id,
                     name: product.name,
-                    stockKey: product.stockKey,
                     toppingName: toppingObj.name,
                     price: toppingObj.price,
                     qty: 1
                 });
             }
 
-            saveCart();
             updateCartBadge();
             showToast(`${product.name} (${toppingObj.name}) ditambahkan!`);
         }
@@ -783,7 +1158,6 @@
                     cart = cart.filter(p => p.cartItemId !== cartItemId);
                 }
             }
-            saveCart();
             renderCartDrawer();
             updateCartBadge();
         }
@@ -838,10 +1212,6 @@
             }
         }
 
-        function saveCart() {
-            localStorage.setItem('segerin_cart', JSON.stringify(cart));
-        }
-
         function updateCartBadge() {
             const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
             const badge = document.getElementById('cartBadge');
@@ -855,30 +1225,152 @@
             }
         }
 
-        // --- 6. USER LOGIN & ADMIN AUTH ---
-        function handleCustomerLogin(e) {
-            e.preventDefault();
-            const name = document.getElementById('inputName').value.trim();
-            const studentClass = document.getElementById('inputClass').value.trim();
-            const phone = document.getElementById('inputPhone').value.trim();
-
-            if (!name || !studentClass || !phone) return;
-
-            currentUser = { name, class: studentClass, phone };
-            localStorage.setItem('segerin_user', JSON.stringify(currentUser));
-
-            // Initialize phone points record if new
-            if (!pointsData[phone]) {
-                pointsData[phone] = { points: 0, name: name, class: studentClass };
-                localStorage.setItem('segerin_points', JSON.stringify(pointsData));
+        function submitOrder() {
+            if (cart.length === 0) {
+                showToast("Keranjang belanjaan kosong!", "error");
+                return;
             }
 
-            closeLoginModal();
-            updateUserUI();
-            updateCartBadge();
-            showToast(`Selamat datang, ${name}!`);
+            if (!currentUser) {
+                openLoginModal();
+                return;
+            }
+
+            // Deduct Stocks
+            cart.forEach(cItem => {
+                const p = products.find(prod => prod.id === cItem.id);
+                if (p) {
+                    const newStock = Math.max(0, p.stock - cItem.qty);
+                    db.collection('products').doc(p.id).update({ stock: newStock });
+                }
+            });
+
+            const notes = document.getElementById('orderNotes').value.trim();
+            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            const newOrder = {
+                id: 'SGR-' + Date.now().toString().slice(-6),
+                userUid: currentUser.uid,
+                customerName: currentUser.name,
+                customerClass: currentUser.class,
+                customerPhone: currentUser.phone,
+                items: [...cart],
+                total: totalAmount,
+                notes: notes || 'Tanpa Catatan',
+                status: 'Menunggu',
+                pointsAwarded: 0,
+                dateStr: todayStr,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                timeString: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB'
+            };
+
+            db.collection('orders').add(newOrder).then(() => {
+                // WhatsApp Message
+                let waMsg = `*PESANAN BARU SEGER.IN*\n`;
+                waMsg += `ID: ${newOrder.id}\n`;
+                waMsg += `Nama: ${newOrder.customerName}\n`;
+                waMsg += `Kelas: ${newOrder.customerClass}\n`;
+                waMsg += `No HP: ${newOrder.customerPhone}\n\n`;
+                waMsg += `*Detail Pesanan:*\n`;
+                cart.forEach(i => {
+                    waMsg += `- ${i.name} [${i.toppingName}] (${i.qty}x) = Rp ${(i.price * i.qty).toLocaleString('id-ID')}\n`;
+                });
+                waMsg += `\n*Total:* Rp ${totalAmount.toLocaleString('id-ID')}\n`;
+                waMsg += `*Catatan:* ${newOrder.notes}\n\n`;
+                waMsg += `Mohon diproses ya admin! Terima kasih.`;
+
+                const targetWaUrl = `https://wa.me/628814187481?text=${encodeURIComponent(waMsg)}`;
+
+                cart = [];
+                updateCartBadge();
+                toggleCartDrawer();
+
+                showToast("Pesanan tersimpan di cloud! Meluncur ke WA...");
+                window.open(targetWaUrl, '_blank');
+            });
         }
 
+        // --- 6. TESTIMONIALS & REVIEWS LOGIC ---
+        function renderReviews() {
+            const container = document.getElementById('reviewsContainer');
+            if (reviews.length === 0) {
+                container.innerHTML = `<p class="col-span-3 text-center text-xs text-slate-400 py-6">Belum ada ulasan. Jadilah yang pertama memberikan review!</p>`;
+                return;
+            }
+
+            container.innerHTML = reviews.map(rev => {
+                const stars = Array(5).fill(0).map((_, i) => 
+                    `<i class="fa-solid fa-star ${i < rev.rating ? 'text-amber-400' : 'text-slate-200'}"></i>`
+                ).join('');
+
+                return `
+                    <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-8 h-8 rounded-full bg-emerald-100 text-brand-darkgreen font-bold text-xs flex items-center justify-center">
+                                        ${rev.userName ? rev.userName.charAt(0) : 'S'}
+                                    </div>
+                                    <div>
+                                        <h5 class="text-xs font-bold text-slate-800">${rev.userName || 'Siswa'}</h5>
+                                        <p class="text-[10px] text-slate-400">${rev.userClass || 'Siswa'}</p>
+                                    </div>
+                                </div>
+                                <div class="text-xs space-x-0.5">${stars}</div>
+                            </div>
+                            <p class="text-xs text-slate-600 italic">"${rev.content}"</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openReviewModal() {
+            if (!currentUser) {
+                openLoginModal();
+                showToast("Login terlebih dahulu untuk memberi ulasan!", "info");
+                return;
+            }
+            document.getElementById('reviewModal').classList.remove('hidden');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.add('hidden');
+        }
+
+        function setRating(rating) {
+            currentRatingInput = rating;
+            const stars = document.getElementById('starRatingInput').children;
+            for (let i = 0; i < 5; i++) {
+                if (i < rating) {
+                    stars[i].className = "fa-solid fa-star cursor-pointer text-amber-400";
+                } else {
+                    stars[i].className = "fa-solid fa-star cursor-pointer text-slate-200";
+                }
+            }
+        }
+
+        function handleSubmitReview(e) {
+            e.preventDefault();
+            const content = document.getElementById('inputReviewContent').value.trim();
+            if (!content) return;
+
+            db.collection('reviews').add({
+                userUid: currentUser.uid,
+                userName: currentUser.name,
+                userClass: currentUser.class,
+                rating: currentRatingInput,
+                content: content,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                closeReviewModal();
+                document.getElementById('inputReviewContent').value = '';
+                showToast("Terima kasih atas ulasan kamu!");
+            });
+        }
+
+        // --- 7. ADMIN DASHBOARD & STATUS MANAGEMENT ---
         function handleAdminLogin(e) {
             e.preventDefault();
             const selectedAdmin = document.getElementById('selectAdminName').value;
@@ -900,9 +1392,8 @@
         }
 
         function logout() {
-            currentUser = null;
+            auth.signOut();
             activeAdmin = null;
-            localStorage.removeItem('segerin_user');
             localStorage.removeItem('segerin_admin');
             updateUserUI();
             updateCartBadge();
@@ -933,13 +1424,16 @@
                 adminNavBtn.classList.add('hidden');
                 pointsNavBtn.classList.remove('hidden');
 
-                const userPt = (pointsData[currentUser.phone] && pointsData[currentUser.phone].points) || 0;
+                const userPt = (pointsData[currentUser.uid] && pointsData[currentUser.uid].points) || 0;
                 pointsValEl.innerText = userPt.toLocaleString('id-ID');
 
                 userNameEl.innerText = currentUser.name;
                 userMetaEl.innerText = `Kelas: ${currentUser.class} | WA: ${currentUser.phone}`;
-                avatarEl.innerText = currentUser.name.charAt(0);
-                avatarEl.className = "w-10 h-10 rounded-full bg-emerald-100 text-brand-darkgreen font-bold flex items-center justify-center text-lg";
+                if (currentUser.photoURL) {
+                    avatarEl.innerHTML = `<img src="${currentUser.photoURL}" class="w-full h-full object-cover">`;
+                } else {
+                    avatarEl.innerText = currentUser.name.charAt(0);
+                }
             } else {
                 sessionBar.classList.add('hidden');
                 adminNavBtn.classList.add('hidden');
@@ -947,113 +1441,45 @@
             }
         }
 
-        // --- 7. ORDERS & REWARD POINTS LOGIC ---
-        function submitOrder() {
-            if (cart.length === 0) {
-                showToast("Keranjang belanjaan kosong!", "error");
-                return;
-            }
-
-            if (!currentUser) {
-                openLoginModal();
-                return;
-            }
-
-            for (let cItem of cart) {
-                if ((stocks[cItem.stockKey] || 0) < cItem.qty) {
-                    showToast(`Stok untuk ${cItem.name} kurang! Sisa: ${stocks[cItem.stockKey]}`, "error");
-                    return;
-                }
-            }
-
-            // Deduct Stocks
-            cart.forEach(cItem => {
-                stocks[cItem.stockKey] -= cItem.qty;
-            });
-            localStorage.setItem('segerin_stocks', JSON.stringify(stocks));
-
-            const notes = document.getElementById('orderNotes').value.trim();
-            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            const todayStr = new Date().toISOString().split('T')[0];
-
-            const newOrder = {
-                id: 'SGR-' + Date.now().toString().slice(-6),
-                customerName: currentUser.name,
-                customerClass: currentUser.class,
-                customerPhone: currentUser.phone,
-                items: [...cart],
-                total: totalAmount,
-                notes: notes || 'Tanpa Catatan',
-                status: 'Menunggu',
-                pointsAwarded: 0,
-                dateStr: todayStr,
-                timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB'
-            };
-
-            orders.unshift(newOrder);
-            localStorage.setItem('segerin_orders', JSON.stringify(orders));
-
-            // WhatsApp Message
-            let waMsg = `*PESANAN BARU SEGER.IN*\n`;
-            waMsg += `ID: ${newOrder.id}\n`;
-            waMsg += `Nama: ${newOrder.customerName}\n`;
-            waMsg += `Kelas: ${newOrder.customerClass}\n`;
-            waMsg += `No HP: ${newOrder.customerPhone}\n\n`;
-            waMsg += `*Detail Pesanan:*\n`;
-            cart.forEach(i => {
-                waMsg += `- ${i.name} [${i.toppingName}] (${i.qty}x) = Rp ${(i.price * i.qty).toLocaleString('id-ID')}\n`;
-            });
-            waMsg += `\n*Total:* Rp ${totalAmount.toLocaleString('id-ID')}\n`;
-            waMsg += `*Catatan:* ${newOrder.notes}\n\n`;
-            waMsg += `Mohon diproses ya admin! Terima kasih.`;
-
-            const encodedWa = encodeURIComponent(waMsg);
-            const targetWaUrl = `https://wa.me/628814187481?text=${encodedWa}`;
-
-            cart = [];
-            saveCart();
-            updateCartBadge();
-            toggleCartDrawer();
-            renderProductGrid();
-            renderStockControls();
-            renderOrdersTable();
-
-            showToast("Pesanan dikirim! Meluncur ke WA...");
-            window.open(targetWaUrl, '_blank');
-        }
-
-        function updateOrderStatus(orderId, newStatus) {
-            const order = orders.find(o => o.id === orderId);
+        function updateOrderStatus(docId, newStatus) {
+            const order = orders.find(o => o.docId === docId);
             if (!order) return;
 
             const prevStatus = order.status;
-            order.status = newStatus;
+            let pointsAwarded = order.pointsAwarded || 0;
 
-            // AWARD POINTS AUTOMATICALLY WHEN STATUS CHANGES TO "Selesai"
-            if (newStatus === 'Selesai' && prevStatus !== 'Selesai' && order.pointsAwarded === 0) {
-                // Generate random points between 20 and 50
-                const pointsEarned = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
-                order.pointsAwarded = pointsEarned;
+            if (newStatus === 'Selesai' && prevStatus !== 'Selesai' && pointsAwarded === 0) {
+                pointsAwarded = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
 
-                const phone = order.customerPhone;
-                if (!pointsData[phone]) {
-                    pointsData[phone] = { points: 0, name: order.customerName, class: order.customerClass };
+                const userUid = order.userUid;
+                if (userUid) {
+                    const currentPt = (pointsData[userUid] && pointsData[userUid].points) || 0;
+                    db.collection('points').doc(userUid).set({
+                        points: currentPt + pointsAwarded,
+                        name: order.customerName,
+                        class: order.customerClass,
+                        phone: order.customerPhone
+                    }, { merge: true });
                 }
-                pointsData[phone].points += pointsEarned;
-                pointsData[phone].name = order.customerName;
-                pointsData[phone].class = order.customerClass;
-
-                localStorage.setItem('segerin_points', JSON.stringify(pointsData));
-                showToast(`Status 'Selesai'! ${order.customerName} dapat +${pointsEarned} Poin!`);
             }
 
-            localStorage.setItem('segerin_orders', JSON.stringify(orders));
-            renderOrdersTable();
-            renderPointsTable();
-            updateUserUI();
+            db.collection('orders').doc(docId).update({
+                status: newStatus,
+                pointsAwarded: pointsAwarded
+            }).then(() => {
+                showToast("Status pesanan diperbarui!");
+            });
         }
 
-        // --- 8. POINTS LOYALTY MODAL & REDEMPTION ---
+        function deleteOrder(docId) {
+            if (confirm("Hapus pesanan ini?")) {
+                db.collection('orders').doc(docId).delete().then(() => {
+                    showToast("Pesanan dihapus.");
+                });
+            }
+        }
+
+        // --- 8. LOYALTY POINTS MODAL & REDEMPTION ---
         function openPointsModal() {
             if (!currentUser) {
                 openLoginModal();
@@ -1061,25 +1487,24 @@
             }
 
             const modal = document.getElementById('pointsModal');
-            const phone = currentUser.phone;
-            const currentPt = (pointsData[phone] && pointsData[phone].points) || 0;
+            const userPt = (pointsData[currentUser.uid] && pointsData[currentUser.uid].points) || 0;
 
-            document.getElementById('modalPointsAmount').innerText = currentPt.toLocaleString('id-ID');
-            document.getElementById('modalPointsPhone').innerText = phone;
-            document.getElementById('pointsProgressText').innerText = `${currentPt.toLocaleString('id-ID')} / 1.000 Poin`;
+            document.getElementById('modalPointsAmount').innerText = userPt.toLocaleString('id-ID');
+            document.getElementById('modalPointsPhone').innerText = currentUser.email || currentUser.phone;
+            document.getElementById('pointsProgressText').innerText = `${userPt.toLocaleString('id-ID')} / 1.000 Poin`;
 
-            const pct = Math.min(100, Math.floor((currentPt / 1000) * 100));
+            const pct = Math.min(100, Math.floor((userPt / 1000) * 100));
             document.getElementById('pointsProgressBar').style.width = pct + '%';
 
             const redeemBtn = document.getElementById('btnRedeemPoints');
-            if (currentPt >= 1000) {
+            if (userPt >= 1000) {
                 redeemBtn.disabled = false;
                 redeemBtn.className = "w-full bg-gradient-to-r from-amber-500 to-brand-orange hover:opacity-95 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer";
                 redeemBtn.innerText = "Tukarkan 1.000 Poin (Gratis Jus Komplit)";
             } else {
                 redeemBtn.disabled = true;
                 redeemBtn.className = "w-full bg-slate-300 text-slate-500 font-bold py-2.5 rounded-xl text-xs transition cursor-not-allowed";
-                redeemBtn.innerText = `Butuh ${1000 - currentPt} Poin Lagi`;
+                redeemBtn.innerText = `Butuh ${1000 - userPt} Poin Lagi`;
             }
 
             modal.classList.remove('hidden');
@@ -1090,51 +1515,46 @@
         }
 
         function redeemFreeJuice() {
-            const phone = currentUser.phone;
-            if (!pointsData[phone] || pointsData[phone].points < 1000) {
+            const userUid = currentUser.uid;
+            const currentPt = (pointsData[userUid] && pointsData[userUid].points) || 0;
+
+            if (currentPt < 1000) {
                 showToast("Poin belum mencukupi 1.000!", "error");
                 return;
             }
 
-            pointsData[phone].points -= 1000;
-            localStorage.setItem('segerin_points', JSON.stringify(pointsData));
-
-            // Create 0 Rupiah Order Voucher
-            const newOrder = {
-                id: 'REDEEM-' + Date.now().toString().slice(-5),
-                customerName: currentUser.name,
-                customerClass: currentUser.class,
-                customerPhone: currentUser.phone,
-                items: [{
-                    cartItemId: "FREE_COMPLET",
-                    id: 99,
-                    name: "Jus Buah Naga/Mangga/Jambu (Bebas Pilih)",
-                    stockKey: "naga",
-                    toppingName: "Jus + Susu + Keju (Komplit GRATIS POIN)",
-                    price: 0,
-                    qty: 1
-                }],
-                total: 0,
-                notes: "PENUKARAN 1.000 POIN REWARD (GRATIS JUS KOMPLIT)",
-                status: "Menunggu",
-                pointsAwarded: 0,
-                dateStr: new Date().toISOString().split('T')[0],
-                timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB'
-            };
-
-            orders.unshift(newOrder);
-            localStorage.setItem('segerin_orders', JSON.stringify(orders));
-
-            closePointsModal();
-            updateUserUI();
-            renderOrdersTable();
-            renderPointsTable();
-
-            showToast("Selamat! Penukaran 1.000 Poin Berhasil!");
-            alert("Voucher Penukaran Jus Komplit Gratis berhasil dibuat! Rinciannya sudah diteruskan ke daftar pesanan Admin.");
+            db.collection('points').doc(userUid).update({
+                points: currentPt - 1000
+            }).then(() => {
+                return db.collection('orders').add({
+                    id: 'REDEEM-' + Date.now().toString().slice(-5),
+                    userUid: userUid,
+                    customerName: currentUser.name,
+                    customerClass: currentUser.class,
+                    customerPhone: currentUser.phone,
+                    items: [{
+                        cartItemId: "FREE_COMPLET",
+                        id: "free",
+                        name: "Jus Bebas Pilih (Kupon Poin)",
+                        toppingName: "Jus + Susu + Keju (Komplit GRATIS)",
+                        price: 0,
+                        qty: 1
+                    }],
+                    total: 0,
+                    notes: "PENUKARAN 1.000 POIN REWARD (GRATIS JUS KOMPLIT)",
+                    status: "Menunggu",
+                    pointsAwarded: 0,
+                    dateStr: new Date().toISOString().split('T')[0],
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    timeString: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB'
+                });
+            }).then(() => {
+                closePointsModal();
+                showToast("Voucher Penukaran Berhasil Dibuat!");
+            });
         }
 
-        // --- 9. ADMIN TAB SWITCHING & SALES REPORTS ---
+        // --- 9. SALES REPORTS & CANVAS CHARTS ---
         function switchAdminTab(tabName) {
             const tabs = ['orders', 'reports', 'stocks', 'points'];
             tabs.forEach(t => {
@@ -1171,14 +1591,17 @@
             document.getElementById('reportCompletedCount').innerText = filtered.length;
             document.getElementById('reportTotalPointsAwarded').innerText = `${totalPointsAwarded.toLocaleString('id-ID')} Poin`;
 
-            // Data for Charts
-            let productSales = { "Jus Buah Naga": 0, "Jus Mangga": 0, "Jus Jambu": 0 };
+            let productSales = {};
+            products.forEach(p => productSales[p.name] = 0);
+
             let toppingSales = { "Original": 0, "Jus+Keju": 0, "Jus+Susu": 0, "Komplit": 0 };
 
             filtered.forEach(o => {
                 o.items.forEach(i => {
                     if (productSales[i.name] !== undefined) {
                         productSales[i.name] += i.qty;
+                    } else {
+                        productSales[i.name] = i.qty;
                     }
                     if (i.toppingName.includes('Komplit')) toppingSales['Komplit'] += i.qty;
                     else if (i.toppingName.includes('Keju')) toppingSales['Jus+Keju'] += i.qty;
@@ -1191,7 +1614,6 @@
             drawPieChart('chartPieToppings', toppingSales);
         }
 
-        // CUSTOM HTML5 CANVAS BAR CHART
         function drawBarChart(canvasId, dataObj) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
@@ -1203,40 +1625,41 @@
 
             const labels = Object.keys(dataObj);
             const values = Object.values(dataObj);
-            const maxVal = Math.max(...values, 5);
+            if (labels.length === 0) return;
 
+            const maxVal = Math.max(...values, 5);
             const padding = 40;
             const chartWidth = canvas.width - (padding * 2);
             const chartHeight = canvas.height - (padding * 2);
-            const barWidth = chartWidth / labels.length - 20;
+            const barWidth = Math.max(20, (chartWidth / labels.length) - 15);
 
-            const colors = ['#EC4899', '#F59E0B', '#EF4444'];
+            const colors = ['#EC4899', '#F59E0B', '#EF4444', '#10B981', '#3B82F6'];
 
             labels.forEach((label, idx) => {
                 const val = values[idx];
                 const barHeight = (val / maxVal) * chartHeight;
-                const x = padding + idx * (barWidth + 20) + 10;
+                const x = padding + idx * (barWidth + 15);
                 const y = canvas.height - padding - barHeight;
 
-                // Draw Bar
                 ctx.fillStyle = colors[idx % colors.length];
                 ctx.beginPath();
-                ctx.roundRect(x, y, barWidth, barHeight, [8, 8, 0, 0]);
+                if (ctx.roundRect) {
+                    ctx.roundRect(x, y, barWidth, barHeight, [6, 6, 0, 0]);
+                } else {
+                    ctx.rect(x, y, barWidth, barHeight);
+                }
                 ctx.fill();
 
-                // Value Label
                 ctx.fillStyle = '#1E293B';
-                ctx.font = 'bold 12px Poppins';
+                ctx.font = 'bold 11px Poppins';
                 ctx.textAlign = 'center';
                 ctx.fillText(val + ' porsi', x + barWidth / 2, y - 6);
 
-                // Bar Category Title
                 ctx.font = '10px Poppins';
-                ctx.fillText(label.replace('Jus ', ''), x + barWidth / 2, canvas.height - padding + 15);
+                ctx.fillText(label.replace('Jus ', '').slice(0, 10), x + barWidth / 2, canvas.height - padding + 15);
             });
         }
 
-        // CUSTOM HTML5 CANVAS PIE/DONUT CHART
         function drawPieChart(canvasId, dataObj) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
@@ -1279,13 +1702,11 @@
                 startAngle += sliceAngle;
             });
 
-            // Donut Hole Cutout
             ctx.fillStyle = '#FFFFFF';
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius * 0.5, 0, 2 * Math.PI);
             ctx.fill();
 
-            // Legend Render
             const legendX = canvas.width - 100;
             labels.forEach((label, idx) => {
                 const legendY = 30 + (idx * 25);
@@ -1299,9 +1720,7 @@
             });
         }
 
-        function printSalesReport() {
-            window.print();
-        }
+        function printSalesReport() { window.print(); }
 
         // --- 10. RENDERING TABLES & CONTROLS ---
         function renderOrdersTable() {
@@ -1333,7 +1752,7 @@
                         <td class="p-3.5">
                             <span class="font-mono text-xs font-bold text-slate-400 block">${order.id}</span>
                             <span class="font-bold text-slate-800 block">${order.customerName}</span>
-                            <span class="text-[10px] text-slate-400">${order.timestamp}</span>
+                            <span class="text-[10px] text-slate-400">${order.timeString || '-'}</span>
                         </td>
                         <td class="p-3.5">
                             <span class="inline-block bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded-md font-medium mb-1">${order.customerClass}</span>
@@ -1347,7 +1766,7 @@
                             <span class="text-[10px] text-slate-400 italic">" ${order.notes} "</span>
                         </td>
                         <td class="p-3.5">
-                            <select onchange="updateOrderStatus('${order.id}', this.value)" class="text-xs font-bold ${statusBadgeClass} border-0 rounded-lg p-1.5 focus:ring-2 focus:ring-brand-green mb-1">
+                            <select onchange="updateOrderStatus('${order.docId}', this.value)" class="text-xs font-bold ${statusBadgeClass} border-0 rounded-lg p-1.5 focus:ring-2 focus:ring-brand-green mb-1">
                                 <option value="Menunggu" ${order.status === 'Menunggu' ? 'selected' : ''}>Menunggu</option>
                                 <option value="Sedang Dibuat" ${order.status === 'Sedang Dibuat' ? 'selected' : ''}>Sedang Dibuat</option>
                                 <option value="Siap Diantar" ${order.status === 'Siap Diantar' ? 'selected' : ''}>Siap Diantar</option>
@@ -1360,7 +1779,7 @@
                                target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg text-xs inline-flex items-center justify-center shadow-xs">
                                 <i class="fa-brands fa-whatsapp"></i>
                             </a>
-                            <button onclick="deleteOrder('${order.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-lg text-xs">
+                            <button onclick="deleteOrder('${order.docId}')" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-lg text-xs">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
@@ -1371,18 +1790,20 @@
 
         function renderStockControls() {
             const container = document.getElementById('stockControlsGrid');
-            container.innerHTML = PRODUCTS.map(p => {
-                const currentVal = stocks[p.stockKey] || 0;
+            container.innerHTML = products.map(p => {
                 return `
-                    <div class="bg-white p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
-                        <div>
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between shadow-xs">
+                        <div class="pr-2">
                             <span class="text-xs font-bold text-slate-800 block">${p.name}</span>
-                            <span class="text-[10px] text-slate-400">Porsi Tersedia</span>
+                            <span class="text-[10px] text-slate-400 block">${p.category}</span>
+                            <button onclick="deleteProduct('${p.id}')" class="text-[10px] text-red-500 hover:underline mt-1">
+                                <i class="fa-solid fa-trash mr-1"></i>Hapus Menu
+                            </button>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <input type="number" min="0" value="${currentVal}" id="stockInput_${p.stockKey}"
-                                   class="w-16 p-1.5 text-center text-xs border border-slate-300 rounded-lg font-bold focus:ring-2 focus:ring-brand-green">
-                            <button onclick="updateStock('${p.stockKey}')" class="bg-brand-darkgreen hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition">
+                        <div class="flex items-center space-x-1.5">
+                            <input type="number" min="0" value="${p.stock || 0}" id="stockInput_${p.id}"
+                                   class="w-14 p-1.5 text-center text-xs border border-slate-300 rounded-lg font-bold focus:ring-2 focus:ring-brand-green">
+                            <button onclick="updateProductStock('${p.id}')" class="bg-brand-darkgreen hover:bg-emerald-800 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg transition">
                                 Simpan
                             </button>
                         </div>
@@ -1391,33 +1812,40 @@
             }).join('');
         }
 
+        function updateProductStock(productId) {
+            const newVal = parseInt(document.getElementById(`stockInput_${productId}`).value) || 0;
+            db.collection('products').doc(productId).update({ stock: newVal }).then(() => {
+                showToast("Stok berhasil diperbarui!");
+            });
+        }
+
         function renderPointsTable() {
             const tbody = document.getElementById('pointsTableBody');
-            const phones = Object.keys(pointsData);
+            const uids = Object.keys(pointsData);
 
-            if (phones.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-5 text-center text-xs text-slate-400">Belum ada data poin siswa.</td></tr>`;
+            if (uids.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-5 text-center text-xs text-slate-400">Belum ada data poin siswa di Firestore.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = phones.map(phone => {
-                const item = pointsData[phone];
+            tbody.innerHTML = uids.map(uid => {
+                const item = pointsData[uid];
                 const canRedeem = item.points >= 1000;
 
                 return `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="p-3.5 font-bold text-slate-800">${item.name || 'Siswa'}</td>
                         <td class="p-3.5"><span class="bg-slate-100 px-2 py-0.5 rounded text-xs">${item.class || '-'}</span></td>
-                        <td class="p-3.5 text-xs text-slate-600">${phone}</td>
-                        <td class="p-3.5 font-black text-brand-orange">${item.points.toLocaleString('id-ID')} Poin</td>
+                        <td class="p-3.5 text-xs text-slate-600">${item.phone || '-'}</td>
+                        <td class="p-3.5 font-black text-brand-orange">${(item.points || 0).toLocaleString('id-ID')} Poin</td>
                         <td class="p-3.5">
                             ${canRedeem 
                                 ? `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full"><i class="fa-solid fa-check mr-1"></i>Bisa Tukar (1.000 Poin)</span>`
-                                : `<span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-2.5 py-1 rounded-full">Progres: ${Math.floor((item.points/1000)*100)}%</span>`
+                                : `<span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-2.5 py-1 rounded-full">Progres: ${Math.floor(((item.points||0)/1000)*100)}%</span>`
                             }
                         </td>
                         <td class="p-3.5 text-center">
-                            <button onclick="adminAdjustPoints('${phone}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-2.5 py-1 rounded-lg">
+                            <button onclick="adminAdjustPoints('${uid}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-2.5 py-1 rounded-lg">
                                 Edit Poin
                             </button>
                         </td>
@@ -1426,42 +1854,17 @@
             }).join('');
         }
 
-        function adminAdjustPoints(phone) {
-            const newPt = prompt(`Masukkan jumlah poin baru untuk ${phone}:`, pointsData[phone].points);
+        function adminAdjustPoints(uid) {
+            const currentPt = pointsData[uid] ? pointsData[uid].points : 0;
+            const newPt = prompt(`Masukkan jumlah poin baru:`, currentPt);
             if (newPt !== null && !isNaN(newPt)) {
-                pointsData[phone].points = parseInt(newPt);
-                localStorage.setItem('segerin_points', JSON.stringify(pointsData));
-                renderPointsTable();
-                updateUserUI();
-                showToast("Poin berhasil diperbarui admin.");
+                db.collection('points').doc(uid).update({ points: parseInt(newPt) }).then(() => {
+                    showToast("Poin diperbarui oleh admin.");
+                });
             }
         }
 
-        function updateStock(stockKey) {
-            const newVal = parseInt(document.getElementById(`stockInput_${stockKey}`).value) || 0;
-            stocks[stockKey] = newVal;
-            localStorage.setItem('segerin_stocks', JSON.stringify(stocks));
-            renderProductGrid();
-            showToast(`Stok ${stockKey.toUpperCase()} berhasil diperbarui!`);
-        }
-
-        function deleteOrder(orderId) {
-            orders = orders.filter(o => o.id !== orderId);
-            localStorage.setItem('segerin_orders', JSON.stringify(orders));
-            renderOrdersTable();
-            showToast("Pesanan dihapus.");
-        }
-
-        function clearAllOrders() {
-            if (confirm("Reset semua data pesanan & poin?")) {
-                orders = [];
-                localStorage.removeItem('segerin_orders');
-                renderOrdersTable();
-                showToast("Semua data pesanan di-reset!");
-            }
-        }
-
-        // --- 11. GENERAL HELPERS ---
+        // --- 11. NAVIGATION & UI HELPERS ---
         function showAdminDashboard() {
             if (!activeAdmin) {
                 openAdminLoginModal();
@@ -1494,6 +1897,7 @@
         }
 
         function formatWaNumber(phone) {
+            if (!phone) return '628814187481';
             let p = phone.replace(/[^0-9]/g, '');
             if (p.startsWith('0')) {
                 p = '62' + p.slice(1);
@@ -1521,20 +1925,5 @@
             }, 3000);
         }
     </script> 
-
-    <script>
-        const firebaseConfig = {
-  apiKey: "AIzaSyBjs6W7r_MW_TVHDuaOa8ybHRxT4cDR_LY",
-  authDomain: "segerin-28ba8.firebaseapp.com",
-  projectId: "segerin-28ba8",
-  storageBucket: "segerin-28ba8.firebasestorage.app",
-  messagingSenderId: "808276728764",
-  appId: "1:808276728764:web:dc6e5dc1991e1c9991e9b9",
-  measurementId: "G-YYY5GSLFCS"
-}
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-    </script>
 </body>
 </html>
