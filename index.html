@@ -199,6 +199,22 @@
                     <!-- Dynamically populated from Firestore -->
                 </div>
             </div>
+
+            <!-- GALERI ARTIS / TOKOH TERKENAL SECTION -->
+            <div class="bg-white rounded-3xl border border-emerald-100 shadow-lg p-6 sm:p-8 space-y-6">
+                <div class="border-b pb-4">
+                    <span class="bg-amber-100 text-amber-800 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                        <i class="fa-solid fa-star text-amber-500 mr-1"></i> Tokoh & Artis
+                    </span>
+                    <h3 class="text-2xl font-heading font-extrabold text-slate-800 mt-1">Siapa Aja yang Pernah Beli di Seger.in?</h3>
+                    <p class="text-xs text-slate-500">Deretan artis dan tokoh terkenal yang sudah menikmati kesegaran jus kami!</p>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div id="celebrityGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Rendered dynamically by JS -->
+                </div>
+            </div>
         </section>
 
         <!-- ==================== ADMIN DASHBOARD ==================== -->
@@ -238,6 +254,9 @@
                     </button>
                     <button id="tabBtnPoints" onclick="switchAdminTab('points')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-star mr-2"></i>Data Poin Pelanggan
+                    </button>
+                    <button id="tabBtnGallery" onclick="switchAdminTab('gallery')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
+                        <i class="fa-solid fa-camera-retro mr-2"></i>Kelola Galeri Artis
                     </button>
                 </div>
 
@@ -404,6 +423,28 @@
                                 <!-- Dynamic Loyalty Points -->
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- TAB 5: KELOLA GALERI ARTIS -->
+                <div id="adminTabGallery" class="hidden space-y-4">
+                    <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-5">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800 mb-1 flex items-center">
+                                    <i class="fa-solid fa-camera-retro text-brand-darkgreen mr-2"></i>
+                                    Kelola Foto Galeri Artis & Tokoh
+                                </h4>
+                                <p class="text-xs text-slate-500">Tambah foto artis, nama, dan deskripsi/kesan mereka saat membeli.</p>
+                            </div>
+                            <button onclick="openAddGalleryModal()" class="bg-brand-green hover:bg-emerald-600 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm">
+                                + Tambah Foto Artis
+                            </button>
+                        </div>
+
+                        <div id="adminGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Controls dynamically rendered here -->
+                        </div>
                     </div>
                 </div>
 
@@ -606,6 +647,47 @@
         </div>
     </div>
 
+    <!-- ADMIN: ADD CELEBRITY GALLERY MODAL -->
+    <div id="addGalleryModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative my-8">
+            <button onclick="closeAddGalleryModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl">
+                    <i class="fa-solid fa-camera-retro"></i>
+                </div>
+                <h3 class="text-xl font-heading font-black text-slate-800">Tambah Galeri Artis</h3>
+                <p class="text-xs text-slate-500">Masukkan foto artis/tokoh yang pernah membeli di toko</p>
+            </div>
+            <form onsubmit="handleSaveGallery(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Artis / Tokoh</label>
+                    <input type="text" id="galleryArtistName" required placeholder="Contoh: Raffi Ahmad" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Profesi / Keterangan Singkat</label>
+                    <input type="text" id="galleryArtistRole" placeholder="Contoh: Presenter / Content Creator" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL Foto Artis</label>
+                    <input type="url" id="galleryImageUrl" required placeholder="https://images.unsplash.com/..." 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Komentar / Pesanan Kesukaan</label>
+                    <textarea id="galleryArtistNote" rows="2" placeholder="Contoh: Langganan Jus Mangga + Keju kalau ke outlet!" 
+                              class="w-full p-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-green focus:outline-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-brand-green hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
+                    Simpan ke Galeri Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- REVIEW / TESTIMONIAL MODAL -->
     <div id="reviewModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
@@ -780,6 +862,7 @@
         let orders = [];
         let reviews = [];
         let pointsData = {};
+        let celebrities = [];
         let selectedToppings = {};
         let currentRatingInput = 5;
         let authMode = 'login';
@@ -792,6 +875,7 @@
             listenToOrdersCloud();
             listenToReviewsCloud();
             listenToPointsCloud();
+            listenToGalleryCloud();
         };
 
         function populateAdminDropdown() {
@@ -984,6 +1068,17 @@
                 });
                 renderPointsTable();
                 updateUserUI();
+            });
+        }
+
+        function listenToGalleryCloud() {
+            db.collection('celebrities').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                celebrities = [];
+                snapshot.forEach(doc => {
+                    celebrities.push({ id: doc.id, ...doc.data() });
+                });
+                renderUserGallery();
+                renderAdminGalleryControls();
             });
         }
 
@@ -1370,7 +1465,105 @@
             });
         }
 
-        // --- 7. ADMIN DASHBOARD & STATUS MANAGEMENT ---
+        // --- 7. CELEBRITY GALLERY LOGIC (USER & ADMIN) ---
+        function renderUserGallery() {
+            const grid = document.getElementById('celebrityGalleryGrid');
+            if (!grid) return;
+
+            if (celebrities.length === 0) {
+                grid.innerHTML = `<div class="col-span-4 text-center py-8 text-slate-400 text-xs">Belum ada foto galeri artis yang ditambahkan.</div>`;
+                return;
+            }
+
+            grid.innerHTML = celebrities.map(item => `
+                <div class="bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden shadow-xs hover:shadow-md transition">
+                    <div class="h-52 w-full bg-slate-200 overflow-hidden relative">
+                        <img src="${item.imageUrl}" alt="${item.name}" 
+                             class="w-full h-full object-cover transition duration-300 hover:scale-105"
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x600/10B981/FFF?text=Artis+Seger.in';" />
+                        <span class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-md font-semibold">
+                            ${item.role || 'Tokoh'}
+                        </span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-slate-800 text-sm mb-1">${item.name}</h4>
+                        <p class="text-xs text-slate-500 italic">"${item.note || 'Suka banget sama jus dari Seger.in!'}"</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAdminGalleryControls() {
+            const grid = document.getElementById('adminGalleryGrid');
+            if (!grid) return;
+
+            if (celebrities.length === 0) {
+                grid.innerHTML = `<p class="col-span-3 text-xs text-slate-400">Belum ada data galeri.</p>`;
+                return;
+            }
+
+            grid.innerHTML = celebrities.map(item => `
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between shadow-xs">
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <img src="${item.imageUrl}" class="w-12 h-12 rounded-xl object-cover flex-shrink-0" onerror="this.src='https://placehold.co/100/10B981/FFF?text=Foto';" />
+                        <div class="truncate">
+                            <span class="text-xs font-bold text-slate-800 block truncate">${item.name}</span>
+                            <span class="text-[10px] text-slate-400 block truncate">${item.role || '-'}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteGalleryItem('${item.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 p-2 rounded-lg text-xs ml-2 flex-shrink-0">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function openAddGalleryModal() {
+            document.getElementById('addGalleryModal').classList.remove('hidden');
+        }
+
+        function closeAddGalleryModal() {
+            document.getElementById('addGalleryModal').classList.add('hidden');
+        }
+
+        function handleSaveGallery(e) {
+            e.preventDefault();
+            if (!activeAdmin) {
+                showToast("Hanya admin terdaftar yang bisa menambah galeri!", "error");
+                return;
+            }
+
+            const name = document.getElementById('galleryArtistName').value.trim();
+            const role = document.getElementById('galleryArtistRole').value.trim();
+            const imageUrl = document.getElementById('galleryImageUrl').value.trim();
+            const note = document.getElementById('galleryArtistNote').value.trim();
+
+            db.collection('celebrities').add({
+                name, role, imageUrl, note,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                closeAddGalleryModal();
+                e.target.reset();
+                showToast("Foto artis berhasil ditambahkan ke Galeri!");
+            }).catch(err => {
+                showToast(`Gagal menyimpan: ${err.message}`, "error");
+            });
+        }
+
+        function deleteGalleryItem(id) {
+            if (!activeAdmin) {
+                showToast("Hanya admin yang bisa menghapus galeri!", "error");
+                return;
+            }
+
+            if (confirm("Yakin ingin menghapus foto artis ini dari galeri?")) {
+                db.collection('celebrities').doc(id).delete().then(() => {
+                    showToast("Foto artis berhasil dihapus dari galeri.");
+                });
+            }
+        }
+
+        // --- 8. ADMIN DASHBOARD & STATUS MANAGEMENT ---
         function handleAdminLogin(e) {
             e.preventDefault();
             const selectedAdmin = document.getElementById('selectAdminName').value;
@@ -1479,7 +1672,7 @@
             }
         }
 
-        // --- 8. LOYALTY POINTS MODAL & REDEMPTION ---
+        // --- 9. LOYALTY POINTS MODAL & REDEMPTION ---
         function openPointsModal() {
             if (!currentUser) {
                 openLoginModal();
@@ -1554,9 +1747,9 @@
             });
         }
 
-        // --- 9. SALES REPORTS & CANVAS CHARTS ---
+        // --- 10. SALES REPORTS & CANVAS CHARTS ---
         function switchAdminTab(tabName) {
-            const tabs = ['orders', 'reports', 'stocks', 'points'];
+            const tabs = ['orders', 'reports', 'stocks', 'points', 'gallery'];
             tabs.forEach(t => {
                 const tabEl = document.getElementById(`adminTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
                 const btnEl = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
@@ -1722,7 +1915,7 @@
 
         function printSalesReport() { window.print(); }
 
-        // --- 10. RENDERING TABLES & CONTROLS ---
+        // --- 11. RENDERING TABLES & CONTROLS ---
         function renderOrdersTable() {
             const tbody = document.getElementById('ordersTableBody');
             const emptyNotice = document.getElementById('emptyOrdersNotice');
@@ -1864,7 +2057,7 @@
             }
         }
 
-        // --- 11. NAVIGATION & UI HELPERS ---
+        // --- 12. NAVIGATION & UI HELPERS ---
         function showAdminDashboard() {
             if (!activeAdmin) {
                 openAdminLoginModal();
