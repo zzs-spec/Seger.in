@@ -80,6 +80,12 @@
                     <span>0881-4187-481</span>
                 </a>
 
+                <!-- User Orders Button -->
+                <button id="userOrdersNavBtn" onclick="openUserOrdersModal()" class="hidden bg-emerald-100 hover:bg-emerald-200 text-brand-darkgreen border border-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold items-center space-x-1.5 transition">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span class="hidden sm:inline">Pesanan Saya</span>
+                </button>
+
                 <!-- Points Pill (For Student) -->
                 <button id="userPointsNavBtn" onclick="openPointsModal()" class="hidden bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-3 py-1.5 rounded-xl text-xs font-bold items-center space-x-1.5 transition">
                     <i class="fa-solid fa-star text-amber-500"></i>
@@ -478,7 +484,23 @@
 
     <!-- ==================== MODALS & DRAWERS ==================== -->
 
-    <!-- LOGIN SISWA MODAL (With Google Sign-In & Email/Password) -->
+    <!-- USER ORDERS TRACKING MODAL -->
+    <div id="userOrdersModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[80vh] flex flex-col">
+            <button onclick="closeUserOrdersModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="flex items-center space-x-2 mb-4">
+                <i class="fa-solid fa-clock-rotate-left text-brand-darkgreen text-xl"></i>
+                <h3 class="text-xl font-heading font-black text-slate-800">Status Pesanan Saya</h3>
+            </div>
+            <div id="userOrdersList" class="overflow-y-auto space-y-3 pr-1">
+                <!-- Dynamic user orders list -->
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SISWA MODAL (With Google Sign-In, Referral Code & Email/Password) -->
     <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative my-8">
             <button onclick="closeLoginModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
@@ -529,6 +551,12 @@
                         <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Kelas / Ruangan</label>
                         <input type="text" id="inputClass" placeholder="Contoh: XII IPA 2" 
                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Kode Referral Teman (Opsional)</label>
+                        <input type="text" id="inputReferralCode" placeholder="Contoh: SEGER-A1B2C3" 
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs font-mono uppercase">
+                        <p class="text-[10px] text-brand-orange mt-0.5">*Dapatkan +50 Poin bonus selamat datang!</p>
                     </div>
                 </div>
 
@@ -724,7 +752,7 @@
         </div>
     </div>
 
-    <!-- POINTS LOYALTY MODAL (FOR CUSTOMER) -->
+    <!-- POINTS LOYALTY MODAL (FOR CUSTOMER & REFERRAL) -->
     <div id="pointsModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
             <button onclick="closePointsModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
@@ -739,7 +767,7 @@
                 <p class="text-xs text-slate-500 mt-1">Kumpulkan poin & dapatkan reward minuman gratis!</p>
             </div>
 
-            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 p-5 rounded-2xl mb-6 text-center">
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 p-5 rounded-2xl mb-4 text-center">
                 <p class="text-xs font-bold text-amber-800 uppercase tracking-wide">Poin Terkumpul Saat Ini</p>
                 <h2 id="modalPointsAmount" class="text-4xl font-heading font-black text-brand-orange my-1">0</h2>
                 <p class="text-[11px] text-slate-600">Akun: <span id="modalPointsPhone" class="font-bold text-slate-800">-</span></p>
@@ -753,6 +781,18 @@
                     <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
                         <div id="pointsProgressBar" class="h-full bg-gradient-to-r from-amber-400 to-brand-orange transition-all duration-500" style="width: 0%;"></div>
                     </div>
+                </div>
+            </div>
+
+            <!-- PROGRAM REFERRAL (AJAK TEMAN) -->
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl mb-4">
+                <p class="text-xs font-bold text-slate-700 uppercase mb-0.5">Program Referral (Ajak Teman)</p>
+                <p class="text-[11px] text-slate-500 mb-2">Bagikan kode unik kamu & dapatkan <strong class="text-brand-orange">+50 Poin</strong> saat teman mendaftar!</p>
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="userReferralCode" readonly class="w-full bg-white font-mono font-bold text-xs p-2.5 rounded-xl border border-slate-300 text-center text-slate-800">
+                    <button onclick="copyReferralCode()" class="bg-slate-900 hover:bg-brand-darkgreen text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex-shrink-0">
+                        <i class="fa-regular fa-copy mr-1"></i> Salin
+                    </button>
                 </div>
             </div>
 
@@ -855,7 +895,7 @@
         const ADMIN_PASSWORD = "Juspastienak";
 
         // --- GLOBAL STATE ---
-        let currentUser = null; // Firebase auth user combined with profile
+        let currentUser = null; 
         let activeAdmin = JSON.parse(localStorage.getItem('segerin_admin')) || null;
         let cart = [];
         let products = [];
@@ -866,6 +906,7 @@
         let selectedToppings = {};
         let currentRatingInput = 5;
         let authMode = 'login';
+        let previousOrderCount = 0;
 
         // --- INITIALIZATION ---
         window.onload = function() {
@@ -946,6 +987,14 @@
                             class: "Siswa",
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
+                        
+                        // Default initial point record
+                        db.collection('points').doc(user.uid).set({
+                            points: 0,
+                            name: user.displayName,
+                            class: "Siswa",
+                            phone: "08814187481"
+                        });
                     }
                 });
 
@@ -965,9 +1014,39 @@
             if (authMode === 'register') {
                 const name = document.getElementById('inputName').value.trim();
                 const studentClass = document.getElementById('inputClass').value.trim();
+                const refCode = document.getElementById('inputReferralCode').value.trim().toUpperCase();
+
+                let initialBonusPoints = 0;
 
                 auth.createUserWithEmailAndPassword(email, password).then(res => {
-                    return db.collection('users').doc(res.user.uid).set({
+                    const newUid = res.user.uid;
+
+                    // If referral code provided, verify and give bonus points
+                    if (refCode && refCode.startsWith('SEGER-')) {
+                        initialBonusPoints = 50; // Bonus for new user
+                        const referrerUidPrefix = refCode.replace('SEGER-', '').toLowerCase();
+
+                        // Search referrer uid matching prefix
+                        db.collection('points').get().then(snap => {
+                            snap.forEach(doc => {
+                                if (doc.id.toLowerCase().startsWith(referrerUidPrefix)) {
+                                    const currentRefPts = doc.data().points || 0;
+                                    db.collection('points').doc(doc.id).update({
+                                        points: currentRefPts + 50
+                                    });
+                                }
+                            });
+                        });
+                    }
+
+                    db.collection('points').doc(newUid).set({
+                        points: initialBonusPoints,
+                        name: name,
+                        class: studentClass,
+                        phone: phone
+                    });
+
+                    return db.collection('users').doc(newUid).set({
                         name: name,
                         class: studentClass,
                         phone: phone,
@@ -976,7 +1055,11 @@
                     });
                 }).then(() => {
                     closeLoginModal();
-                    showToast("Akun berhasil dibuat!");
+                    if (initialBonusPoints > 0) {
+                        showToast("Akun berhasil dibuat! Bonus +50 Poin Referral ditambahkan!");
+                    } else {
+                        showToast("Akun berhasil dibuat!");
+                    }
                 }).catch(err => {
                     showToast(err.message, "error");
                 });
@@ -1043,11 +1126,42 @@
                 snapshot.forEach(doc => {
                     orders.push({ docId: doc.id, ...doc.data() });
                 });
+
+                // Trigger Sound Alert for Admin when new order arrives
+                if (activeAdmin && orders.length > previousOrderCount && previousOrderCount !== 0) {
+                    playOrderNotificationSound();
+                    showToast("🔔 Ada Pesanan Baru Masuk!", "info");
+                }
+                previousOrderCount = orders.length;
+
                 renderOrdersTable();
                 if (!document.getElementById('adminTabReports').classList.contains('hidden')) {
                     renderSalesReport();
                 }
             });
+        }
+
+        function playOrderNotificationSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioContext.currentTime); // D5
+                osc.frequency.setValueAtTime(880, audioContext.currentTime + 0.15); // A5
+                
+                gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.start();
+                osc.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log("Audio notify blocked or unsupported", e);
+            }
         }
 
         function listenToReviewsCloud() {
@@ -1386,6 +1500,47 @@
             });
         }
 
+        // --- USER ORDER TRACKING LOGIC ---
+        function openUserOrdersModal() {
+            if (!currentUser) return;
+            const listContainer = document.getElementById('userOrdersList');
+            const myOrders = orders.filter(o => o.userUid === currentUser.uid);
+
+            if (myOrders.length === 0) {
+                listContainer.innerHTML = `<p class="text-center text-slate-400 text-xs py-8">Belum ada pesanan aktif.</p>`;
+            } else {
+                listContainer.innerHTML = myOrders.map(o => {
+                    let badgeColor = "bg-amber-100 text-amber-800";
+                    if (o.status === "Sedang Dibuat") badgeColor = "bg-blue-100 text-blue-800";
+                    if (o.status === "Siap Diantar") badgeColor = "bg-purple-100 text-purple-800";
+                    if (o.status === "Selesai") badgeColor = "bg-emerald-100 text-emerald-800";
+
+                    return `
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-mono text-xs font-bold text-slate-500">${o.id}</span>
+                                <span class="text-xs font-bold px-3 py-1 rounded-full ${badgeColor}">
+                                    ${o.status}
+                                </span>
+                            </div>
+                            <div class="text-xs text-slate-700 font-medium space-y-1 my-2">
+                                ${o.items.map(i => `<div>- ${i.name} <span class="text-slate-500">(${i.toppingName})</span> x${i.qty}</div>`).join('')}
+                            </div>
+                            <div class="flex justify-between items-center mt-3 pt-2 border-t border-slate-200/60 text-[11px] text-slate-400">
+                                <span>${o.timeString || ''}</span>
+                                <span class="font-black text-brand-darkgreen text-sm">Rp ${o.total.toLocaleString('id-ID')}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            document.getElementById('userOrdersModal').classList.remove('hidden');
+        }
+
+        function closeUserOrdersModal() {
+            document.getElementById('userOrdersModal').classList.add('hidden');
+        }
+
         // --- 6. TESTIMONIALS & REVIEWS LOGIC ---
         function renderReviews() {
             const container = document.getElementById('reviewsContainer');
@@ -1601,12 +1756,14 @@
             const avatarEl = document.getElementById('userAvatar');
             const adminNavBtn = document.getElementById('adminPortalNavBtn');
             const pointsNavBtn = document.getElementById('userPointsNavBtn');
+            const userOrdersNavBtn = document.getElementById('userOrdersNavBtn');
             const pointsValEl = document.getElementById('navUserPoints');
 
             if (activeAdmin) {
                 sessionBar.classList.remove('hidden');
                 adminNavBtn.classList.remove('hidden');
                 pointsNavBtn.classList.add('hidden');
+                userOrdersNavBtn.classList.add('hidden');
                 userNameEl.innerText = `Admin: ${activeAdmin}`;
                 userMetaEl.innerText = "Pengelola Utama Seger.in";
                 avatarEl.innerText = activeAdmin.charAt(0);
@@ -1616,6 +1773,7 @@
                 sessionBar.classList.remove('hidden');
                 adminNavBtn.classList.add('hidden');
                 pointsNavBtn.classList.remove('hidden');
+                userOrdersNavBtn.classList.remove('hidden');
 
                 const userPt = (pointsData[currentUser.uid] && pointsData[currentUser.uid].points) || 0;
                 pointsValEl.innerText = userPt.toLocaleString('id-ID');
@@ -1631,6 +1789,7 @@
                 sessionBar.classList.add('hidden');
                 adminNavBtn.classList.add('hidden');
                 pointsNavBtn.classList.add('hidden');
+                userOrdersNavBtn.classList.add('hidden');
             }
         }
 
@@ -1672,7 +1831,7 @@
             }
         }
 
-        // --- 9. LOYALTY POINTS MODAL & REDEMPTION ---
+        // --- 9. LOYALTY POINTS MODAL & REDEMPTION & REFERRAL ---
         function openPointsModal() {
             if (!currentUser) {
                 openLoginModal();
@@ -1685,6 +1844,9 @@
             document.getElementById('modalPointsAmount').innerText = userPt.toLocaleString('id-ID');
             document.getElementById('modalPointsPhone').innerText = currentUser.email || currentUser.phone;
             document.getElementById('pointsProgressText').innerText = `${userPt.toLocaleString('id-ID')} / 1.000 Poin`;
+
+            // Set Referral Code Input
+            document.getElementById('userReferralCode').value = "SEGER-" + currentUser.uid.slice(0, 6).toUpperCase();
 
             const pct = Math.min(100, Math.floor((userPt / 1000) * 100));
             document.getElementById('pointsProgressBar').style.width = pct + '%';
@@ -1705,6 +1867,13 @@
 
         function closePointsModal() {
             document.getElementById('pointsModal').classList.add('hidden');
+        }
+
+        function copyReferralCode() {
+            const codeInput = document.getElementById('userReferralCode');
+            codeInput.select();
+            navigator.clipboard.writeText(codeInput.value);
+            showToast("Kode referral berhasil disalin!");
         }
 
         function redeemFreeJuice() {
