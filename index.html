@@ -49,6 +49,10 @@
             #printableArea, #printableArea * { visibility: visible; }
             #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
         }
+        .step-active { color: #047857; font-weight: 700; }
+        .step-inactive { color: #94A3B8; }
+        .step-line-active { background-color: #10B981; }
+        .step-line-inactive { background-color: #E2E8F0; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-emerald-50 via-amber-50 to-orange-50 min-h-screen text-slate-800 flex flex-col font-sans">
@@ -161,13 +165,13 @@
             </div>
         </div>
 
-        <!-- ==================== USER PAGE: MENU CATALOG ==================== -->
+        <!-- USER PAGE: MENU CATALOG -->
         <section id="catalogPage" class="space-y-10">
             <div>
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <div>
                         <h3 class="text-2xl font-heading font-extrabold text-slate-800">Menu Jus Buah Segar</h3>
-                        <p class="text-xs sm:text-sm text-slate-500">Pilih jus buah bergizi & topping lezat kesukaanmu</p>
+                        <p class="text-xs sm:text-sm text-slate-500">Pilih jus buah bergizi & kustomisasi rasa kesukaanmu</p>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl text-xs flex items-center space-x-3">
                         <div class="w-8 h-8 rounded-xl bg-amber-400 text-slate-900 font-bold flex items-center justify-center">
@@ -182,7 +186,6 @@
 
                 <!-- Juice Cards Grid -->
                 <div id="juiceGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Dynamic render from JS / Firestore -->
                 </div>
             </div>
 
@@ -202,11 +205,10 @@
 
                 <!-- Reviews Summary & Grid -->
                 <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Dynamically populated from Firestore -->
                 </div>
             </div>
 
-            <!-- GALERI ARTIS / TOKOH TERKENAL SECTION -->
+            <!-- GALERI ARTIS SECTION -->
             <div class="bg-white rounded-3xl border border-emerald-100 shadow-lg p-6 sm:p-8 space-y-6">
                 <div class="border-b pb-4">
                     <span class="bg-amber-100 text-amber-800 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
@@ -218,12 +220,11 @@
 
                 <!-- Gallery Grid -->
                 <div id="celebrityGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <!-- Rendered dynamically by JS -->
                 </div>
             </div>
         </section>
 
-        <!-- ==================== ADMIN DASHBOARD ==================== -->
+        <!-- ADMIN DASHBOARD -->
         <section id="adminDashboard" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-3xl border border-emerald-100 shadow-md">
                 
@@ -252,11 +253,17 @@
                     <button id="tabBtnOrders" onclick="switchAdminTab('orders')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-brand-darkgreen text-brand-darkgreen whitespace-nowrap">
                         <i class="fa-solid fa-list-check mr-2"></i>Daftar Pesanan
                     </button>
+                    <button id="tabBtnSettings" onclick="switchAdminTab('settings')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
+                        <i class="fa-solid fa-gears mr-2"></i>Pengaturan Toko
+                    </button>
                     <button id="tabBtnReports" onclick="switchAdminTab('reports')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-chart-line mr-2"></i>Laporan Penjualan
                     </button>
                     <button id="tabBtnStocks" onclick="switchAdminTab('stocks')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-boxes-stacked mr-2"></i>Kelola Menu & Stok
+                    </button>
+                    <button id="tabBtnToppings" onclick="switchAdminTab('toppings')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
+                        <i class="fa-solid fa-cheese mr-2"></i>Kelola Stok Topping
                     </button>
                     <button id="tabBtnPoints" onclick="switchAdminTab('points')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-star mr-2"></i>Data Poin Pelanggan
@@ -268,7 +275,6 @@
 
                 <!-- TAB 1: ORDERS MANAGEMENT -->
                 <div id="adminTabOrders" class="space-y-6">
-                    <!-- Metrics -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl">
                             <p class="text-xs text-emerald-600 font-semibold uppercase">Total Pesanan</p>
@@ -288,21 +294,19 @@
                         </div>
                     </div>
 
-                    <!-- Table -->
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm text-slate-600">
                             <thead class="bg-slate-50 text-slate-700 text-xs uppercase font-bold border-b border-slate-200">
                                 <tr>
                                     <th class="p-3.5">ID & Pemesan</th>
                                     <th class="p-3.5">Kelas & No. HP</th>
-                                    <th class="p-3.5">Detail Pesanan</th>
-                                    <th class="p-3.5">Total & Catatan</th>
+                                    <th class="p-3.5">Detail Pesanan & Kustomisasi</th>
+                                    <th class="p-3.5">Metode & Total</th>
                                     <th class="p-3.5">Status & Poin Reward</th>
                                     <th class="p-3.5 text-center">Aksi WA</th>
                                 </tr>
                             </thead>
                             <tbody id="ordersTableBody" class="divide-y divide-slate-100">
-                                <!-- Dynamic Orders -->
                             </tbody>
                         </table>
                         <div id="emptyOrdersNotice" class="hidden py-12 text-center text-slate-400">
@@ -312,28 +316,63 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: AUTOMATED SALES REPORT -->
+                <!-- TAB 2: PENGATURAN TOKO (TOGGLE QRIS) -->
+                <div id="adminTabSettings" class="hidden space-y-6">
+                    <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl max-w-xl">
+                        <h3 class="font-bold text-slate-800 text-lg mb-2">Pengaturan Fitur Pembayaran</h3>
+                        <p class="text-xs text-slate-500 mb-6">Nyalakan atau matikan opsi pembayaran QRIS/Transfer untuk pelanggan secara realtime.</p>
+                        
+                        <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-qrcode"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-800">Status Fitur QRIS / Transfer</h4>
+                                    <p id="qrisStatusLabel" class="text-xs text-emerald-600 font-semibold">Aktif (Pelanggan dapat memilih QRIS)</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="toggleQrisSwitch" onchange="toggleQrisFeature(this.checked)" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-green"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: AUTOMATED SALES REPORT -->
                 <div id="adminTabReports" class="hidden space-y-6">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
                         <div>
                             <h3 class="font-bold text-slate-800 text-lg">Laporan Penjualan Otomatis (Realtime)</h3>
-                            <p class="text-xs text-slate-500">Filter data penjualan dan unduh/cetak laporan</p>
+                            <p class="text-xs text-slate-500">Filter berdasarkan rentang tanggal atau preset waktu</p>
                         </div>
-                        <div class="flex items-center space-x-2 w-full sm:w-auto">
-                            <select id="reportFilterRange" onchange="renderSalesReport()" class="px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-semibold focus:outline-none">
-                                <option value="all">Semua Waktu</option>
-                                <option value="today">Hari Ini</option>
-                            </select>
+                        
+                        <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+                            <div class="flex bg-white p-1 rounded-xl border border-slate-300 text-xs font-semibold">
+                                <button onclick="setReportPreset('today')" class="px-2.5 py-1 rounded-lg hover:bg-slate-100">Hari Ini</button>
+                                <button onclick="setReportPreset('week')" class="px-2.5 py-1 rounded-lg hover:bg-slate-100">Minggu Ini</button>
+                                <button onclick="setReportPreset('month')" class="px-2.5 py-1 rounded-lg hover:bg-slate-100">Bulan Ini</button>
+                                <button onclick="setReportPreset('all')" class="px-2.5 py-1 rounded-lg hover:bg-slate-100">Semua</button>
+                            </div>
+
+                            <div class="flex items-center space-x-1 text-xs">
+                                <input type="date" id="reportStartDate" class="p-1.5 bg-white border border-slate-300 rounded-lg text-xs">
+                                <span class="text-slate-400">-</span>
+                                <input type="date" id="reportEndDate" class="p-1.5 bg-white border border-slate-300 rounded-lg text-xs">
+                                <button onclick="renderSalesReport()" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-black">
+                                    Filter
+                                </button>
+                            </div>
+
                             <button onclick="printSalesReport()" class="bg-brand-darkgreen hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition flex items-center space-x-1">
                                 <i class="fa-solid fa-print mr-1"></i>
-                                <span>Cetak Laporan</span>
+                                <span>Cetak</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Printable Container -->
                     <div id="printableArea" class="space-y-6">
-                        <!-- Summary Cards -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div class="bg-gradient-to-br from-emerald-500 to-teal-700 text-white p-5 rounded-2xl shadow-sm">
                                 <p class="text-xs uppercase font-semibold text-emerald-100">Total Pemasukan (Omset)</p>
@@ -352,9 +391,7 @@
                             </div>
                         </div>
 
-                        <!-- Canvas Charts Grid -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Revenue/Sales Bar Chart -->
                             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                                 <h4 class="font-bold text-slate-800 text-sm mb-4 flex items-center">
                                     <i class="fa-solid fa-chart-column text-brand-orange mr-2"></i>
@@ -365,7 +402,6 @@
                                 </div>
                             </div>
 
-                            <!-- Topping Distribution Donut Chart -->
                             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
                                 <h4 class="font-bold text-slate-800 text-sm mb-4 flex items-center">
                                     <i class="fa-solid fa-chart-pie text-brand-darkgreen mr-2"></i>
@@ -379,16 +415,16 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: STOCKS & MENU MANAGEMENT -->
+                <!-- TAB 4: STOCKS & MENU MANAGEMENT (WITH EDIT PRICE) -->
                 <div id="adminTabStocks" class="hidden space-y-4">
                     <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-5">
                         <div class="flex justify-between items-center mb-4">
                             <div>
                                 <h4 class="text-sm font-bold text-slate-800 mb-1 flex items-center">
                                     <i class="fa-solid fa-boxes-stacked text-brand-darkgreen mr-2"></i>
-                                    Kelola Menu & Stok Bahan Jus
+                                    Kelola Menu, Harga & Stok Bahan Jus
                                 </h4>
-                                <p class="text-xs text-slate-500">Atur ketersediaan porsi atau hapus menu dari database.</p>
+                                <p class="text-xs text-slate-500">Ubah harga jual (jika bahan baku naik) atau atur stok porsi.</p>
                             </div>
                             <button onclick="openAddMenuModal()" class="bg-brand-green hover:bg-emerald-600 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm">
                                 + Tambah Menu Baru
@@ -396,12 +432,32 @@
                         </div>
 
                         <div id="stockControlsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <!-- Stock & Product controls dynamically rendered here -->
                         </div>
                     </div>
                 </div>
 
-                <!-- TAB 4: LOYALTY POINTS DATA -->
+                <!-- TAB 5: TOPPING MANAGEMENT -->
+                <div id="adminTabToppings" class="hidden space-y-4">
+                    <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-5">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800 mb-1 flex items-center">
+                                    <i class="fa-solid fa-cheese text-amber-600 mr-2"></i>
+                                    Kelola Stok Topping & Add-ons Mandiri
+                                </h4>
+                                <p class="text-xs text-slate-500">Atur harga tambahan dan stok porsi topping secara terpisah.</p>
+                            </div>
+                            <button onclick="openAddToppingModal()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm">
+                                + Tambah Topping Baru
+                            </button>
+                        </div>
+
+                        <div id="toppingControlsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 6: LOYALTY POINTS DATA -->
                 <div id="adminTabPoints" class="hidden space-y-4">
                     <div class="flex justify-between items-center bg-amber-50 p-4 rounded-2xl border border-amber-200">
                         <div>
@@ -426,13 +482,12 @@
                                 </tr>
                             </thead>
                             <tbody id="pointsTableBody" class="divide-y divide-slate-100">
-                                <!-- Dynamic Loyalty Points -->
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- TAB 5: KELOLA GALERI ARTIS -->
+                <!-- TAB 7: KELOLA GALERI ARTIS -->
                 <div id="adminTabGallery" class="hidden space-y-4">
                     <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-5">
                         <div class="flex justify-between items-center mb-4">
@@ -449,7 +504,6 @@
                         </div>
 
                         <div id="adminGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <!-- Controls dynamically rendered here -->
                         </div>
                     </div>
                 </div>
@@ -482,11 +536,11 @@
         </div>
     </footer>
 
-    <!-- ==================== MODALS & DRAWERS ==================== -->
+    <!-- MODALS & DRAWERS -->
 
     <!-- USER ORDERS TRACKING MODAL -->
     <div id="userOrdersModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[80vh] flex flex-col">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[85vh] flex flex-col">
             <button onclick="closeUserOrdersModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
@@ -494,13 +548,23 @@
                 <i class="fa-solid fa-clock-rotate-left text-brand-darkgreen text-xl"></i>
                 <h3 class="text-xl font-heading font-black text-slate-800">Status Pesanan Saya</h3>
             </div>
-            <div id="userOrdersList" class="overflow-y-auto space-y-3 pr-1">
-                <!-- Dynamic user orders list -->
+            <div id="userOrdersList" class="overflow-y-auto space-y-4 pr-1">
             </div>
         </div>
     </div>
 
-    <!-- LOGIN SISWA MODAL (With Google Sign-In, Referral Code & Email/Password) -->
+    <!-- PRODUCT CUSTOMIZATION MODAL -->
+    <div id="customizeModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative my-8">
+            <button onclick="closeCustomizeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div id="customizeModalBody">
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SISWA MODAL -->
     <div id="loginModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative my-8">
             <button onclick="closeLoginModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
@@ -556,7 +620,7 @@
                         <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Kode Referral Teman (Opsional)</label>
                         <input type="text" id="inputReferralCode" placeholder="Contoh: SEGER-A1B2C3" 
                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs font-mono uppercase">
-                        <p class="text-[10px] text-brand-orange mt-0.5">*Dapatkan +50 Poin bonus selamat datang!</p>
+                        <p class="text-[10px] text-brand-orange mt-0.5">*Bonus +50 Poin akan dicairkan setelah transaksi pertama selesai!</p>
                     </div>
                 </div>
 
@@ -596,14 +660,13 @@
                     <i class="fa-solid fa-user-shield"></i>
                 </div>
                 <h3 class="text-xl font-heading font-black text-slate-800">Login Admin Seger.in</h3>
-                <p class="text-xs text-slate-500">Pilih nama admin terdaftar dan masukkan password</p>
+                <p class="text-xs text-slate-500">Masukkan Username / Email Admin dan Kata Sandi</p>
             </div>
             <form onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Pilih Nama Admin</label>
-                    <select id="selectAdminName" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white font-medium">
-                        <!-- Rendered by JS -->
-                    </select>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Username / Email Admin</label>
+                    <input type="text" id="inputAdminUsername" required placeholder="Masukkan nama atau username admin" 
+                           class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm font-medium">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Kata Sandi (Password)</label>
@@ -611,16 +674,16 @@
                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
                 </div>
                 <div id="adminLoginError" class="hidden text-xs text-red-600 bg-red-50 p-3 rounded-xl border border-red-200 font-semibold text-center">
-                    Password salah! Silakan coba lagi.
+                    Username atau Password salah!
                 </div>
-                <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-3 rounded-xl text-sm shadow-md transition">
+                <button type="submit" id="btnAdminLoginSubmit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-3 rounded-xl text-sm shadow-md transition">
                     Masuk Ke Dashboard Admin
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- ADMIN: ADD / EDIT MENU MODAL -->
+    <!-- ADMIN: ADD MENU MODAL -->
     <div id="addMenuModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative my-8">
             <button onclick="closeAddMenuModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
@@ -631,7 +694,7 @@
                     <i class="fa-solid fa-wine-glass"></i>
                 </div>
                 <h3 class="text-xl font-heading font-black text-slate-800">Tambah Menu Jus Baru</h3>
-                <p class="text-xs text-slate-500">Masukkan rincian buah, foto gambar, dan persediaan stok</p>
+                <p class="text-xs text-slate-500">Masukkan rincian buah, harga dasar, foto gambar, dan stok</p>
             </div>
             <form onsubmit="handleSaveNewMenu(event)" class="space-y-4">
                 <div>
@@ -639,14 +702,19 @@
                     <input type="text" id="newMenuName" required placeholder="Contoh: Jus Alpukat Kocok" 
                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Harga Dasar (Rp)</label>
+                        <input type="number" id="newMenuPrice" min="0" required placeholder="12000" 
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs font-bold text-brand-darkgreen">
+                    </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Kategori</label>
                         <input type="text" id="newMenuCategory" required placeholder="Contoh: Premium" 
                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Stok Awal (Porsi)</label>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Stok (Porsi)</label>
                         <input type="number" id="newMenuStock" min="0" required placeholder="30" 
                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
                     </div>
@@ -655,7 +723,6 @@
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL Foto Gambar Jus</label>
                     <input type="url" id="newMenuImageUrl" required placeholder="https://images.unsplash.com/photo-..." 
                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
-                    <p class="text-[10px] text-slate-400 mt-1">Salin link gambar dari Unsplash atau sumber publik lainnya.</p>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Manfaat Kesehatan</label>
@@ -670,6 +737,44 @@
 
                 <button type="submit" class="w-full bg-brand-green hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
                     Simpan Ke Database Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADMIN: ADD TOPPING MODAL -->
+    <div id="addToppingModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative my-8">
+            <button onclick="closeAddToppingModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl">
+                    <i class="fa-solid fa-cheese"></i>
+                </div>
+                <h3 class="text-xl font-heading font-black text-slate-800">Tambah Topping / Add-on</h3>
+                <p class="text-xs text-slate-500">Atur topping baru beserta harga dan stoknya</p>
+            </div>
+            <form onsubmit="handleSaveNewTopping(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Topping</label>
+                    <input type="text" id="newToppingName" required placeholder="Contoh: Boba Tapioka / Chia Seed" 
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Harga Tambahan (Rp)</label>
+                        <input type="number" id="newToppingPrice" min="0" required placeholder="3000" 
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Stok Porsi</label>
+                        <input type="number" id="newToppingStock" min="0" required placeholder="50" 
+                               class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
+                    Simpan Topping Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
                 </button>
             </form>
         </div>
@@ -752,7 +857,7 @@
         </div>
     </div>
 
-    <!-- POINTS LOYALTY MODAL (FOR CUSTOMER & REFERRAL) -->
+    <!-- POINTS LOYALTY MODAL -->
     <div id="pointsModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
             <button onclick="closePointsModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
@@ -772,7 +877,6 @@
                 <h2 id="modalPointsAmount" class="text-4xl font-heading font-black text-brand-orange my-1">0</h2>
                 <p class="text-[11px] text-slate-600">Akun: <span id="modalPointsPhone" class="font-bold text-slate-800">-</span></p>
                 
-                <!-- Progress Bar to 1000 -->
                 <div class="mt-4">
                     <div class="flex justify-between text-[11px] font-bold text-slate-600 mb-1">
                         <span>Progres Hadiah</span>
@@ -784,10 +888,9 @@
                 </div>
             </div>
 
-            <!-- PROGRAM REFERRAL (AJAK TEMAN) -->
             <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl mb-4">
                 <p class="text-xs font-bold text-slate-700 uppercase mb-0.5">Program Referral (Ajak Teman)</p>
-                <p class="text-[11px] text-slate-500 mb-2">Bagikan kode unik kamu & dapatkan <strong class="text-brand-orange">+50 Poin</strong> saat teman mendaftar!</p>
+                <p class="text-[11px] text-slate-500 mb-2">Bagikan kode unik kamu & dapatkan <strong class="text-brand-orange">+50 Poin</strong> saat teman menyelesaikan transaksi pertama!</p>
                 <div class="flex items-center space-x-2">
                     <input type="text" id="userReferralCode" readonly class="w-full bg-white font-mono font-bold text-xs p-2.5 rounded-xl border border-slate-300 text-center text-slate-800">
                     <button onclick="copyReferralCode()" class="bg-slate-900 hover:bg-brand-darkgreen text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex-shrink-0">
@@ -796,7 +899,6 @@
                 </div>
             </div>
 
-            <!-- Reward Option -->
             <div id="redeemBox" class="border border-slate-200 p-4 rounded-2xl space-y-3">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-lg font-bold">
@@ -814,11 +916,10 @@
         </div>
     </div>
 
-    <!-- CART SIDE DRAWER -->
+    <!-- CART SIDE DRAWER WITH REALTIME DYNAMIC QRIS OPTION -->
     <div id="cartDrawer" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs hidden">
         <div class="absolute right-0 top-0 bottom-0 max-w-md w-full bg-white shadow-2xl flex flex-col justify-between transform transition-transform duration-300">
             
-            <!-- Drawer Header -->
             <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-emerald-50">
                 <div class="flex items-center space-x-2">
                     <i class="fa-solid fa-basket-shopping text-brand-darkgreen text-lg"></i>
@@ -829,12 +930,9 @@
                 </button>
             </div>
 
-            <!-- Drawer Items Content -->
             <div id="cartItemsContainer" class="p-5 flex-grow overflow-y-auto space-y-4">
-                <!-- Dynamic cart items -->
             </div>
 
-            <!-- Drawer Footer -->
             <div class="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Catatan Pengantaran / Kelas</label>
@@ -842,7 +940,28 @@
                               class="w-full p-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-green focus:outline-none"></textarea>
                 </div>
 
-                <div class="flex justify-between items-center pt-2">
+                <!-- DYNAMIC PAYMENT METHOD SELECTION -->
+                <div class="bg-white p-3 rounded-xl border border-slate-200">
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-2">
+                        <i class="fa-solid fa-wallet text-brand-orange mr-1"></i> Pilih Metode Pembayaran:
+                    </label>
+                    <div class="space-y-1.5 text-xs">
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50">
+                            <input type="radio" name="paymentMethod" value="COD" checked class="text-brand-green focus:ring-brand-green">
+                            <span class="font-semibold text-slate-800">Cash on Delivery (COD) / Bayar Cash</span>
+                        </label>
+                        <label id="qrisRadioOption" class="flex items-center space-x-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50">
+                            <input type="radio" name="paymentMethod" id="qrisRadioInput" value="QRIS" class="text-brand-green focus:ring-brand-green">
+                            <span id="qrisRadioText" class="font-semibold text-slate-800">Transfer Bank / QRIS All Payment</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50">
+                            <input type="radio" name="paymentMethod" value="E-Wallet" class="text-brand-green focus:ring-brand-green">
+                            <span class="font-semibold text-slate-800">E-Wallet (Gopay / ShopeePay / OVO)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center pt-1">
                     <span class="text-sm font-semibold text-slate-600">Total Pembayaran:</span>
                     <span id="cartTotalPrice" class="text-xl font-heading font-black text-brand-darkgreen">Rp 0</span>
                 </div>
@@ -863,7 +982,7 @@
 
     <!-- APPLICATION LOGIC & FIREBASE INTEGRATION -->
     <script>
-        // --- 1. FIREBASE CONFIGURATION & INITIALIZATION ---
+        // FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBjs6W7r_MW_TVHDuaOa8ybHRxT4cDR_LY",
             authDomain: "segerin-28ba8.firebaseapp.com",
@@ -877,54 +996,38 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // --- CONSTANTS ---
-        const TOPPING_OPTIONS = [
-            { id: "none", name: "Jus Biasa (Original)", price: 5000 },
-            { id: "keju", name: "Jus + Keju", price: 6000 },
-            { id: "susu", name: "Jus + Susu", price: 6000 },
-            { id: "susu_keju", name: "Jus + Susu + Keju (Komplit)", price: 7000 }
-        ];
-
-        const AUTHORIZED_ADMINS = [
-            "Ahmad Rizky",
-            "Fadri Kusuma Jaya",
-            "Miko Ifan Ariyanto",
-            "Yhoanharendra Andika Putra SAMSI"
-        ];
-
-        const ADMIN_PASSWORD = "Juspastienak";
-
-        // --- GLOBAL STATE ---
+        // GLOBAL STATE
         let currentUser = null; 
         let activeAdmin = JSON.parse(localStorage.getItem('segerin_admin')) || null;
         let cart = [];
         let products = [];
+        let toppings = [];
         let orders = [];
         let reviews = [];
         let pointsData = {};
         let celebrities = [];
-        let selectedToppings = {};
+        let isQrisEnabled = true;
         let currentRatingInput = 5;
         let authMode = 'login';
         let previousOrderCount = 0;
+        let selectedProductForCustomization = null;
 
-        // --- INITIALIZATION ---
+        // Security State
+        let failedAdminLoginAttempts = 0;
+        let adminLoginLockoutTime = 0;
+
         window.onload = function() {
-            populateAdminDropdown();
             initAuthListener();
             listenToProductsCloud();
+            listenToToppingsCloud();
             listenToOrdersCloud();
             listenToReviewsCloud();
             listenToPointsCloud();
             listenToGalleryCloud();
+            listenToSettingsCloud();
+            setReportPreset('all');
         };
 
-        function populateAdminDropdown() {
-            const select = document.getElementById('selectAdminName');
-            select.innerHTML = AUTHORIZED_ADMINS.map(name => `<option value="${name}">${name}</option>`).join('');
-        }
-
-        // --- 2. FIREBASE AUTHENTICATION ---
         function initAuthListener() {
             auth.onAuthStateChanged(user => {
                 if (user) {
@@ -936,7 +1039,9 @@
                             class: profile.class || "Umum",
                             phone: profile.phone || "08123456789",
                             email: user.email,
-                            photoURL: user.photoURL
+                            photoURL: user.photoURL,
+                            referredBy: profile.referredBy || null,
+                            firstOrderCompleted: profile.firstOrderCompleted || false
                         };
                         updateUserUI();
                         updateCartBadge();
@@ -946,6 +1051,61 @@
                     updateUserUI();
                     updateCartBadge();
                 }
+            });
+        }
+
+        function listenToSettingsCloud() {
+            db.collection('settings').doc('storeConfig').onSnapshot(doc => {
+                if (doc.exists) {
+                    isQrisEnabled = doc.data().qrisEnabled !== false;
+                } else {
+                    db.collection('settings').doc('storeConfig').set({ qrisEnabled: true });
+                    isQrisEnabled = true;
+                }
+                applyQrisSettingsUI();
+            });
+        }
+
+        function applyQrisSettingsUI() {
+            const toggleSwitch = document.getElementById('toggleQrisSwitch');
+            const statusLabel = document.getElementById('qrisStatusLabel');
+            const qrisOption = document.getElementById('qrisRadioOption');
+            const qrisInput = document.getElementById('qrisRadioInput');
+            const qrisText = document.getElementById('qrisRadioText');
+
+            if (toggleSwitch) toggleSwitch.checked = isQrisEnabled;
+            
+            if (isQrisEnabled) {
+                if (statusLabel) {
+                    statusLabel.innerText = "Aktif (Pelanggan dapat memilih QRIS)";
+                    statusLabel.className = "text-xs text-emerald-600 font-semibold";
+                }
+                if (qrisOption) {
+                    qrisOption.classList.remove('opacity-40', 'cursor-not-allowed');
+                    qrisInput.disabled = false;
+                    qrisText.innerText = "Transfer Bank / QRIS All Payment";
+                }
+            } else {
+                if (statusLabel) {
+                    statusLabel.innerText = "Nonaktif (QRIS dimatikan sementara oleh Admin)";
+                    statusLabel.className = "text-xs text-red-500 font-semibold";
+                }
+                if (qrisOption) {
+                    qrisOption.classList.add('opacity-40', 'cursor-not-allowed');
+                    qrisInput.disabled = true;
+                    qrisInput.checked = false;
+                    qrisText.innerText = "Transfer Bank / QRIS (Sedang Nonaktif)";
+                }
+            }
+        }
+
+        function toggleQrisFeature(enabled) {
+            if (!activeAdmin) {
+                showToast("Akses ditolak. Hanya Admin!", "error");
+                return;
+            }
+            db.collection('settings').doc('storeConfig').set({ qrisEnabled: enabled }, { merge: true }).then(() => {
+                showToast(enabled ? "Fitur QRIS Diaktifkan!" : "Fitur QRIS Dinonaktifkan!");
             });
         }
 
@@ -985,10 +1145,10 @@
                             email: user.email,
                             phone: "08814187481",
                             class: "Siswa",
+                            firstOrderCompleted: false,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
                         
-                        // Default initial point record
                         db.collection('points').doc(user.uid).set({
                             points: 0,
                             name: user.displayName,
@@ -1016,31 +1176,16 @@
                 const studentClass = document.getElementById('inputClass').value.trim();
                 const refCode = document.getElementById('inputReferralCode').value.trim().toUpperCase();
 
-                let initialBonusPoints = 0;
-
                 auth.createUserWithEmailAndPassword(email, password).then(res => {
                     const newUid = res.user.uid;
+                    let referredByUid = null;
 
-                    // If referral code provided, verify and give bonus points
                     if (refCode && refCode.startsWith('SEGER-')) {
-                        initialBonusPoints = 50; // Bonus for new user
-                        const referrerUidPrefix = refCode.replace('SEGER-', '').toLowerCase();
-
-                        // Search referrer uid matching prefix
-                        db.collection('points').get().then(snap => {
-                            snap.forEach(doc => {
-                                if (doc.id.toLowerCase().startsWith(referrerUidPrefix)) {
-                                    const currentRefPts = doc.data().points || 0;
-                                    db.collection('points').doc(doc.id).update({
-                                        points: currentRefPts + 50
-                                    });
-                                }
-                            });
-                        });
+                        referredByUid = refCode.replace('SEGER-', '').toLowerCase();
                     }
 
                     db.collection('points').doc(newUid).set({
-                        points: initialBonusPoints,
+                        points: 0,
                         name: name,
                         class: studentClass,
                         phone: phone
@@ -1051,15 +1196,13 @@
                         class: studentClass,
                         phone: phone,
                         email: email,
+                        referredBy: referredByUid,
+                        firstOrderCompleted: false,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 }).then(() => {
                     closeLoginModal();
-                    if (initialBonusPoints > 0) {
-                        showToast("Akun berhasil dibuat! Bonus +50 Poin Referral ditambahkan!");
-                    } else {
-                        showToast("Akun berhasil dibuat!");
-                    }
+                    showToast("Akun berhasil dibuat!");
                 }).catch(err => {
                     showToast(err.message, "error");
                 });
@@ -1073,7 +1216,6 @@
             }
         }
 
-        // --- 3. CLOUD FIRESTORE REALTIME LISTENERS ---
         function listenToProductsCloud() {
             db.collection('products').onSnapshot(snapshot => {
                 if (snapshot.empty) {
@@ -1089,10 +1231,25 @@
             });
         }
 
+        function listenToToppingsCloud() {
+            db.collection('toppings').onSnapshot(snapshot => {
+                if (snapshot.empty) {
+                    seedInitialToppings();
+                    return;
+                }
+                toppings = [];
+                snapshot.forEach(doc => {
+                    toppings.push({ id: doc.id, ...doc.data() });
+                });
+                renderToppingControls();
+            });
+        }
+
         function seedInitialProducts() {
             const defaultProducts = [
                 {
                     name: "Jus Buah Naga",
+                    price: 10000,
                     category: "Favorit Sehat",
                     benefit: "Kaya Antioksidan & Sehat untuk Pencernaan",
                     desc: "Buah naga merah segar pilihan dengan es batu dingin dan sensasi menyegarkan.",
@@ -1101,6 +1258,7 @@
                 },
                 {
                     name: "Jus Mangga",
+                    price: 12000,
                     category: "Manis Segar",
                     benefit: "Tinggi Vitamin C untuk Daya Tahan Tubuh",
                     desc: "Mangga harum manis segar yang di-blend lembut dengan kelezatan alami.",
@@ -1108,7 +1266,8 @@
                     imageUrl: "https://images.unsplash.com/photo-1546173159-315724a31696?auto=format&fit=crop&w=600&q=80"
                 },
                 {
-                    name: "Jus Jambu",
+                    name: "Jus Jambu Biji",
+                    price: 10000,
                     category: "Kaya Vitamin",
                     benefit: "Meningkatkan Trombosit & Kesegaran Tubuh",
                     desc: "Jambu biji merah manis kaya vitamin C tanpa zat pengawet buatan.",
@@ -1120,6 +1279,18 @@
             defaultProducts.forEach(p => db.collection('products').add(p));
         }
 
+        function seedInitialToppings() {
+            const defaultToppings = [
+                { name: "Tanpa Topping (Original)", price: 0, stock: 999 },
+                { name: "Keju Melimpah", price: 2000, stock: 50 },
+                { name: "Susu Kental Manis", price: 1000, stock: 50 },
+                { name: "Chia Seed Sehat", price: 3000, stock: 30 },
+                { name: "Cincau Hitam Segar", price: 2000, stock: 40 }
+            ];
+
+            defaultToppings.forEach(t => db.collection('toppings').add(t));
+        }
+
         function listenToOrdersCloud() {
             db.collection('orders').onSnapshot(snapshot => {
                 orders = [];
@@ -1127,7 +1298,6 @@
                     orders.push({ docId: doc.id, ...doc.data() });
                 });
 
-                // Trigger Sound Alert for Admin when new order arrives
                 if (activeAdmin && orders.length > previousOrderCount && previousOrderCount !== 0) {
                     playOrderNotificationSound();
                     showToast("🔔 Ada Pesanan Baru Masuk!", "info");
@@ -1148,8 +1318,8 @@
                 const gain = audioContext.createGain();
                 
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, audioContext.currentTime); // D5
-                osc.frequency.setValueAtTime(880, audioContext.currentTime + 0.15); // A5
+                osc.frequency.setValueAtTime(587.33, audioContext.currentTime);
+                osc.frequency.setValueAtTime(880, audioContext.currentTime + 0.15);
                 
                 gain.gain.setValueAtTime(0.3, audioContext.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
@@ -1160,7 +1330,7 @@
                 osc.start();
                 osc.stop(audioContext.currentTime + 0.5);
             } catch (e) {
-                console.log("Audio notify blocked or unsupported", e);
+                console.log("Audio notify error:", e);
             }
         }
 
@@ -1196,7 +1366,6 @@
             });
         }
 
-        // --- 4. CATALOG & DYNAMIC MENU MANAGEMENT ---
         function renderProductGrid() {
             const grid = document.getElementById('juiceGrid');
             if (products.length === 0) {
@@ -1207,13 +1376,11 @@
             grid.innerHTML = products.map(item => {
                 const availableStock = item.stock || 0;
                 const isOutOfStock = availableStock <= 0;
-                const currentToppingId = selectedToppings[item.id] || "none";
-                const activeTopping = TOPPING_OPTIONS.find(t => t.id === currentToppingId) || TOPPING_OPTIONS[0];
+                const basePrice = item.price || 10000;
 
                 return `
                     <div class="bg-white rounded-3xl border border-emerald-100 shadow-sm hover:shadow-xl transition transform hover:-translate-y-1 flex flex-col justify-between overflow-hidden">
                         <div>
-                            <!-- PRODUCT IMAGE -->
                             <div class="relative h-48 w-full bg-slate-100 overflow-hidden">
                                 <img src="${item.imageUrl}" 
                                      alt="${item.name}"
@@ -1233,7 +1400,7 @@
                                 <div class="flex justify-between items-start mb-1">
                                     <h4 class="text-xl font-bold text-slate-800 leading-snug">${item.name}</h4>
                                     <span class="text-lg font-heading font-black text-brand-orange whitespace-nowrap ml-2">
-                                        Rp ${activeTopping.price.toLocaleString('id-ID')}
+                                        Rp ${basePrice.toLocaleString('id-ID')}
                                     </span>
                                 </div>
                                 <p class="text-xs text-slate-500 mb-3 leading-relaxed">${item.desc}</p>
@@ -1242,41 +1409,15 @@
                                     <i class="fa-solid fa-heart-pulse text-amber-500 text-xs mt-0.5"></i>
                                     <p class="text-[11px] text-amber-900 font-medium leading-tight">${item.benefit}</p>
                                 </div>
-
-                                <!-- TOPPING SELECTION -->
-                                <div class="mb-2 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-2">
-                                        <i class="fa-solid fa-cheese text-amber-500 mr-1"></i> Pilih Topping:
-                                    </label>
-                                    <div class="grid grid-cols-2 gap-1.5">
-                                        ${TOPPING_OPTIONS.map(top => {
-                                            const isSelected = currentToppingId === top.id;
-                                            return `
-                                                <button type="button" 
-                                                        onclick="selectTopping('${item.id}', '${top.id}')"
-                                                        class="text-[11px] p-2 rounded-xl border text-left transition font-semibold flex flex-col justify-between ${
-                                                            isSelected 
-                                                            ? 'bg-brand-darkgreen text-white border-brand-darkgreen shadow-sm' 
-                                                            : 'bg-white text-slate-700 border-slate-200 hover:border-emerald-300'
-                                                        }">
-                                                    <span>${top.name}</span>
-                                                    <span class="${isSelected ? 'text-amber-300' : 'text-brand-orange'} text-[10px] font-bold">
-                                                        Rp ${top.price.toLocaleString('id-ID')}
-                                                    </span>
-                                                </button>
-                                            `;
-                                        }).join('')}
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
                         <div class="p-5 pt-0">
-                            <button onclick="addToCart('${item.id}')" 
+                            <button onclick="openCustomizeModal('${item.id}')" 
                                     ${isOutOfStock ? 'disabled' : ''} 
                                     class="w-full ${isOutOfStock ? 'bg-slate-300 cursor-not-allowed text-slate-500' : 'bg-slate-900 hover:bg-brand-darkgreen text-white'} font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 transition shadow-md">
-                                <i class="fa-solid fa-cart-plus text-sm"></i>
-                                <span>${isOutOfStock ? 'Stok Bahan Habis' : 'Tambah Ke Keranjang'}</span>
+                                <i class="fa-solid fa-sliders text-sm"></i>
+                                <span>${isOutOfStock ? 'Stok Bahan Habis' : 'Pesan & Kustomisasi'}</span>
                             </button>
                         </div>
                     </div>
@@ -1284,9 +1425,136 @@
             }).join('');
         }
 
-        function selectTopping(productId, toppingId) {
-            selectedToppings[productId] = toppingId;
-            renderProductGrid();
+        function openCustomizeModal(productId) {
+            if (!currentUser) {
+                openLoginModal();
+                showToast("Silakan login siswa dulu untuk kumpulkan poin!", "info");
+                return;
+            }
+
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            selectedProductForCustomization = product;
+            const container = document.getElementById('customizeModalBody');
+
+            container.innerHTML = `
+                <div class="text-center mb-5">
+                    <h3 class="text-xl font-heading font-black text-slate-800">Kustomisasi ${product.name}</h3>
+                    <p class="text-xs text-slate-500">Pilih tingkat kemanisan, es, ukuran, dan topping tambahan</p>
+                </div>
+
+                <div class="space-y-4 text-xs">
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1.5"><i class="fa-solid fa-cubes-stacked text-amber-500 mr-1"></i>Tingkat Gula (Sugar Level)</label>
+                        <select id="custSugar" class="w-full p-2.5 rounded-xl border border-slate-200 font-medium focus:ring-2 focus:ring-brand-green">
+                            <option value="Normal Sugar (100%)">Normal Sugar (100%)</option>
+                            <option value="Less Sugar (50%)">Less Sugar (50%)</option>
+                            <option value="No Sugar (0%)">No Sugar / Murni Alami (0%)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1.5"><i class="fa-solid fa-snowflake text-blue-400 mr-1"></i>Tingkat Es (Ice Level)</label>
+                        <select id="custIce" class="w-full p-2.5 rounded-xl border border-slate-200 font-medium focus:ring-2 focus:ring-brand-green">
+                            <option value="Normal Ice">Normal Ice</option>
+                            <option value="Less Ice">Less Ice</option>
+                            <option value="No Ice (Tanpa Es)">No Ice (Hangat/Dingin Alami)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1.5"><i class="fa-solid fa-glass-water text-emerald-600 mr-1"></i>Ukuran Gelas (Cup Size)</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="border border-slate-200 p-2.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-brand-green">
+                                <span class="font-bold">Reguler (Standard)</span>
+                                <input type="radio" name="custSize" value="Reguler" checked class="text-brand-green">
+                            </label>
+                            <label class="border border-slate-200 p-2.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-brand-green">
+                                <div>
+                                    <span class="font-bold block">Large (+Rp 3.000)</span>
+                                </div>
+                                <input type="radio" name="custSize" value="Large" class="text-brand-green">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1.5"><i class="fa-solid fa-cheese text-amber-500 mr-1"></i>Tambah Topping Add-ons</label>
+                        <div class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                            ${toppings.map(top => {
+                                if (top.stock <= 0) return '';
+                                return `
+                                    <label class="flex items-center justify-between p-2 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer">
+                                        <span class="font-medium">${top.name}</span>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-brand-orange font-bold">+Rp ${top.price.toLocaleString('id-ID')}</span>
+                                            <input type="checkbox" value="${top.id}" data-name="${top.name}" data-price="${top.price}" class="custToppingCB rounded text-brand-green">
+                                        </div>
+                                    </label>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="confirmAddToCart()" class="w-full bg-gradient-to-r from-brand-green to-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition mt-5">
+                    Masukkan ke Keranjang Belanja <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            `;
+
+            document.getElementById('customizeModal').classList.remove('hidden');
+        }
+
+        function closeCustomizeModal() {
+            document.getElementById('customizeModal').classList.add('hidden');
+        }
+
+        function confirmAddToCart() {
+            if (!selectedProductForCustomization) return;
+
+            const product = selectedProductForCustomization;
+            const sugar = document.getElementById('custSugar').value;
+            const ice = document.getElementById('custIce').value;
+            const sizeRadio = document.querySelector('input[name="custSize"]:checked').value;
+            const sizeExtraPrice = sizeRadio === 'Large' ? 3000 : 0;
+
+            let selectedToppingObjs = [];
+            let toppingsTotalPrice = 0;
+
+            const checkboxes = document.querySelectorAll('.custToppingCB:checked');
+            checkboxes.forEach(cb => {
+                const price = parseInt(cb.getAttribute('data-price')) || 0;
+                const name = cb.getAttribute('data-name');
+                selectedToppingObjs.push(name);
+                toppingsTotalPrice += price;
+            });
+
+            const toppingText = selectedToppingObjs.length > 0 ? selectedToppingObjs.join(', ') : 'Original (Tanpa Topping)';
+            const unitPrice = product.price + sizeExtraPrice + toppingsTotalPrice;
+
+            const cartItemId = `${product.id}_${sugar}_${ice}_${sizeRadio}_${selectedToppingObjs.join('-')}`;
+            const existing = cart.find(item => item.cartItemId === cartItemId);
+
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    cartItemId: cartItemId,
+                    id: product.id,
+                    name: product.name,
+                    sugar: sugar,
+                    ice: ice,
+                    size: sizeRadio,
+                    toppingName: toppingText,
+                    price: unitPrice,
+                    qty: 1
+                });
+            }
+
+            closeCustomizeModal();
+            updateCartBadge();
+            showToast(`${product.name} ditambahkan ke keranjang!`);
         }
 
         function openAddMenuModal() { document.getElementById('addMenuModal').classList.remove('hidden'); }
@@ -1295,6 +1563,7 @@
         function handleSaveNewMenu(e) {
             e.preventDefault();
             const name = document.getElementById('newMenuName').value.trim();
+            const price = parseInt(document.getElementById('newMenuPrice').value) || 0;
             const category = document.getElementById('newMenuCategory').value.trim();
             const stock = parseInt(document.getElementById('newMenuStock').value) || 0;
             const imageUrl = document.getElementById('newMenuImageUrl').value.trim();
@@ -1302,7 +1571,7 @@
             const desc = document.getElementById('newMenuDesc').value.trim();
 
             db.collection('products').add({
-                name, category, stock, imageUrl, benefit, desc,
+                name, price, category, stock, imageUrl, benefit, desc,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 closeAddMenuModal();
@@ -1320,43 +1589,65 @@
             }
         }
 
-        // --- 5. CART & ORDERS ---
-        function addToCart(productId) {
-            if (!currentUser) {
-                openLoginModal();
-                showToast("Silakan login siswa dulu untuk kumpulkan poin!", "info");
-                return;
-            }
+        function openAddToppingModal() { document.getElementById('addToppingModal').classList.remove('hidden'); }
+        function closeAddToppingModal() { document.getElementById('addToppingModal').classList.add('hidden'); }
 
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
+        function handleSaveNewTopping(e) {
+            e.preventDefault();
+            const name = document.getElementById('newToppingName').value.trim();
+            const price = parseInt(document.getElementById('newToppingPrice').value) || 0;
+            const stock = parseInt(document.getElementById('newToppingStock').value) || 0;
 
-            if (product.stock <= 0) {
-                showToast("Maaf, stok bahan jus ini habis!", "error");
-                return;
-            }
+            db.collection('toppings').add({
+                name, price, stock,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                closeAddToppingModal();
+                showToast("Topping baru berhasil disimpan!");
+            }).catch(err => {
+                showToast(`Gagal menyimpan: ${err.message}`, "error");
+            });
+        }
 
-            const chosenToppingId = selectedToppings[productId] || "none";
-            const toppingObj = TOPPING_OPTIONS.find(t => t.id === chosenToppingId) || TOPPING_OPTIONS[0];
+        function renderToppingControls() {
+            const container = document.getElementById('toppingControlsGrid');
+            if (!container) return;
 
-            const cartItemId = `${productId}_${chosenToppingId}`;
-            const existing = cart.find(item => item.cartItemId === cartItemId);
+            container.innerHTML = toppings.map(t => {
+                return `
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between shadow-xs">
+                        <div class="pr-2">
+                            <span class="text-xs font-bold text-slate-800 block">${t.name}</span>
+                            <span class="text-[10px] text-brand-orange font-bold block">Rp ${t.price.toLocaleString('id-ID')}</span>
+                            <button onclick="deleteTopping('${t.id}')" class="text-[10px] text-red-500 hover:underline mt-1">
+                                <i class="fa-solid fa-trash mr-1"></i>Hapus
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-1.5">
+                            <input type="number" min="0" value="${t.stock || 0}" id="toppingStockInput_${t.id}"
+                                   class="w-14 p-1.5 text-center text-xs border border-slate-300 rounded-lg font-bold focus:ring-2 focus:ring-amber-500">
+                            <button onclick="updateToppingStock('${t.id}')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg transition">
+                                Simpan
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
 
-            if (existing) {
-                existing.qty += 1;
-            } else {
-                cart.push({
-                    cartItemId: cartItemId,
-                    id: product.id,
-                    name: product.name,
-                    toppingName: toppingObj.name,
-                    price: toppingObj.price,
-                    qty: 1
+        function updateToppingStock(toppingId) {
+            const newVal = parseInt(document.getElementById(`toppingStockInput_${toppingId}`).value) || 0;
+            db.collection('toppings').doc(toppingId).update({ stock: newVal }).then(() => {
+                showToast("Stok topping diperbarui!");
+            });
+        }
+
+        function deleteTopping(toppingId) {
+            if (confirm("Yakin ingin menghapus topping ini?")) {
+                db.collection('toppings').doc(toppingId).delete().then(() => {
+                    showToast("Topping dihapus.");
                 });
             }
-
-            updateCartBadge();
-            showToast(`${product.name} (${toppingObj.name}) ditambahkan!`);
         }
 
         function updateCartQty(cartItemId, delta) {
@@ -1391,18 +1682,23 @@
                 const itemTotal = item.price * item.qty;
                 total += itemTotal;
                 return `
-                    <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
-                        <div class="flex-grow pr-2">
-                            <h5 class="text-xs font-bold text-slate-800">${item.name}</h5>
-                            <span class="inline-block bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-md my-0.5">
-                                ${item.toppingName}
-                            </span>
-                            <p class="text-[11px] text-brand-darkgreen font-semibold">Rp ${item.price.toLocaleString('id-ID')}</p>
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex flex-col space-y-2">
+                        <div class="flex items-center justify-between">
+                            <h5 class="text-xs font-bold text-slate-800">${item.name} (${item.size})</h5>
+                            <span class="text-xs font-bold text-brand-darkgreen">Rp ${itemTotal.toLocaleString('id-ID')}</span>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="updateCartQty('${item.cartItemId}', -1)" class="w-7 h-7 rounded-lg bg-white border border-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">-</button>
-                            <span class="text-xs font-bold text-slate-800 min-w-[18px] text-center">${item.qty}</span>
-                            <button onclick="updateCartQty('${item.cartItemId}', 1)" class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">+</button>
+                        <div class="text-[10px] text-slate-500 space-y-0.5">
+                            <div><i class="fa-solid fa-cubes-stacked mr-1"></i>${item.sugar}</div>
+                            <div><i class="fa-solid fa-snowflake mr-1"></i>${item.ice}</div>
+                            <div><i class="fa-solid fa-cheese mr-1"></i>${item.toppingName}</div>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-200/60">
+                            <span class="text-[10px] text-slate-400">@ Rp ${item.price.toLocaleString('id-ID')}</span>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="updateCartQty('${item.cartItemId}', -1)" class="w-6 h-6 rounded-lg bg-white border border-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">-</button>
+                                <span class="text-xs font-bold text-slate-800 min-w-[16px] text-center">${item.qty}</span>
+                                <button onclick="updateCartQty('${item.cartItemId}', 1)" class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">+</button>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1445,15 +1741,7 @@
                 return;
             }
 
-            // Deduct Stocks
-            cart.forEach(cItem => {
-                const p = products.find(prod => prod.id === cItem.id);
-                if (p) {
-                    const newStock = Math.max(0, p.stock - cItem.qty);
-                    db.collection('products').doc(p.id).update({ stock: newStock });
-                }
-            });
-
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
             const notes = document.getElementById('orderNotes').value.trim();
             const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             const todayStr = new Date().toISOString().split('T')[0];
@@ -1466,6 +1754,7 @@
                 customerPhone: currentUser.phone,
                 items: [...cart],
                 total: totalAmount,
+                paymentMethod: paymentMethod,
                 notes: notes || 'Tanpa Catatan',
                 status: 'Menunggu',
                 pointsAwarded: 0,
@@ -1475,7 +1764,14 @@
             };
 
             db.collection('orders').add(newOrder).then(() => {
-                // WhatsApp Message
+                cart.forEach(cItem => {
+                    const p = products.find(prod => prod.id === cItem.id);
+                    if (p) {
+                        const newStock = Math.max(0, p.stock - cItem.qty);
+                        db.collection('products').doc(p.id).update({ stock: newStock });
+                    }
+                });
+
                 let waMsg = `*PESANAN BARU SEGER.IN*\n`;
                 waMsg += `ID: ${newOrder.id}\n`;
                 waMsg += `Nama: ${newOrder.customerName}\n`;
@@ -1483,9 +1779,10 @@
                 waMsg += `No HP: ${newOrder.customerPhone}\n\n`;
                 waMsg += `*Detail Pesanan:*\n`;
                 cart.forEach(i => {
-                    waMsg += `- ${i.name} [${i.toppingName}] (${i.qty}x) = Rp ${(i.price * i.qty).toLocaleString('id-ID')}\n`;
+                    waMsg += `- ${i.name} (${i.size}) [${i.sugar}, ${i.ice}, ${i.toppingName}] (${i.qty}x) = Rp ${(i.price * i.qty).toLocaleString('id-ID')}\n`;
                 });
-                waMsg += `\n*Total:* Rp ${totalAmount.toLocaleString('id-ID')}\n`;
+                waMsg += `\n*Pembayaran:* ${paymentMethod}\n`;
+                waMsg += `*Total:* Rp ${totalAmount.toLocaleString('id-ID')}\n`;
                 waMsg += `*Catatan:* ${newOrder.notes}\n\n`;
                 waMsg += `Mohon diproses ya admin! Terima kasih.`;
 
@@ -1500,7 +1797,6 @@
             });
         }
 
-        // --- USER ORDER TRACKING LOGIC ---
         function openUserOrdersModal() {
             if (!currentUser) return;
             const listContainer = document.getElementById('userOrdersList');
@@ -1510,21 +1806,36 @@
                 listContainer.innerHTML = `<p class="text-center text-slate-400 text-xs py-8">Belum ada pesanan aktif.</p>`;
             } else {
                 listContainer.innerHTML = myOrders.map(o => {
-                    let badgeColor = "bg-amber-100 text-amber-800";
-                    if (o.status === "Sedang Dibuat") badgeColor = "bg-blue-100 text-blue-800";
-                    if (o.status === "Siap Diantar") badgeColor = "bg-purple-100 text-purple-800";
-                    if (o.status === "Selesai") badgeColor = "bg-emerald-100 text-emerald-800";
+                    let stepIndex = 1; 
+                    if (o.status === "Sedang Dibuat") stepIndex = 2;
+                    if (o.status === "Siap Diantar") stepIndex = 3;
+                    if (o.status === "Selesai") stepIndex = 4;
 
                     return `
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
-                            <div class="flex justify-between items-center mb-2">
+                            <div class="flex justify-between items-center mb-3">
                                 <span class="font-mono text-xs font-bold text-slate-500">${o.id}</span>
-                                <span class="text-xs font-bold px-3 py-1 rounded-full ${badgeColor}">
-                                    ${o.status}
+                                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700">
+                                    Metode: ${o.paymentMethod || 'COD'}
                                 </span>
                             </div>
-                            <div class="text-xs text-slate-700 font-medium space-y-1 my-2">
-                                ${o.items.map(i => `<div>- ${i.name} <span class="text-slate-500">(${i.toppingName})</span> x${i.qty}</div>`).join('')}
+
+                            <div class="my-4 px-2">
+                                <div class="flex items-center justify-between text-[10px] text-center font-bold mb-2">
+                                    <div class="${stepIndex >= 1 ? 'step-active' : 'step-inactive'} w-1/4">Diterima</div>
+                                    <div class="${stepIndex >= 2 ? 'step-active' : 'step-inactive'} w-1/4">Dibuat</div>
+                                    <div class="${stepIndex >= 3 ? 'step-active' : 'step-inactive'} w-1/4">Diantar</div>
+                                    <div class="${stepIndex >= 4 ? 'step-active' : 'step-inactive'} w-1/4">Selesai</div>
+                                </div>
+                                <div class="flex items-center justify-between relative">
+                                    <div class="w-full h-1.5 bg-slate-200 rounded-full flex justify-between items-center relative overflow-hidden">
+                                        <div class="h-full bg-brand-green transition-all duration-500" style="width: ${((stepIndex - 1) / 3) * 100}%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-xs text-slate-700 font-medium space-y-1 my-2 bg-white p-3 rounded-xl border border-slate-100">
+                                ${o.items.map(i => `<div>• ${i.name} (${i.size || 'Reguler'}) - ${i.sugar || 'Normal'} x${i.qty}</div>`).join('')}
                             </div>
                             <div class="flex justify-between items-center mt-3 pt-2 border-t border-slate-200/60 text-[11px] text-slate-400">
                                 <span>${o.timeString || ''}</span>
@@ -1541,7 +1852,6 @@
             document.getElementById('userOrdersModal').classList.add('hidden');
         }
 
-        // --- 6. TESTIMONIALS & REVIEWS LOGIC ---
         function renderReviews() {
             const container = document.getElementById('reviewsContainer');
             if (reviews.length === 0) {
@@ -1593,11 +1903,7 @@
             currentRatingInput = rating;
             const stars = document.getElementById('starRatingInput').children;
             for (let i = 0; i < 5; i++) {
-                if (i < rating) {
-                    stars[i].className = "fa-solid fa-star cursor-pointer text-amber-400";
-                } else {
-                    stars[i].className = "fa-solid fa-star cursor-pointer text-slate-200";
-                }
+                stars[i].className = i < rating ? "fa-solid fa-star cursor-pointer text-amber-400" : "fa-solid fa-star cursor-pointer text-slate-200";
             }
         }
 
@@ -1620,7 +1926,6 @@
             });
         }
 
-        // --- 7. CELEBRITY GALLERY LOGIC (USER & ADMIN) ---
         function renderUserGallery() {
             const grid = document.getElementById('celebrityGalleryGrid');
             if (!grid) return;
@@ -1673,13 +1978,8 @@
             `).join('');
         }
 
-        function openAddGalleryModal() {
-            document.getElementById('addGalleryModal').classList.remove('hidden');
-        }
-
-        function closeAddGalleryModal() {
-            document.getElementById('addGalleryModal').classList.add('hidden');
-        }
+        function openAddGalleryModal() { document.getElementById('addGalleryModal').classList.remove('hidden'); }
+        function closeAddGalleryModal() { document.getElementById('addGalleryModal').classList.add('hidden'); }
 
         function handleSaveGallery(e) {
             e.preventDefault();
@@ -1718,24 +2018,50 @@
             }
         }
 
-        // --- 8. ADMIN DASHBOARD & STATUS MANAGEMENT ---
         function handleAdminLogin(e) {
             e.preventDefault();
-            const selectedAdmin = document.getElementById('selectAdminName').value;
-            const inputPass = document.getElementById('inputAdminPass').value;
+
+            if (Date.now() < adminLoginLockoutTime) {
+                const remainingSecs = Math.ceil((adminLoginLockoutTime - Date.now()) / 1000);
+                showToast(`Terlalu banyak percobaan! Coba lagi dalam ${remainingSecs} detik.`, "error");
+                return;
+            }
+
+            const usernameInput = document.getElementById('inputAdminUsername').value.trim();
+            const passInput = document.getElementById('inputAdminPass').value.trim();
             const errorEl = document.getElementById('adminLoginError');
 
-            if (inputPass === ADMIN_PASSWORD) {
-                activeAdmin = selectedAdmin;
+            const ALLOWED_ADMINS = [
+                "admin",
+                "ahmad rizky",
+                "fadri kusuma jaya",
+                "miko ofan ariyanto",
+                "yhoanharendra andika putra samsi"
+            ];
+
+            const isValidAdminName = ALLOWED_ADMINS.includes(usernameInput.toLowerCase());
+            const isValidPassword = (passInput === "Juspastienak");
+
+            if (isValidAdminName && isValidPassword) {
+                failedAdminLoginAttempts = 0;
+                activeAdmin = usernameInput;
                 localStorage.setItem('segerin_admin', JSON.stringify(activeAdmin));
                 errorEl.classList.add('hidden');
+                document.getElementById('inputAdminUsername').value = '';
                 document.getElementById('inputAdminPass').value = '';
                 closeAdminLoginModal();
                 updateUserUI();
                 showAdminDashboard();
-                showToast(`Halo Admin ${selectedAdmin}!`);
+                showToast(`Halo Admin ${usernameInput}!`);
             } else {
-                errorEl.classList.remove('hidden');
+                failedAdminLoginAttempts++;
+                if (failedAdminLoginAttempts >= 5) {
+                    adminLoginLockoutTime = Date.now() + 60000;
+                    showToast("Batas 5x kesalahan dicapai! Dikunci sementara 1 menit.", "error");
+                } else {
+                    errorEl.innerText = `Username atau Password salah! (Percobaan ${failedAdminLoginAttempts}/5)`;
+                    errorEl.classList.remove('hidden');
+                }
             }
         }
 
@@ -1766,7 +2092,7 @@
                 userOrdersNavBtn.classList.add('hidden');
                 userNameEl.innerText = `Admin: ${activeAdmin}`;
                 userMetaEl.innerText = "Pengelola Utama Seger.in";
-                avatarEl.innerText = activeAdmin.charAt(0);
+                avatarEl.innerText = activeAdmin.charAt(0).toUpperCase();
                 avatarEl.className = "w-10 h-10 rounded-full bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-lg";
                 document.getElementById('activeAdminText').innerText = `Logged in as: ${activeAdmin}`;
             } else if (currentUser) {
@@ -1800,18 +2126,43 @@
             const prevStatus = order.status;
             let pointsAwarded = order.pointsAwarded || 0;
 
-            if (newStatus === 'Selesai' && prevStatus !== 'Selesai' && pointsAwarded === 0) {
-                pointsAwarded = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
+            if (newStatus === 'Selesai' && prevStatus !== 'Selesai') {
+                if (pointsAwarded === 0) {
+                    pointsAwarded = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
 
-                const userUid = order.userUid;
-                if (userUid) {
-                    const currentPt = (pointsData[userUid] && pointsData[userUid].points) || 0;
-                    db.collection('points').doc(userUid).set({
-                        points: currentPt + pointsAwarded,
-                        name: order.customerName,
-                        class: order.customerClass,
-                        phone: order.customerPhone
-                    }, { merge: true });
+                    const userUid = order.userUid;
+                    if (userUid) {
+                        const currentPt = (pointsData[userUid] && pointsData[userUid].points) || 0;
+                        db.collection('points').doc(userUid).set({
+                            points: currentPt + pointsAwarded,
+                            name: order.customerName,
+                            class: order.customerClass,
+                            phone: order.customerPhone
+                        }, { merge: true });
+
+                        db.collection('users').doc(userUid).get().then(uDoc => {
+                            if (uDoc.exists) {
+                                const uData = uDoc.data();
+                                if (!uData.firstOrderCompleted) {
+                                    db.collection('users').doc(userUid).update({ firstOrderCompleted: true });
+
+                                    if (uData.referredBy) {
+                                        const referrerPrefix = uData.referredBy;
+                                        db.collection('points').get().then(snap => {
+                                            snap.forEach(pDoc => {
+                                                if (pDoc.id.toLowerCase().startsWith(referrerPrefix.toLowerCase())) {
+                                                    const refCurrentPt = pDoc.data().points || 0;
+                                                    db.collection('points').doc(pDoc.id).update({
+                                                        points: refCurrentPt + 50
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
             }
 
@@ -1831,7 +2182,6 @@
             }
         }
 
-        // --- 9. LOYALTY POINTS MODAL & REDEMPTION & REFERRAL ---
         function openPointsModal() {
             if (!currentUser) {
                 openLoginModal();
@@ -1845,7 +2195,6 @@
             document.getElementById('modalPointsPhone').innerText = currentUser.email || currentUser.phone;
             document.getElementById('pointsProgressText').innerText = `${userPt.toLocaleString('id-ID')} / 1.000 Poin`;
 
-            // Set Referral Code Input
             document.getElementById('userReferralCode').value = "SEGER-" + currentUser.uid.slice(0, 6).toUpperCase();
 
             const pct = Math.min(100, Math.floor((userPt / 1000) * 100));
@@ -1865,9 +2214,7 @@
             modal.classList.remove('hidden');
         }
 
-        function closePointsModal() {
-            document.getElementById('pointsModal').classList.add('hidden');
-        }
+        function closePointsModal() { document.getElementById('pointsModal').classList.add('hidden'); }
 
         function copyReferralCode() {
             const codeInput = document.getElementById('userReferralCode');
@@ -1897,13 +2244,17 @@
                     items: [{
                         cartItemId: "FREE_COMPLET",
                         id: "free",
-                        name: "Jus Bebas Pilih (Kupon Poin)",
-                        toppingName: "Jus + Susu + Keju (Komplit GRATIS)",
+                        name: "Jus Gratis (Penukaran Poin)",
+                        toppingName: "Jus Komplit GRATIS",
+                        sugar: "Normal Sugar",
+                        ice: "Normal Ice",
+                        size: "Reguler",
                         price: 0,
                         qty: 1
                     }],
                     total: 0,
-                    notes: "PENUKARAN 1.000 POIN REWARD (GRATIS JUS KOMPLIT)",
+                    paymentMethod: "Kupon Poin (Gratis)",
+                    notes: "PENUKARAN 1.000 POIN REWARD",
                     status: "Menunggu",
                     pointsAwarded: 0,
                     dateStr: new Date().toISOString().split('T')[0],
@@ -1916,9 +2267,8 @@
             });
         }
 
-        // --- 10. SALES REPORTS & CANVAS CHARTS ---
         function switchAdminTab(tabName) {
-            const tabs = ['orders', 'reports', 'stocks', 'points', 'gallery'];
+            const tabs = ['orders', 'settings', 'reports', 'stocks', 'toppings', 'points', 'gallery'];
             tabs.forEach(t => {
                 const tabEl = document.getElementById(`adminTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
                 const btnEl = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
@@ -1937,13 +2287,42 @@
             }
         }
 
+        function setReportPreset(preset) {
+            const today = new Date();
+            const endDateInput = document.getElementById('reportEndDate');
+            const startDateInput = document.getElementById('reportStartDate');
+
+            endDateInput.value = today.toISOString().split('T')[0];
+
+            if (preset === 'today') {
+                startDateInput.value = today.toISOString().split('T')[0];
+            } else if (preset === 'week') {
+                const pastWeek = new Date();
+                pastWeek.setDate(today.getDate() - 7);
+                startDateInput.value = pastWeek.toISOString().split('T')[0];
+            } else if (preset === 'month') {
+                const pastMonth = new Date();
+                pastMonth.setMonth(today.getMonth() - 1);
+                startDateInput.value = pastMonth.toISOString().split('T')[0];
+            } else if (preset === 'all') {
+                startDateInput.value = '';
+                endDateInput.value = '';
+            }
+
+            renderSalesReport();
+        }
+
         function renderSalesReport() {
-            const filter = document.getElementById('reportFilterRange').value;
-            const todayStr = new Date().toISOString().split('T')[0];
+            const startDateVal = document.getElementById('reportStartDate').value;
+            const endDateVal = document.getElementById('reportEndDate').value;
 
             let filtered = orders.filter(o => o.status === 'Selesai');
-            if (filter === 'today') {
-                filtered = filtered.filter(o => o.dateStr === todayStr);
+
+            if (startDateVal) {
+                filtered = filtered.filter(o => o.dateStr >= startDateVal);
+            }
+            if (endDateVal) {
+                filtered = filtered.filter(o => o.dateStr <= endDateVal);
             }
 
             const totalRevenue = filtered.reduce((sum, o) => sum + o.total, 0);
@@ -1956,7 +2335,8 @@
             let productSales = {};
             products.forEach(p => productSales[p.name] = 0);
 
-            let toppingSales = { "Original": 0, "Jus+Keju": 0, "Jus+Susu": 0, "Komplit": 0 };
+            let toppingSales = {};
+            toppings.forEach(t => toppingSales[t.name] = 0);
 
             filtered.forEach(o => {
                 o.items.forEach(i => {
@@ -1965,10 +2345,14 @@
                     } else {
                         productSales[i.name] = i.qty;
                     }
-                    if (i.toppingName.includes('Komplit')) toppingSales['Komplit'] += i.qty;
-                    else if (i.toppingName.includes('Keju')) toppingSales['Jus+Keju'] += i.qty;
-                    else if (i.toppingName.includes('Susu')) toppingSales['Jus+Susu'] += i.qty;
-                    else toppingSales['Original'] += i.qty;
+
+                    if (i.toppingName) {
+                        if (toppingSales[i.toppingName] !== undefined) {
+                            toppingSales[i.toppingName] += i.qty;
+                        } else {
+                            toppingSales[i.toppingName] = i.qty;
+                        }
+                    }
                 });
             });
 
@@ -2039,7 +2423,7 @@
             const centerY = canvas.height / 2;
             const radius = Math.min(centerX, centerY) - 20;
 
-            const colors = ['#10B981', '#F59E0B', '#3B82F6', '#8B5CF6'];
+            const colors = ['#10B981', '#F59E0B', '#3B82F6', '#8B5CF6', '#EC4899'];
 
             if (total === 0) {
                 ctx.fillStyle = '#CBD5E1';
@@ -2069,22 +2453,21 @@
             ctx.arc(centerX, centerY, radius * 0.5, 0, 2 * Math.PI);
             ctx.fill();
 
-            const legendX = canvas.width - 100;
+            const legendX = canvas.width - 110;
             labels.forEach((label, idx) => {
-                const legendY = 30 + (idx * 25);
+                const legendY = 20 + (idx * 22);
                 ctx.fillStyle = colors[idx % colors.length];
-                ctx.fillRect(legendX, legendY, 12, 12);
+                ctx.fillRect(legendX, legendY, 10, 10);
 
                 ctx.fillStyle = '#334155';
                 ctx.font = '10px Poppins';
                 ctx.textAlign = 'left';
-                ctx.fillText(`${label}: ${dataObj[label]}`, legendX + 18, legendY + 10);
+                ctx.fillText(`${label.slice(0, 12)}: ${dataObj[label]}`, legendX + 14, legendY + 9);
             });
         }
 
         function printSalesReport() { window.print(); }
 
-        // --- 11. RENDERING TABLES & CONTROLS ---
         function renderOrdersTable() {
             const tbody = document.getElementById('ordersTableBody');
             const emptyNotice = document.getElementById('emptyOrdersNotice');
@@ -2102,7 +2485,7 @@
 
             emptyNotice.classList.add('hidden');
             tbody.innerHTML = orders.map(order => {
-                const itemsFormatted = order.items.map(i => `<span class="font-bold text-slate-800">${i.name}</span> <span class="text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded text-[10px] font-semibold">(${i.toppingName})</span> x${i.qty}`).join('<br>');
+                const itemsFormatted = order.items.map(i => `<span class="font-bold text-slate-800">${i.name}</span> (${i.size || 'Reguler'}) <span class="text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded text-[10px] font-semibold">${i.toppingName || 'Original'}</span> x${i.qty}`).join('<br>');
                 
                 let statusBadgeClass = 'bg-amber-100 text-amber-800';
                 if (order.status === 'Sedang Dibuat') statusBadgeClass = 'bg-blue-100 text-blue-800';
@@ -2125,7 +2508,8 @@
                         </td>
                         <td class="p-3.5">
                             <span class="font-bold text-brand-darkgreen block text-xs">Rp ${order.total.toLocaleString('id-ID')}</span>
-                            <span class="text-[10px] text-slate-400 italic">" ${order.notes} "</span>
+                            <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded inline-block my-0.5">${order.paymentMethod || 'COD'}</span>
+                            <span class="text-[10px] text-slate-400 italic block">" ${order.notes} "</span>
                         </td>
                         <td class="p-3.5">
                             <select onchange="updateOrderStatus('${order.docId}', this.value)" class="text-xs font-bold ${statusBadgeClass} border-0 rounded-lg p-1.5 focus:ring-2 focus:ring-brand-green mb-1">
@@ -2157,16 +2541,24 @@
                     <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between shadow-xs">
                         <div class="pr-2">
                             <span class="text-xs font-bold text-slate-800 block">${p.name}</span>
-                            <span class="text-[10px] text-slate-400 block">${p.category}</span>
-                            <button onclick="deleteProduct('${p.id}')" class="text-[10px] text-red-500 hover:underline mt-1">
+                            <span class="text-[10px] text-slate-400 block mb-1">${p.category}</span>
+                            <button onclick="deleteProduct('${p.id}')" class="text-[10px] text-red-500 hover:underline">
                                 <i class="fa-solid fa-trash mr-1"></i>Hapus Menu
                             </button>
                         </div>
-                        <div class="flex items-center space-x-1.5">
-                            <input type="number" min="0" value="${p.stock || 0}" id="stockInput_${p.id}"
-                                   class="w-14 p-1.5 text-center text-xs border border-slate-300 rounded-lg font-bold focus:ring-2 focus:ring-brand-green">
-                            <button onclick="updateProductStock('${p.id}')" class="bg-brand-darkgreen hover:bg-emerald-800 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg transition">
-                                Simpan
+                        <div class="space-y-1.5 text-right">
+                            <div class="flex items-center space-x-1 justify-end">
+                                <span class="text-[10px] text-slate-500">Harga:</span>
+                                <input type="number" min="0" value="${p.price || 0}" id="priceInput_${p.id}"
+                                       class="w-20 p-1 text-right text-xs border border-slate-300 rounded font-bold text-brand-darkgreen focus:ring-2 focus:ring-brand-green">
+                            </div>
+                            <div class="flex items-center space-x-1 justify-end">
+                                <span class="text-[10px] text-slate-500">Stok:</span>
+                                <input type="number" min="0" value="${p.stock || 0}" id="stockInput_${p.id}"
+                                       class="w-16 p-1 text-center text-xs border border-slate-300 rounded font-bold focus:ring-2 focus:ring-brand-green">
+                            </div>
+                            <button onclick="updateProductPriceAndStock('${p.id}')" class="bg-brand-darkgreen hover:bg-emerald-800 text-white text-[10px] font-bold px-2.5 py-1 rounded transition w-full mt-1">
+                                Simpan Perubahan
                             </button>
                         </div>
                     </div>
@@ -2174,10 +2566,15 @@
             }).join('');
         }
 
-        function updateProductStock(productId) {
-            const newVal = parseInt(document.getElementById(`stockInput_${productId}`).value) || 0;
-            db.collection('products').doc(productId).update({ stock: newVal }).then(() => {
-                showToast("Stok berhasil diperbarui!");
+        function updateProductPriceAndStock(productId) {
+            const newPrice = parseInt(document.getElementById(`priceInput_${productId}`).value) || 0;
+            const newStock = parseInt(document.getElementById(`stockInput_${productId}`).value) || 0;
+
+            db.collection('products').doc(productId).update({ 
+                price: newPrice,
+                stock: newStock 
+            }).then(() => {
+                showToast("Harga & Stok berhasil diperbarui!");
             });
         }
 
@@ -2226,7 +2623,6 @@
             }
         }
 
-        // --- 12. NAVIGATION & UI HELPERS ---
         function showAdminDashboard() {
             if (!activeAdmin) {
                 openAdminLoginModal();
