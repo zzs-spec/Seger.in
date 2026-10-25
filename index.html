@@ -15,6 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -719,11 +720,34 @@
                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL Foto Gambar Jus</label>
-                    <input type="url" id="newMenuImageUrl" required placeholder="https://images.unsplash.com/photo-..." 
-                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+
+                <!-- DIRECT FILE UPLOAD OR URL SWITCHER -->
+                <div class="space-y-2 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                    <label class="block text-xs font-bold text-slate-700 uppercase"><i class="fa-solid fa-image text-brand-green mr-1"></i>Foto Gambar Jus</label>
+                    
+                    <div>
+                        <span class="text-[11px] font-semibold text-slate-600 block mb-1">Opsi A: Unggah File Langsung (Firebase Storage)</span>
+                        <input type="file" id="newMenuFileInput" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-100 file:text-brand-darkgreen hover:file:bg-emerald-200 cursor-pointer">
+                    </div>
+
+                    <div class="relative flex py-1 items-center">
+                        <div class="flex-grow border-t border-slate-200"></div>
+                        <span class="flex-shrink mx-2 text-[10px] text-slate-400 font-bold uppercase">Atau URL Eksternal</span>
+                        <div class="flex-grow border-t border-slate-200"></div>
+                    </div>
+
+                    <div>
+                        <input type="url" id="newMenuImageUrl" placeholder="https://images.unsplash.com/photo-..." 
+                               class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                    </div>
+
+                    <!-- UPLOAD PROGRESS STATUS BAR -->
+                    <div id="newMenuUploadProgress" class="hidden text-[11px] font-bold text-brand-darkgreen flex items-center space-x-2 pt-1">
+                        <i class="fa-solid fa-spinner fa-spin text-amber-500"></i>
+                        <span id="newMenuProgressText">Mengunggah gambar... 0%</span>
+                    </div>
                 </div>
+
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Manfaat Kesehatan</label>
                     <input type="text" id="newMenuBenefit" required placeholder="Contoh: Kaya Lemak Baik & Energi" 
@@ -735,7 +759,7 @@
                               class="w-full p-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-green focus:outline-none"></textarea>
                 </div>
 
-                <button type="submit" class="w-full bg-brand-green hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
+                <button type="submit" id="btnSaveNewMenu" class="w-full bg-brand-green hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
                     Simpan Ke Database Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
                 </button>
             </form>
@@ -804,17 +828,40 @@
                     <input type="text" id="galleryArtistRole" placeholder="Contoh: Presenter / Content Creator" 
                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL Foto Artis</label>
-                    <input type="url" id="galleryImageUrl" required placeholder="https://images.unsplash.com/..." 
-                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+
+                <!-- DIRECT FILE UPLOAD OR URL SWITCHER FOR GALLERY -->
+                <div class="space-y-2 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                    <label class="block text-xs font-bold text-slate-700 uppercase"><i class="fa-solid fa-image text-brand-green mr-1"></i>Foto Artis</label>
+                    
+                    <div>
+                        <span class="text-[11px] font-semibold text-slate-600 block mb-1">Opsi A: Unggah File Langsung (Firebase Storage)</span>
+                        <input type="file" id="galleryFileInput" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200 cursor-pointer">
+                    </div>
+
+                    <div class="relative flex py-1 items-center">
+                        <div class="flex-grow border-t border-slate-200"></div>
+                        <span class="flex-shrink mx-2 text-[10px] text-slate-400 font-bold uppercase">Atau URL Eksternal</span>
+                        <div class="flex-grow border-t border-slate-200"></div>
+                    </div>
+
+                    <div>
+                        <input type="url" id="galleryImageUrl" placeholder="https://images.unsplash.com/..." 
+                               class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
+                    </div>
+
+                    <!-- UPLOAD PROGRESS STATUS BAR -->
+                    <div id="galleryUploadProgress" class="hidden text-[11px] font-bold text-amber-800 flex items-center space-x-2 pt-1">
+                        <i class="fa-solid fa-spinner fa-spin text-brand-orange"></i>
+                        <span id="galleryProgressText">Mengunggah foto... 0%</span>
+                    </div>
                 </div>
+
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Komentar / Pesanan Kesukaan</label>
                     <textarea id="galleryArtistNote" rows="2" placeholder="Contoh: Langganan Jus Mangga + Keju kalau ke outlet!" 
                               class="w-full p-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-brand-green focus:outline-none"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-brand-green hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
+                <button type="submit" id="btnSaveGallery" class="w-full bg-brand-green hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
                     Simpan ke Galeri Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
                 </button>
             </form>
@@ -966,9 +1013,9 @@
                     <span id="cartTotalPrice" class="text-xl font-heading font-black text-brand-darkgreen">Rp 0</span>
                 </div>
 
-                <button onclick="submitOrder()" class="w-full bg-gradient-to-r from-brand-orange to-amber-500 hover:opacity-95 text-white font-bold py-3 rounded-2xl text-sm shadow-md transition flex items-center justify-center space-x-2">
+                <button id="btnSubmitOrder" onclick="submitOrder()" class="w-full bg-gradient-to-r from-brand-orange to-amber-500 hover:opacity-95 text-white font-bold py-3 rounded-2xl text-sm shadow-md transition flex items-center justify-center space-x-2">
                     <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span>Kirim Pesanan (Simpan Database & WA)</span>
+                    <span id="submitOrderBtnText">Kirim Pesanan (Simpan Database & WA)</span>
                 </button>
             </div>
         </div>
@@ -995,6 +1042,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
+        const storage = firebase.storage();
 
         // GLOBAL STATE
         let currentUser = null; 
@@ -1028,6 +1076,13 @@
             setReportPreset('all');
         };
 
+        function handleFirestoreError(err, contextName) {
+            console.warn(`Firestore Warning [${contextName}]:`, err.message);
+            if (err.code === 'permission-denied') {
+                showToast(`Mode Demo/Offline: Memakai data lokal untuk ${contextName}`, "info");
+            }
+        }
+
         function initAuthListener() {
             auth.onAuthStateChanged(user => {
                 if (user) {
@@ -1045,7 +1100,7 @@
                         };
                         updateUserUI();
                         updateCartBadge();
-                    });
+                    }).catch(err => handleFirestoreError(err, 'Profile User'));
                 } else {
                     currentUser = null;
                     updateUserUI();
@@ -1059,9 +1114,12 @@
                 if (doc.exists) {
                     isQrisEnabled = doc.data().qrisEnabled !== false;
                 } else {
-                    db.collection('settings').doc('storeConfig').set({ qrisEnabled: true });
+                    db.collection('settings').doc('storeConfig').set({ qrisEnabled: true }).catch(err => handleFirestoreError(err, 'Settings Initial'));
                     isQrisEnabled = true;
                 }
+                applyQrisSettingsUI();
+            }, err => {
+                handleFirestoreError(err, 'Settings Listener');
                 applyQrisSettingsUI();
             });
         }
@@ -1165,18 +1223,64 @@
             });
         }
 
+        // Helper function for Direct File Upload to Firebase Storage
+        async function uploadFileToFirebaseStorage(file, folder) {
+            return new Promise((resolve, reject) => {
+                if (!file) {
+                    reject(new Error("File tidak ditemukan."));
+                    return;
+                }
+                const cleanFileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, "_")}`;
+                const storageRef = storage.ref(`${folder}/${cleanFileName}`);
+                const uploadTask = storageRef.put(file);
+
+                const isMenuFolder = folder === 'menu_images';
+                const progressContainer = document.getElementById(isMenuFolder ? 'newMenuUploadProgress' : 'galleryUploadProgress');
+                const progressText = document.getElementById(isMenuFolder ? 'newMenuProgressText' : 'galleryProgressText');
+
+                if (progressContainer) progressContainer.classList.remove('hidden');
+
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                        if (progressText) progressText.innerText = `Mengunggah gambar... ${progress}%`;
+                    }, 
+                    (error) => {
+                        if (progressContainer) progressContainer.classList.add('hidden');
+                        reject(error);
+                    }, 
+                    () => {
+                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                            if (progressContainer) progressContainer.classList.add('hidden');
+                            resolve(downloadURL);
+                        }).catch(err => {
+                            if (progressContainer) progressContainer.classList.add('hidden');
+                            reject(err);
+                        });
+                    }
+                );
+            });
+        }
+
         function handleEmailAuth(e) {
             e.preventDefault();
             const email = document.getElementById('inputEmail').value.trim();
             const password = document.getElementById('inputPassword').value.trim();
-            const phone = document.getElementById('inputPhone').value.trim();
+            const rawPhone = document.getElementById('inputPhone').value.trim();
+            const formattedPhone = formatWaNumber(rawPhone);
 
             if (authMode === 'register') {
                 const name = document.getElementById('inputName').value.trim();
                 const studentClass = document.getElementById('inputClass').value.trim();
                 const refCode = document.getElementById('inputReferralCode').value.trim().toUpperCase();
 
-                auth.createUserWithEmailAndPassword(email, password).then(res => {
+                // ANTI-FRAUD: Check if WhatsApp phone number is already registered
+                db.collection('users').where('phone', '==', formattedPhone).get().then(phoneCheckSnap => {
+                    if (!phoneCheckSnap.empty) {
+                        throw new Error("Nomor WhatsApp ini sudah pernah terdaftar di akun lain!");
+                    }
+                    return auth.createUserWithEmailAndPassword(email, password);
+                }).then(res => {
                     const newUid = res.user.uid;
                     let referredByUid = null;
 
@@ -1188,13 +1292,13 @@
                         points: 0,
                         name: name,
                         class: studentClass,
-                        phone: phone
+                        phone: formattedPhone
                     });
 
                     return db.collection('users').doc(newUid).set({
                         name: name,
                         class: studentClass,
-                        phone: phone,
+                        phone: formattedPhone,
                         email: email,
                         referredBy: referredByUid,
                         firstOrderCompleted: false,
@@ -1228,6 +1332,17 @@
                 });
                 renderProductGrid();
                 renderStockControls();
+                checkCartRealtimeStocks();
+            }, err => {
+                handleFirestoreError(err, 'Katalog Produk');
+                if (products.length === 0) {
+                    products = [
+                        { id: 'p1', name: "Jus Buah Naga", price: 10000, category: "Favorit Sehat", benefit: "Kaya Antioksidan & Sehat untuk Pencernaan", desc: "Buah naga merah segar pilihan.", stock: 30, imageUrl: "https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80" },
+                        { id: 'p2', name: "Jus Mangga", price: 12000, category: "Manis Segar", benefit: "Tinggi Vitamin C", desc: "Mangga harum manis segar.", stock: 30, imageUrl: "https://images.unsplash.com/photo-1546173159-315724a31696?auto=format&fit=crop&w=600&q=80" },
+                        { id: 'p3', name: "Jus Jambu Biji", price: 10000, category: "Kaya Vitamin", benefit: "Meningkatkan Trombosit", desc: "Jambu biji merah manis.", stock: 30, imageUrl: "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&w=600&q=80" }
+                    ];
+                    renderProductGrid();
+                }
             });
         }
 
@@ -1242,6 +1357,85 @@
                     toppings.push({ id: doc.id, ...doc.data() });
                 });
                 renderToppingControls();
+                checkCartRealtimeStocks();
+            }, err => {
+                handleFirestoreError(err, 'Toppings');
+                if (toppings.length === 0) {
+                    toppings = [
+                        { id: 't1', name: "Tanpa Topping (Original)", price: 0, stock: 999 },
+                        { id: 't2', name: "Keju Melimpah", price: 2000, stock: 50 },
+                        { id: 't3', name: "Susu Kental Manis", price: 1000, stock: 50 },
+                        { id: 't4', name: "Chia Seed Sehat", price: 3000, stock: 30 }
+                    ];
+                    renderToppingControls();
+                }
+            });
+        }
+
+        function listenToOrdersCloud() {
+            db.collection('orders').onSnapshot(snapshot => {
+                orders = [];
+                snapshot.forEach(doc => {
+                    orders.push({ docId: doc.id, ...doc.data() });
+                });
+
+                if (activeAdmin && orders.length > previousOrderCount && previousOrderCount !== 0) {
+                    playOrderNotificationSound();
+                    showToast("🔔 Ada Pesanan Baru Masuk!", "info");
+                }
+                previousOrderCount = orders.length;
+
+                renderOrdersTable();
+                if (!document.getElementById('adminTabReports').classList.contains('hidden')) {
+                    renderSalesReport();
+                }
+            }, err => handleFirestoreError(err, 'Orders'));
+        }
+
+        function listenToReviewsCloud() {
+            db.collection('reviews').onSnapshot(snapshot => {
+                reviews = [];
+                snapshot.forEach(doc => {
+                    reviews.push({ id: doc.id, ...doc.data() });
+                });
+                renderReviews();
+            }, err => handleFirestoreError(err, 'Reviews'));
+        }
+
+        function listenToPointsCloud() {
+            db.collection('points').onSnapshot(snapshot => {
+                pointsData = {};
+                snapshot.forEach(doc => {
+                    pointsData[doc.id] = doc.data();
+                });
+                renderPointsTable();
+                updateUserUI();
+            }, err => handleFirestoreError(err, 'Points'));
+        }
+
+        function listenToGalleryCloud() {
+            db.collection('celebrities').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                celebrities = [];
+                snapshot.forEach(doc => {
+                    celebrities.push({ id: doc.id, ...doc.data() });
+                });
+                renderUserGallery();
+                renderAdminGalleryControls();
+            }, err => handleFirestoreError(err, 'Gallery'));
+        }
+
+        function listenToToppingsCloud() {
+            db.collection('toppings').onSnapshot(snapshot => {
+                if (snapshot.empty) {
+                    seedInitialToppings();
+                    return;
+                }
+                toppings = [];
+                snapshot.forEach(doc => {
+                    toppings.push({ id: doc.id, ...doc.data() });
+                });
+                renderToppingControls();
+                checkCartRealtimeStocks();
             });
         }
 
@@ -1413,7 +1607,7 @@
                         </div>
 
                         <div class="p-5 pt-0">
-                            <button onclick="openCustomizeModal('${item.id}')" 
+                            <button id="btn-order-${item.id}" onclick="openCustomizeModal('${item.id}')" 
                                     ${isOutOfStock ? 'disabled' : ''} 
                                     class="w-full ${isOutOfStock ? 'bg-slate-300 cursor-not-allowed text-slate-500' : 'bg-slate-900 hover:bg-brand-darkgreen text-white'} font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 transition shadow-md">
                                 <i class="fa-solid fa-sliders text-sm"></i>
@@ -1519,13 +1713,16 @@
             const sizeRadio = document.querySelector('input[name="custSize"]:checked').value;
             const sizeExtraPrice = sizeRadio === 'Large' ? 3000 : 0;
 
+            let selectedToppingIds = [];
             let selectedToppingObjs = [];
             let toppingsTotalPrice = 0;
 
             const checkboxes = document.querySelectorAll('.custToppingCB:checked');
             checkboxes.forEach(cb => {
+                const id = cb.value;
                 const price = parseInt(cb.getAttribute('data-price')) || 0;
                 const name = cb.getAttribute('data-name');
+                selectedToppingIds.push(id);
                 selectedToppingObjs.push(name);
                 toppingsTotalPrice += price;
             });
@@ -1533,7 +1730,7 @@
             const toppingText = selectedToppingObjs.length > 0 ? selectedToppingObjs.join(', ') : 'Original (Tanpa Topping)';
             const unitPrice = product.price + sizeExtraPrice + toppingsTotalPrice;
 
-            const cartItemId = `${product.id}_${sugar}_${ice}_${sizeRadio}_${selectedToppingObjs.join('-')}`;
+            const cartItemId = `${product.id}_${sugar}_${ice}_${sizeRadio}_${selectedToppingIds.join('-')}`;
             const existing = cart.find(item => item.cartItemId === cartItemId);
 
             if (existing) {
@@ -1546,6 +1743,7 @@
                     sugar: sugar,
                     ice: ice,
                     size: sizeRadio,
+                    toppingIds: selectedToppingIds,
                     toppingName: toppingText,
                     price: unitPrice,
                     qty: 1
@@ -1560,25 +1758,44 @@
         function openAddMenuModal() { document.getElementById('addMenuModal').classList.remove('hidden'); }
         function closeAddMenuModal() { document.getElementById('addMenuModal').classList.add('hidden'); }
 
-        function handleSaveNewMenu(e) {
+        async function handleSaveNewMenu(e) {
             e.preventDefault();
-            const name = document.getElementById('newMenuName').value.trim();
-            const price = parseInt(document.getElementById('newMenuPrice').value) || 0;
-            const category = document.getElementById('newMenuCategory').value.trim();
-            const stock = parseInt(document.getElementById('newMenuStock').value) || 0;
-            const imageUrl = document.getElementById('newMenuImageUrl').value.trim();
-            const benefit = document.getElementById('newMenuBenefit').value.trim();
-            const desc = document.getElementById('newMenuDesc').value.trim();
+            const btn = document.getElementById('btnSaveNewMenu');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan...`;
 
-            db.collection('products').add({
-                name, price, category, stock, imageUrl, benefit, desc,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            try {
+                const name = document.getElementById('newMenuName').value.trim();
+                const price = parseInt(document.getElementById('newMenuPrice').value) || 0;
+                const category = document.getElementById('newMenuCategory').value.trim();
+                const stock = parseInt(document.getElementById('newMenuStock').value) || 0;
+                const fileInput = document.getElementById('newMenuFileInput');
+                let imageUrl = document.getElementById('newMenuImageUrl').value.trim();
+                const benefit = document.getElementById('newMenuBenefit').value.trim();
+                const desc = document.getElementById('newMenuDesc').value.trim();
+
+                if (fileInput.files && fileInput.files[0]) {
+                    imageUrl = await uploadFileToFirebaseStorage(fileInput.files[0], 'menu_images');
+                }
+
+                if (!imageUrl) {
+                    imageUrl = "https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80";
+                }
+
+                await db.collection('products').add({
+                    name, price, category, stock, imageUrl, benefit, desc,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
                 closeAddMenuModal();
+                e.target.reset();
                 showToast("Menu baru berhasil disimpan ke Database Cloud!");
-            }).catch(err => {
+            } catch (err) {
                 showToast(`Gagal menyimpan: ${err.message}`, "error");
-            });
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `Simpan Ke Database Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>`;
+            }
         }
 
         function deleteProduct(productId) {
@@ -1662,6 +1879,44 @@
             updateCartBadge();
         }
 
+        function checkCartRealtimeStocks() {
+            if (cart.length === 0) return;
+            let stockIssues = [];
+
+            cart.forEach(cItem => {
+                const masterProduct = products.find(p => p.id === cItem.id);
+                if (!masterProduct || masterProduct.stock < cItem.qty) {
+                    stockIssues.push(`${cItem.name} (Sisa stok: ${masterProduct ? masterProduct.stock : 0})`);
+                }
+
+                if (cItem.toppingIds && cItem.toppingIds.length > 0) {
+                    cItem.toppingIds.forEach(topId => {
+                        const masterTop = toppings.find(t => t.id === topId);
+                        if (!masterTop || masterTop.stock < cItem.qty) {
+                            stockIssues.push(`Topping ${masterTop ? masterTop.name : 'pilihan'} (Stok habis)`);
+                        }
+                    });
+                }
+            });
+
+            const submitBtn = document.getElementById('btnSubmitOrder');
+            const submitBtnText = document.getElementById('submitOrderBtnText');
+
+            if (stockIssues.length > 0) {
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.className = "w-full bg-slate-300 text-slate-500 font-bold py-3 rounded-2xl text-sm transition cursor-not-allowed flex items-center justify-center space-x-2";
+                }
+                if (submitBtnText) submitBtnText.innerText = "Stok Item Keranjang Habis!";
+            } else {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.className = "w-full bg-gradient-to-r from-brand-orange to-amber-500 hover:opacity-95 text-white font-bold py-3 rounded-2xl text-sm shadow-md transition flex items-center justify-center space-x-2";
+                }
+                if (submitBtnText) submitBtnText.innerText = "Kirim Pesanan (Simpan Database & WA)";
+            }
+        }
+
         function renderCartDrawer() {
             const container = document.getElementById('cartItemsContainer');
             const totalPriceEl = document.getElementById('cartTotalPrice');
@@ -1674,6 +1929,7 @@
                     </div>
                 `;
                 totalPriceEl.innerText = 'Rp 0';
+                checkCartRealtimeStocks();
                 return;
             }
 
@@ -1705,6 +1961,7 @@
             }).join('');
 
             totalPriceEl.innerText = `Rp ${total.toLocaleString('id-ID')}`;
+            checkCartRealtimeStocks();
         }
 
         function toggleCartDrawer() {
@@ -1730,7 +1987,8 @@
             }
         }
 
-        function submitOrder() {
+        // SERVER-SIDE / BACKEND VALIDATION IN SUBMIT ORDER (ANTI-CHEAT HARGA)
+        async function submitOrder() {
             if (cart.length === 0) {
                 showToast("Keranjang belanjaan kosong!", "error");
                 return;
@@ -1741,9 +1999,59 @@
                 return;
             }
 
+            // Fetch fresh price master data from Firestore for Anti-Cheat calculation
+            let calculatedTotal = 0;
+            let validatedItems = [];
+
+            try {
+                for (const item of cart) {
+                    const productDoc = await db.collection('products').doc(item.id).get();
+                    if (!productDoc.exists) {
+                        throw new Error(`Produk "${item.name}" tidak ditemukan di database master.`);
+                    }
+
+                    const productMaster = productDoc.data();
+                    if (productMaster.stock < item.qty) {
+                        throw new Error(`Stok untuk "${item.name}" tidak mencukupi (Sisa: ${productMaster.stock}).`);
+                    }
+
+                    let unitPrice = productMaster.price;
+
+                    // Add size extra price
+                    if (item.size === 'Large') unitPrice += 3000;
+
+                    // Add toppings price from Firestore master data
+                    if (item.toppingIds && item.toppingIds.length > 0) {
+                        for (const topId of item.toppingIds) {
+                            const topDoc = await db.collection('toppings').doc(topId).get();
+                            if (topDoc.exists) {
+                                const topData = topDoc.data();
+                                if (topData.stock < item.qty) {
+                                    throw new Error(`Stok topping "${topData.name}" tidak mencukupi.`);
+                                }
+                                unitPrice += topData.price;
+                            }
+                        }
+                    }
+
+                    // Anti-Cheat Check: Compare item price calculated by client vs master data calculation
+                    if (unitPrice !== item.price) {
+                        throw new Error(`Perubahan harga terdeteksi pada item "${item.name}". Mohon perbarui keranjang.`);
+                    }
+
+                    calculatedTotal += unitPrice * item.qty;
+                    validatedItems.push({
+                        ...item,
+                        price: unitPrice
+                    });
+                }
+            } catch (error) {
+                showToast(`🚨 Validasi Gagal: ${error.message}`, "error");
+                return;
+            }
+
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
             const notes = document.getElementById('orderNotes').value.trim();
-            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             const todayStr = new Date().toISOString().split('T')[0];
 
             const newOrder = {
@@ -1752,8 +2060,8 @@
                 customerName: currentUser.name,
                 customerClass: currentUser.class,
                 customerPhone: currentUser.phone,
-                items: [...cart],
-                total: totalAmount,
+                items: validatedItems,
+                total: calculatedTotal,
                 paymentMethod: paymentMethod,
                 notes: notes || 'Tanpa Catatan',
                 status: 'Menunggu',
@@ -1764,11 +2072,21 @@
             };
 
             db.collection('orders').add(newOrder).then(() => {
-                cart.forEach(cItem => {
+                // Deduct stocks in Firestore after validation
+                validatedItems.forEach(cItem => {
                     const p = products.find(prod => prod.id === cItem.id);
                     if (p) {
                         const newStock = Math.max(0, p.stock - cItem.qty);
                         db.collection('products').doc(p.id).update({ stock: newStock });
+                    }
+                    if (cItem.toppingIds && cItem.toppingIds.length > 0) {
+                        cItem.toppingIds.forEach(tId => {
+                            const t = toppings.find(top => top.id === tId);
+                            if (t) {
+                                const newTopStock = Math.max(0, t.stock - cItem.qty);
+                                db.collection('toppings').doc(t.id).update({ stock: newTopStock });
+                            }
+                        });
                     }
                 });
 
@@ -1778,11 +2096,11 @@
                 waMsg += `Kelas: ${newOrder.customerClass}\n`;
                 waMsg += `No HP: ${newOrder.customerPhone}\n\n`;
                 waMsg += `*Detail Pesanan:*\n`;
-                cart.forEach(i => {
+                validatedItems.forEach(i => {
                     waMsg += `- ${i.name} (${i.size}) [${i.sugar}, ${i.ice}, ${i.toppingName}] (${i.qty}x) = Rp ${(i.price * i.qty).toLocaleString('id-ID')}\n`;
                 });
                 waMsg += `\n*Pembayaran:* ${paymentMethod}\n`;
-                waMsg += `*Total:* Rp ${totalAmount.toLocaleString('id-ID')}\n`;
+                waMsg += `*Total Sah:* Rp ${calculatedTotal.toLocaleString('id-ID')}\n`;
                 waMsg += `*Catatan:* ${newOrder.notes}\n\n`;
                 waMsg += `Mohon diproses ya admin! Terima kasih.`;
 
@@ -1792,7 +2110,7 @@
                 updateCartBadge();
                 toggleCartDrawer();
 
-                showToast("Pesanan tersimpan di cloud! Meluncur ke WA...");
+                showToast("Pesanan tersimpan & terverifikasi! Meluncur ke WA...");
                 window.open(targetWaUrl, '_blank');
             });
         }
@@ -1981,28 +2299,46 @@
         function openAddGalleryModal() { document.getElementById('addGalleryModal').classList.remove('hidden'); }
         function closeAddGalleryModal() { document.getElementById('addGalleryModal').classList.add('hidden'); }
 
-        function handleSaveGallery(e) {
+        async function handleSaveGallery(e) {
             e.preventDefault();
             if (!activeAdmin) {
                 showToast("Hanya admin terdaftar yang bisa menambah galeri!", "error");
                 return;
             }
 
-            const name = document.getElementById('galleryArtistName').value.trim();
-            const role = document.getElementById('galleryArtistRole').value.trim();
-            const imageUrl = document.getElementById('galleryImageUrl').value.trim();
-            const note = document.getElementById('galleryArtistNote').value.trim();
+            const btn = document.getElementById('btnSaveGallery');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan...`;
 
-            db.collection('celebrities').add({
-                name, role, imageUrl, note,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            try {
+                const name = document.getElementById('galleryArtistName').value.trim();
+                const role = document.getElementById('galleryArtistRole').value.trim();
+                const fileInput = document.getElementById('galleryFileInput');
+                let imageUrl = document.getElementById('galleryImageUrl').value.trim();
+                const note = document.getElementById('galleryArtistNote').value.trim();
+
+                if (fileInput.files && fileInput.files[0]) {
+                    imageUrl = await uploadFileToFirebaseStorage(fileInput.files[0], 'gallery_images');
+                }
+
+                if (!imageUrl) {
+                    imageUrl = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80";
+                }
+
+                await db.collection('celebrities').add({
+                    name, role, imageUrl, note,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
                 closeAddGalleryModal();
                 e.target.reset();
                 showToast("Foto artis berhasil ditambahkan ke Galeri!");
-            }).catch(err => {
+            } catch (err) {
                 showToast(`Gagal menyimpan: ${err.message}`, "error");
-            });
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `Simpan ke Galeri Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>`;
+            }
         }
 
         function deleteGalleryItem(id) {
@@ -2146,6 +2482,7 @@
                                 if (!uData.firstOrderCompleted) {
                                     db.collection('users').doc(userUid).update({ firstOrderCompleted: true });
 
+                                    // ANTI-FRAUD REFERRAL BONUS: Award +50 points only once on verified unique first completed order
                                     if (uData.referredBy) {
                                         const referrerPrefix = uData.referredBy;
                                         db.collection('points').get().then(snap => {
