@@ -1424,6 +1424,21 @@
             }, err => handleFirestoreError(err, 'Gallery'));
         }
 
+        function listenToToppingsCloud() {
+            db.collection('toppings').onSnapshot(snapshot => {
+                if (snapshot.empty) {
+                    seedInitialToppings();
+                    return;
+                }
+                toppings = [];
+                snapshot.forEach(doc => {
+                    toppings.push({ id: doc.id, ...doc.data() });
+                });
+                renderToppingControls();
+                checkCartRealtimeStocks();
+            });
+        }
+
         function seedInitialProducts() {
             const defaultProducts = [
                 {
@@ -1470,6 +1485,26 @@
             defaultToppings.forEach(t => db.collection('toppings').add(t));
         }
 
+        function listenToOrdersCloud() {
+            db.collection('orders').onSnapshot(snapshot => {
+                orders = [];
+                snapshot.forEach(doc => {
+                    orders.push({ docId: doc.id, ...doc.data() });
+                });
+
+                if (activeAdmin && orders.length > previousOrderCount && previousOrderCount !== 0) {
+                    playOrderNotificationSound();
+                    showToast("🔔 Ada Pesanan Baru Masuk!", "info");
+                }
+                previousOrderCount = orders.length;
+
+                renderOrdersTable();
+                if (!document.getElementById('adminTabReports').classList.contains('hidden')) {
+                    renderSalesReport();
+                }
+            });
+        }
+
         function playOrderNotificationSound() {
             try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -1491,6 +1526,38 @@
             } catch (e) {
                 console.log("Audio notify error:", e);
             }
+        }
+
+        function listenToReviewsCloud() {
+            db.collection('reviews').onSnapshot(snapshot => {
+                reviews = [];
+                snapshot.forEach(doc => {
+                    reviews.push({ id: doc.id, ...doc.data() });
+                });
+                renderReviews();
+            });
+        }
+
+        function listenToPointsCloud() {
+            db.collection('points').onSnapshot(snapshot => {
+                pointsData = {};
+                snapshot.forEach(doc => {
+                    pointsData[doc.id] = doc.data();
+                });
+                renderPointsTable();
+                updateUserUI();
+            });
+        }
+
+        function listenToGalleryCloud() {
+            db.collection('celebrities').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                celebrities = [];
+                snapshot.forEach(doc => {
+                    celebrities.push({ id: doc.id, ...doc.data() });
+                });
+                renderUserGallery();
+                renderAdminGalleryControls();
+            });
         }
 
         function renderProductGrid() {
