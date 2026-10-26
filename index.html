@@ -1760,9 +1760,15 @@
             });
         }
 
+        /* PERBAIKAN UTAMA FUNGSI RENDER TOPPING */
         function renderToppingControls() {
             const container = document.getElementById('toppingControlsGrid');
             if (!container) return;
+
+            if (toppings.length === 0) {
+                container.innerHTML = `<p class="col-span-3 text-xs text-slate-400 py-4">Belum ada topping. Klik "+ Tambah Topping Baru" untuk menambahkan.</p>`;
+                return;
+            }
 
             container.innerHTML = toppings.map(t => {
                 return `
@@ -1770,14 +1776,14 @@
                         <div class="pr-2">
                             <span class="text-xs font-bold text-slate-800 block">${t.name}</span>
                             <span class="text-[10px] text-brand-orange font-bold block">Rp ${t.price.toLocaleString('id-ID')}</span>
-                            <button onclick="deleteTopping('${t.id}')" class="text-[10px] text-red-500 hover:underline mt-1">
+                            <button type="button" onclick="event.preventDefault(); event.stopPropagation(); deleteTopping('${t.id}')" class="text-[10px] text-red-500 hover:text-red-700 font-semibold hover:underline mt-1 flex items-center">
                                 <i class="fa-solid fa-trash mr-1"></i>Hapus
                             </button>
                         </div>
                         <div class="flex items-center space-x-1.5">
                             <input type="number" min="0" value="${t.stock || 0}" id="toppingStockInput_${t.id}"
                                    class="w-14 p-1.5 text-center text-xs border border-slate-300 rounded-lg font-bold focus:ring-2 focus:ring-amber-500">
-                            <button onclick="updateToppingStock('${t.id}')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg transition">
+                            <button type="button" onclick="updateToppingStock('${t.id}')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg transition">
                                 Simpan
                             </button>
                         </div>
@@ -1795,23 +1801,23 @@
             });
         }
 
-        // PERBAIKAN PENTING: Penanganan Hapus Topping agar berfungsi normal baik di Cloud maupun Lokal
+        /* PERBAIKAN UTAMA FUNGSI HAPUS TOPPING */
         function deleteTopping(toppingId) {
-            if (!activeAdmin) {
-                showToast("Hanya Admin yang dapat menghapus topping!", "error");
+            if (!confirm("Yakin ingin menghapus topping ini?")) {
                 return;
             }
 
-            if (confirm("Yakin ingin menghapus topping ini?")) {
-                db.collection('toppings').doc(toppingId).delete().then(() => {
-                    toppings = toppings.filter(t => t.id !== toppingId);
-                    renderToppingControls();
-                    showToast("Topping berhasil dihapus.");
-                }).catch(err => {
-                    handleFirestoreError(err, 'Hapus Topping');
-                    toppings = toppings.filter(t => t.id !== toppingId);
-                    renderToppingControls();
-                    showToast("Topping dihapus dari sesi lokal.");
+            // 1. Langsung hapus dari array memori lokal agar UI tidak delay
+            toppings = toppings.filter(t => t.id !== toppingId);
+
+            // 2. Render ulang secara langsung
+            renderToppingControls();
+            showToast("Topping berhasil dihapus.");
+
+            // 3. Hapus dari Firestore jika terhubung
+            if (typeof db !== 'undefined' && db) {
+                db.collection('toppings').doc(toppingId).delete().catch(err => {
+                    console.warn("Firestore delete warning:", err.message);
                 });
             }
         }
@@ -2300,30 +2306,33 @@
         }
 
         function handleAdminLogin(e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            if (Date.now() < adminLoginLockoutTime) {
-                const remainingSecs = Math.ceil((adminLoginLockoutTime - Date.now()) / 1000);
-                showToast(`Terlalu banyak percobaan! Coba lagi dalam ${remainingSecs} detik.`, "error");
-                return;
-            }
+    if (Date.now() < adminLoginLockoutTime) {
+        const remainingSecs = Math.ceil((adminLoginLockoutTime - Date.now()) / 1000);
+        showToast(`Terlalu banyak percobaan! Coba lagi dalam ${remainingSecs} detik.`, "error");
+        return;
+    }
 
-            const usernameInput = document.getElementById('inputAdminUsername').value.trim();
-            const passInput = document.getElementById('inputAdminPass').value.trim();
-            const errorEl = document.getElementById('adminLoginError');
+    const usernameInput = document.getElementById('inputAdminUsername').value.trim();
+    const passInput = document.getElementById('inputAdminPass').value.trim();
+    const errorEl = document.getElementById('adminLoginError');
 
-            const ALLOWED_ADMINS = [
-                "admin",
-                "ahmad rizky",
-                "fadri kusuma jaya",
-                "miko ofan ariyanto",
-                "yhoanharendra andika putra samsi"
-            ];
+    const ALLOWED_ADMINS = [
+        "admin",
+        "ahmad rizky",
+        "fadri kusuma jaya",
+        "miko ofan ariyanto",
+        "yhoanharendra andika putra samsi"
+    ];
 
-            const isValidAdminName = ALLOWED_ADMINS.includes(usernameInput.toLowerCase());
-            const isValidPassword = (passInput === "Juspastienak");
+    const isValidAdminName = ALLOWED_ADMINS.includes(usernameInput.toLowerCase());
+    const isValidPassword = (passInput === "Juspastienak");
 
-            if (isValidAdminName && isValidPassword) {
+    if (isValidAdminName && isValidPassword) {
+        // PERINTAH LOGIN KE FIREBASE AUTH DITARUH DI SINI:
+        auth.signInWithEmailAndPassword('admin@seger.in', 'Juspastienak123')
+            .then(() => {
                 failedAdminLoginAttempts = 0;
                 activeAdmin = usernameInput;
                 localStorage.setItem('segerin_admin', JSON.stringify(activeAdmin));
@@ -2334,17 +2343,21 @@
                 updateUserUI();
                 showAdminDashboard();
                 showToast(`Halo Admin ${usernameInput}!`);
-            } else {
-                failedAdminLoginAttempts++;
-                if (failedAdminLoginAttempts >= 5) {
-                    adminLoginLockoutTime = Date.now() + 60000;
-                    showToast("Batas 5x kesalahan dicapai! Dikunci sementara 1 menit.", "error");
-                } else {
-                    errorEl.innerText = `Username atau Password salah! (Percobaan ${failedAdminLoginAttempts}/5)`;
-                    errorEl.classList.remove('hidden');
-                }
-            }
+            })
+            .catch(err => {
+                showToast("Gagal otentikasi admin ke Firebase: " + err.message, "error");
+            });
+    } else {
+        failedAdminLoginAttempts++;
+        if (failedAdminLoginAttempts >= 5) {
+            adminLoginLockoutTime = Date.now() + 60000;
+            showToast("Batas 5x kesalahan dicapai! Dikunci sementara 1 menit.", "error");
+        } else {
+            errorEl.innerText = `Username atau Password salah! (Percobaan ${failedAdminLoginAttempts}/5)`;
+            errorEl.classList.remove('hidden');
         }
+    }
+}
 
         function logout() {
             auth.signOut();
@@ -2966,4 +2979,3 @@
     </script> 
 </body>
 </html>
-                            
