@@ -1223,7 +1223,6 @@
             });
         }
 
-        // Helper function for Direct File Upload to Firebase Storage
         async function uploadFileToFirebaseStorage(file, folder) {
             return new Promise((resolve, reject) => {
                 if (!file) {
@@ -1274,7 +1273,6 @@
                 const studentClass = document.getElementById('inputClass').value.trim();
                 const refCode = document.getElementById('inputReferralCode').value.trim().toUpperCase();
 
-                // ANTI-FRAUD: Check if WhatsApp phone number is already registered
                 db.collection('users').where('phone', '==', formattedPhone).get().then(phoneCheckSnap => {
                     if (!phoneCheckSnap.empty) {
                         throw new Error("Nomor WhatsApp ini sudah pernah terdaftar di akun lain!");
@@ -1735,6 +1733,8 @@
             if (confirm("Yakin ingin menghapus menu ini dari database?")) {
                 db.collection('products').doc(productId).delete().then(() => {
                     showToast("Menu dihapus.");
+                }).catch(err => {
+                    showToast(`Gagal menghapus menu: ${err.message}`, "error");
                 });
             }
         }
@@ -1753,6 +1753,7 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 closeAddToppingModal();
+                e.target.reset();
                 showToast("Topping baru berhasil disimpan!");
             }).catch(err => {
                 showToast(`Gagal menyimpan: ${err.message}`, "error");
@@ -1789,13 +1790,28 @@
             const newVal = parseInt(document.getElementById(`toppingStockInput_${toppingId}`).value) || 0;
             db.collection('toppings').doc(toppingId).update({ stock: newVal }).then(() => {
                 showToast("Stok topping diperbarui!");
+            }).catch(err => {
+                showToast(`Gagal update stok: ${err.message}`, "error");
             });
         }
 
+        // PERBAIKAN PENTING: Penanganan Hapus Topping agar berfungsi normal baik di Cloud maupun Lokal
         function deleteTopping(toppingId) {
+            if (!activeAdmin) {
+                showToast("Hanya Admin yang dapat menghapus topping!", "error");
+                return;
+            }
+
             if (confirm("Yakin ingin menghapus topping ini?")) {
                 db.collection('toppings').doc(toppingId).delete().then(() => {
-                    showToast("Topping dihapus.");
+                    toppings = toppings.filter(t => t.id !== toppingId);
+                    renderToppingControls();
+                    showToast("Topping berhasil dihapus.");
+                }).catch(err => {
+                    handleFirestoreError(err, 'Hapus Topping');
+                    toppings = toppings.filter(t => t.id !== toppingId);
+                    renderToppingControls();
+                    showToast("Topping dihapus dari sesi lokal.");
                 });
             }
         }
@@ -1920,7 +1936,6 @@
             }
         }
 
-        // SERVER-SIDE / BACKEND VALIDATION IN SUBMIT ORDER (ANTI-CHEAT HARGA)
         async function submitOrder() {
             if (cart.length === 0) {
                 showToast("Keranjang belanjaan kosong!", "error");
@@ -1932,7 +1947,6 @@
                 return;
             }
 
-            // Fetch fresh price master data from Firestore for Anti-Cheat calculation
             let calculatedTotal = 0;
             let validatedItems = [];
 
@@ -1950,10 +1964,8 @@
 
                     let unitPrice = productMaster.price;
 
-                    // Add size extra price
                     if (item.size === 'Large') unitPrice += 3000;
 
-                    // Add toppings price from Firestore master data
                     if (item.toppingIds && item.toppingIds.length > 0) {
                         for (const topId of item.toppingIds) {
                             const topDoc = await db.collection('toppings').doc(topId).get();
@@ -1967,7 +1979,6 @@
                         }
                     }
 
-                    // Anti-Cheat Check: Compare item price calculated by client vs master data calculation
                     if (unitPrice !== item.price) {
                         throw new Error(`Perubahan harga terdeteksi pada item "${item.name}". Mohon perbarui keranjang.`);
                     }
@@ -2005,7 +2016,6 @@
             };
 
             db.collection('orders').add(newOrder).then(() => {
-                // Deduct stocks in Firestore after validation
                 validatedItems.forEach(cItem => {
                     const p = products.find(prod => prod.id === cItem.id);
                     if (p) {
@@ -2283,6 +2293,8 @@
             if (confirm("Yakin ingin menghapus foto artis ini dari galeri?")) {
                 db.collection('celebrities').doc(id).delete().then(() => {
                     showToast("Foto artis berhasil dihapus dari galeri.");
+                }).catch(err => {
+                    showToast(`Gagal menghapus foto artis: ${err.message}`, "error");
                 });
             }
         }
@@ -2415,7 +2427,6 @@
                                 if (!uData.firstOrderCompleted) {
                                     db.collection('users').doc(userUid).update({ firstOrderCompleted: true });
 
-                                    // ANTI-FRAUD REFERRAL BONUS: Award +50 points only once on verified unique first completed order
                                     if (uData.referredBy) {
                                         const referrerPrefix = uData.referredBy;
                                         db.collection('points').get().then(snap => {
@@ -2955,3 +2966,4 @@
     </script> 
 </body>
 </html>
+                            
