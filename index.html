@@ -83,6 +83,12 @@
                     <span>0881-4187-481</span>
                 </a>
 
+                <!-- Nav Button to Open Separate FAQ Modal -->
+                <button onclick="openFaqModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold items-center space-x-1 transition flex">
+                    <i class="fa-solid fa-circle-question text-brand-orange"></i>
+                    <span>FAQ</span>
+                </button>
+
                 <!-- User Orders Tracking Button -->
                 <button id="userOrdersNavBtn" onclick="openUserOrdersModal()" class="hidden bg-emerald-100 hover:bg-emerald-200 text-brand-darkgreen border border-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold items-center space-x-1.5 transition">
                     <i class="fa-solid fa-clock-rotate-left"></i>
@@ -119,13 +125,13 @@
         <section id="heroSection" class="mb-8 rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 text-white p-6 sm:p-10 shadow-xl relative overflow-hidden">
             <div class="relative z-10 max-w-2xl">
                 <span class="bg-white/20 text-emerald-100 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block backdrop-blur-sm">
-                    <i class="fa-solid fa-qrcode mr-1 text-amber-300"></i> QRIS Presisi: Receh Rp 1-99 Otomatis Jadi Poin!
+                    <i class="fa-solid fa-qrcode mr-1 text-amber-300"></i> QRIS Presisi: Receh Rp 10 = 1 Bonus Poin!
                 </span>
                 <h2 class="text-3xl sm:text-5xl font-heading font-black leading-tight mb-3">
                     Biar Harimu Lebih <span class="text-brand-yellow underline decoration-brand-orange">Seger!</span>
                 </h2>
                 <p class="text-emerald-50 text-sm sm:text-base mb-6 leading-relaxed">
-                    Setiap pembelian dapat <strong class="text-amber-300">20-50 poin</strong> + bonus poin receh transaksi QRIS! Kumpulkan 1.000 Poin & tukarkan dengan <strong class="text-amber-300">1 Jus Komplit Gratis</strong>.
+                    Setiap pembelian dapat <strong class="text-amber-300">20-50 poin</strong> + bonus poin receh QRIS (tiap Rp 10 = +1 Poin)! Kumpulkan 1.000 Poin & tukarkan dengan <strong class="text-amber-300">1 Jus Komplit Gratis</strong>.
                 </p>
                 <div class="flex flex-wrap gap-3">
                     <button onclick="scrollToMenu()" class="bg-brand-yellow hover:bg-amber-400 text-slate-900 font-bold px-6 py-3 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center space-x-2">
@@ -559,17 +565,107 @@
         </div>
         <div class="border-t border-slate-800 mt-6 pt-4 px-4 max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-slate-500">
             <p>&copy; 2026 Seger.in Juice Delivery. All rights reserved.</p>
-            <!-- Subtle Secret Admin Entrance -->
-            <button onclick="openAdminLoginModal()" class="mt-2 sm:mt-0 text-slate-600 hover:text-slate-400 transition text-[11px] flex items-center space-x-1">
-                <i class="fa-solid fa-lock text-[10px]"></i>
-                <span>Portal Admin Toko</span>
-            </button>
+            <div class="flex items-center space-x-4 mt-2 sm:mt-0">
+                <button onclick="openFaqModal()" class="text-slate-400 hover:text-white transition text-[11px] flex items-center space-x-1">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <span>Pusat Bantuan (FAQ)</span>
+                </button>
+                <button onclick="openAdminLoginModal()" class="text-slate-600 hover:text-slate-400 transition text-[11px] flex items-center space-x-1">
+                    <i class="fa-solid fa-lock text-[10px]"></i>
+                    <span>Portal Admin Toko</span>
+                </button>
+            </div>
         </div>
     </footer>
 
     <!-- MODALS & DRAWERS -->
 
-    <!-- QRIS CHECKOUT MODAL (PRESISI RECEH 1-10 RS) -->
+    <!-- DEDICATED SEPARATE FAQ MODAL -->
+    <div id="faqModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[85vh] flex flex-col">
+            <button onclick="closeFaqModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="flex items-center space-x-3 mb-4 border-b pb-4 flex-shrink-0">
+                <div class="w-10 h-10 rounded-2xl bg-orange-100 text-brand-orange flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-heading font-black text-slate-800">Pertanyaan Sering Ditanyakan (FAQ)</h3>
+                    <p class="text-xs text-slate-500">Panduan pemesanan, QRIS presisi, & konversi poin loyalitas</p>
+                </div>
+            </div>
+
+            <!-- Accordion List in Modal -->
+            <div class="overflow-y-auto space-y-3 pr-1 flex-grow">
+                <!-- Q1 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition">
+                    <button onclick="toggleFaq(1)" class="w-full p-4 text-left font-bold text-sm text-slate-800 flex justify-between items-center bg-slate-50 hover:bg-emerald-50 transition">
+                        <span class="flex items-center">
+                            <i class="fa-solid fa-qrcode text-brand-orange mr-3 text-base"></i>
+                            Kenapa total bayar QRIS ada tambahan angka unik (misal Rp 15.070)?
+                        </span>
+                        <i id="faqIcon1" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-300"></i>
+                    </button>
+                    <div id="faqContent1" class="hidden p-4 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-white">
+                        Angka unik receh (1 s/d 99 Rupiah) digunakan oleh sistem kami untuk memverifikasi transfer kamu secara presisi agar pesanan otomatis dikenali tanpa tertukar. <strong class="text-brand-darkgreen">Kelebihan receh tersebut dikonversi otomatis dengan rasio Rp 10 = 1 Poin Bonus</strong> (misal kelebihan Rp 70 = <strong class="text-brand-orange">+7 Bonus Poin</strong>)!
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition">
+                    <button onclick="toggleFaq(2)" class="w-full p-4 text-left font-bold text-sm text-slate-800 flex justify-between items-center bg-slate-50 hover:bg-emerald-50 transition">
+                        <span class="flex items-center">
+                            <i class="fa-regular fa-copy text-brand-green mr-3 text-base"></i>
+                            Bagaimana cara transfer nominal presisi tanpa salah ketik?
+                        </span>
+                        <i id="faqIcon2" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-300"></i>
+                    </button>
+                    <div id="faqContent2" class="hidden p-4 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-white">
+                        Saat tampilan checkout QRIS muncul, klik tombol <strong class="text-brand-orange font-bold font-mono">[Salin Nominal]</strong>. Saat membuka aplikasi m-Banking atau E-Wallet (GoPay/ShopeePay/OVO/DANA), langsung tempel (*paste*) nominal tersebut pada kolom jumlah transfer.
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition">
+                    <button onclick="toggleFaq(3)" class="w-full p-4 text-left font-bold text-sm text-slate-800 flex justify-between items-center bg-slate-50 hover:bg-emerald-50 transition">
+                        <span class="flex items-center">
+                            <i class="fa-solid fa-star text-amber-500 mr-3 text-base"></i>
+                            Bagaimana alur pengumpulan dan penukaran Poin Loyalitas?
+                        </span>
+                        <i id="faqIcon3" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-300"></i>
+                    </button>
+                    <div id="faqContent3" class="hidden p-4 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-white">
+                        Setiap kali pesananmu diselesaikan oleh Admin, kamu akan mendapatkan <strong class="text-amber-600 font-bold">20 s/d 50 Poin reguler</strong> + bonus receh QRIS (Rp 10 = 1 Poin). Kumpulkan hingga <strong class="text-brand-orange font-bold">1.000 Poin</strong> dan tukarkan langsung di modal poin untuk mendapatkan <strong class="text-brand-darkgreen font-bold">1 Jus Komplit Gratis (Jus + Susu + Keju)</strong>.
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden transition">
+                    <button onclick="toggleFaq(4)" class="w-full p-4 text-left font-bold text-sm text-slate-800 flex justify-between items-center bg-slate-50 hover:bg-emerald-50 transition">
+                        <span class="flex items-center">
+                            <i class="fa-solid fa-truck-ramp-box text-emerald-600 mr-3 text-base"></i>
+                            Bagaimana cara memantau pesanan saya yang sedang dibuat?
+                        </span>
+                        <i id="faqIcon4" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-300"></i>
+                    </button>
+                    <div id="faqContent4" class="hidden p-4 text-xs text-slate-600 leading-relaxed border-t border-slate-100 bg-white">
+                        Kamu dapat mengeklik tombol <strong class="text-brand-darkgreen font-bold">[Pesanan Saya]</strong> di navigasi atas. Di sana terdapat garis waktu status (Menunggu Dibuat Diantar Selesai) yang dapat kamu pantau secara realtime.
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs flex-shrink-0">
+                <span class="text-slate-500">Butuh bantuan langsung? Hubungi kami via WhatsApp:</span>
+                <a href="https://wa.me/628814187481?text=Halo%20Seger.in,%20saya%20mau%20tanya%20seputar%20pemesanan..." target="_blank" class="bg-brand-darkgreen hover:bg-emerald-800 text-white font-bold px-4 py-2 rounded-xl transition flex items-center space-x-1.5">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Tanya Admin WA</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- QRIS CHECKOUT MODAL (PRESISI RECEH 1-99 RS) -->
     <div id="qrisCheckoutModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative my-6 text-center">
             <button onclick="closeQrisCheckoutModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
@@ -615,18 +711,14 @@
                 <p class="text-xs text-amber-800 font-semibold">Total Transfer Presisi (Wajib Pas):</p>
                 <div class="flex items-center justify-center space-x-2 my-1">
                     <h2 id="qrisExactAmount" class="text-3xl font-heading font-black text-brand-orange">Rp 0</h2>
-                    <button onclick="copyQrisAmount()" class="bg-amber-200 hover:bg-amber-300 text-amber-900 text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center space-x-1" title="Salin Nominal Presisi">
+                    <button onclick="copyQrisAmount()" class="bg-amber-200 hover:bg-amber-300 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-lg transition" title="Salin Nominal">
                         <i class="fa-regular fa-copy"></i>
-                        <span>Salin Nominal</span>
                     </button>
                 </div>
-                <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200 mt-2 text-left space-y-1">
+                <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200 mt-2 text-left">
                     <p class="text-[11px] text-amber-900 leading-tight">
                         <i class="fa-solid fa-circle-info text-amber-600 mr-1"></i>
-                        Gunakan tombol <strong>"Salin Nominal"</strong> lalu <em>paste</em> di e-wallet/M-Banking agar transfer presisi.
-                    </p>
-                    <p class="text-[11px] text-amber-900 leading-tight">
-                        Kelebihan <strong id="qrisBonusRecehText">Rp 0</strong> otomatis masuk sebagai <strong id="qrisBonusPoinText">+0 Poin Loyalitas</strong> tambahan di akunmu!
+                        Transfer tepat <strong id="qrisRecehText">Rp 0</strong> agar pesanan terverifikasi instan. Kelebihan <strong id="qrisBonusRecehText">Rp 0</strong> otomatis masuk sebagai <strong id="qrisBonusPoinText">+0 Poin Loyalitas</strong> tambahan di akunmu!
                     </p>
                 </div>
             </div>
@@ -740,12 +832,12 @@
                 <div id="registerExtraFields" class="space-y-3 hidden">
                     <div>
                         <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nama Lengkap</label>
-                        <input type="text" id="inputName" placeholder="Contoh: Budi Santoso" 
+                        <input type="text" id="inputName" placeholder="Contoh: Ahmad Rizky" 
                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Kelas / Ruangan</label>
-                        <input type="text" id="inputClass" placeholder="Contoh: XII IPA 2" 
+                        <input type="text" id="inputClass" placeholder="Contoh: XI TKJ 3" 
                                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-green text-xs">
                     </div>
                     <div>
@@ -1217,6 +1309,9 @@
         window.updateOrderStatus = updateOrderStatus;
         window.deleteOrder = deleteOrder;
         window.scrollToMenu = scrollToMenu;
+        window.openFaqModal = openFaqModal;
+        window.closeFaqModal = closeFaqModal;
+        window.toggleFaq = toggleFaq;
 
         window.onload = function() {
             initAuthListener();
@@ -2263,13 +2358,15 @@
             let baseTotal = cart.reduce((sum, item) => sum + ((Number(item.unitPrice) || 0) * item.qty), 0);
 
             if (selectedMethod === 'QRIS') {
-                // Expanded range: 1 to 99 Rp (99 unique variations to prevent collisions during rush hours)
-                const bonusReceh = Math.floor(Math.random() * 99) + 1; 
+                const bonusReceh = Math.floor(Math.random() * 99) + 1; // 1 to 99 Rp
                 const exactTotal = baseTotal + bonusReceh;
+                // Ratio adjustment: 10 Rp = 1 Point (Prevent Inflation)
+                const bonusPointsCalculated = Math.floor(bonusReceh / 10);
 
                 pendingQrisData = {
                     baseTotal: baseTotal,
                     bonusReceh: bonusReceh,
+                    bonusPointsCalculated: bonusPointsCalculated,
                     exactTotal: exactTotal,
                     notes: notes,
                     items: [...cart]
@@ -2279,7 +2376,7 @@
                 document.getElementById('qrisExactAmount').innerText = `Rp ${exactTotal.toLocaleString('id-ID')}`;
                 document.getElementById('qrisRecehText').innerText = `Rp ${exactTotal.toLocaleString('id-ID')}`;
                 document.getElementById('qrisBonusRecehText').innerText = `Rp ${bonusReceh}`;
-                document.getElementById('qrisBonusPoinText').innerText = `+${bonusReceh} Poin`;
+                document.getElementById('qrisBonusPoinText').innerText = `+${bonusPointsCalculated} Poin`;
 
                 // Clear previous proof image upload input
                 document.getElementById('qrisProofInput').value = '';
@@ -2537,7 +2634,8 @@
 
                 if (newStatus === 'Selesai' && order.userUid) {
                     const regularPoints = Math.floor(Math.random() * 31) + 20; // 20 - 50 points
-                    const bonusRecehPoints = order.bonusPoinReceh || 0;
+                    // Ratio adjustment: 10 Rp = 1 Point (or stored bonusPoinReceh / 10)
+                    const bonusRecehPoints = order.bonusPoinReceh ? Math.floor(order.bonusPoinReceh / 10) : 0;
                     const totalAddedPoints = regularPoints + bonusRecehPoints;
 
                     // Increment student points in Firestore
@@ -2546,7 +2644,7 @@
                     });
 
                     // Check for referral bonus credit
-                    const userSnap = await getDoc(doc(db, 'users', order.userUid));
+                    const userSnap = await getDoc(doc(doc(db, 'users', order.userUid)));
                     if (userSnap.exists()) {
                         const uData = userSnap.data();
                         if (uData.referredBy && !uData.firstOrderCompleted) {
@@ -2930,6 +3028,28 @@
             showCatalogPage();
             const el = document.getElementById('menuSection');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openFaqModal() {
+            document.getElementById('faqModal').classList.remove('hidden');
+        }
+
+        function closeFaqModal() {
+            document.getElementById('faqModal').classList.add('hidden');
+        }
+
+        function toggleFaq(index) {
+            const content = document.getElementById(`faqContent${index}`);
+            const icon = document.getElementById(`faqIcon${index}`);
+            if (!content) return;
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                if (icon) icon.style.transform = 'rotate(0deg)';
+            }
         }
 
         function showToast(msg, type = "success") {
