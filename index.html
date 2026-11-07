@@ -4,18 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seger.in - Fresh Juice & Loyalty Rewards</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <!-- Google Fonts (Poppins & Montserrat) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK (Compat Version) -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -40,9 +36,9 @@
     <style>
         html { scroll-behavior: smooth; }
         .glass {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
         }
         @media print {
             body * { visibility: hidden; }
@@ -51,13 +47,16 @@
         }
         .step-active { color: #047857; font-weight: 700; }
         .step-inactive { color: #94A3B8; }
-        .step-line-active { background-color: #10B981; }
-        .step-line-inactive { background-color: #E2E8F0; }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-emerald-50 via-amber-50 to-orange-50 min-h-screen text-slate-800 flex flex-col font-sans">
 
-    <!-- NAVIGATION HEADER -->
+    <!-- NAVIGATION HEADER (Clean & Student-Focused) -->
     <header class="sticky top-0 z-40 glass border-b border-emerald-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
             
@@ -84,7 +83,7 @@
                     <span>0881-4187-481</span>
                 </a>
 
-                <!-- User Orders Button -->
+                <!-- User Orders Tracking Button -->
                 <button id="userOrdersNavBtn" onclick="openUserOrdersModal()" class="hidden bg-emerald-100 hover:bg-emerald-200 text-brand-darkgreen border border-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold items-center space-x-1.5 transition">
                     <i class="fa-solid fa-clock-rotate-left"></i>
                     <span class="hidden sm:inline">Pesanan Saya</span>
@@ -105,11 +104,8 @@
 
                 <!-- Auth Modal Triggers -->
                 <div id="userBadgeArea" class="flex items-center space-x-2">
-                    <button onclick="openLoginModal()" class="bg-brand-orange hover:bg-orange-600 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-sm flex items-center">
+                    <button onclick="openLoginModal()" class="bg-brand-orange hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-sm flex items-center">
                         <i class="fa-solid fa-user-circle mr-1.5"></i> Masuk Siswa
-                    </button>
-                    <button onclick="openAdminLoginModal()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-sm flex items-center">
-                        <i class="fa-solid fa-lock mr-1.5"></i> Admin
                     </button>
                 </div>
             </div>
@@ -123,13 +119,13 @@
         <section id="heroSection" class="mb-8 rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 text-white p-6 sm:p-10 shadow-xl relative overflow-hidden">
             <div class="relative z-10 max-w-2xl">
                 <span class="bg-white/20 text-emerald-100 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3 inline-block backdrop-blur-sm">
-                    <i class="fa-solid fa-gift mr-1 text-amber-300"></i> Kumpulkan Poin & Dapatkan Jus Gratis!
+                    <i class="fa-solid fa-qrcode mr-1 text-amber-300"></i> QRIS Presisi: Receh Rp 1-10 Otomatis Jadi Poin!
                 </span>
                 <h2 class="text-3xl sm:text-5xl font-heading font-black leading-tight mb-3">
                     Biar Harimu Lebih <span class="text-brand-yellow underline decoration-brand-orange">Seger!</span>
                 </h2>
                 <p class="text-emerald-50 text-sm sm:text-base mb-6 leading-relaxed">
-                    Setiap pembelian dapat 20-50 poin! Kumpulkan 1.000 Poin & tukarkan dengan <strong class="text-amber-300">1 Jus Komplit Gratis</strong>.
+                    Setiap pembelian dapat <strong class="text-amber-300">20-50 poin</strong> + bonus poin receh transaksi QRIS! Kumpulkan 1.000 Poin & tukarkan dengan <strong class="text-amber-300">1 Jus Komplit Gratis</strong>.
                 </p>
                 <div class="flex flex-wrap gap-3">
                     <button onclick="scrollToMenu()" class="bg-brand-yellow hover:bg-amber-400 text-slate-900 font-bold px-6 py-3 rounded-2xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center space-x-2">
@@ -141,6 +137,10 @@
                         <span>Cek Poin Saya</span>
                     </button>
                 </div>
+            </div>
+            <!-- Decorative Graphics -->
+            <div class="absolute -right-10 -bottom-10 opacity-20 pointer-events-none hidden sm:block">
+                <i class="fa-solid fa-glass-water text-[240px]"></i>
             </div>
         </section>
 
@@ -178,8 +178,8 @@
                             <i class="fa-solid fa-coins text-sm"></i>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-800">Sistem Poin Loyalitas (Cloud Live)</p>
-                            <p class="text-[11px] text-slate-600">Selesai 1 Pesanan = <span class="font-bold text-brand-orange">+20 s/d +50 Poin</span></p>
+                            <p class="font-bold text-slate-800">Sistem Poin Loyalitas & Receh QRIS</p>
+                            <p class="text-[11px] text-slate-600">Pesanan Selesai = <span class="font-bold text-brand-orange">+20 s/d +50 Poin (+Receh QRIS)</span></p>
                         </div>
                     </div>
                 </div>
@@ -224,7 +224,7 @@
             </div>
         </section>
 
-        <!-- ADMIN DASHBOARD -->
+        <!-- ADMIN DASHBOARD (Hidden for regular users) -->
         <section id="adminDashboard" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-3xl border border-emerald-100 shadow-md">
                 
@@ -243,7 +243,7 @@
                             <span>Tambah Menu Baru</span>
                         </button>
                         <button onclick="showCatalogPage()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-4 py-2.5 rounded-xl transition">
-                            <i class="fa-solid fa-store mr-1"></i> Katalog
+                            <i class="fa-solid fa-store mr-1"></i> Lihat Toko
                         </button>
                     </div>
                 </div>
@@ -254,7 +254,7 @@
                         <i class="fa-solid fa-list-check mr-2"></i>Daftar Pesanan
                     </button>
                     <button id="tabBtnSettings" onclick="switchAdminTab('settings')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-                        <i class="fa-solid fa-gears mr-2"></i>Pengaturan Toko
+                        <i class="fa-solid fa-gears mr-2"></i>Pengaturan Toko & QRIS
                     </button>
                     <button id="tabBtnReports" onclick="switchAdminTab('reports')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-chart-line mr-2"></i>Laporan Penjualan
@@ -301,9 +301,9 @@
                                     <th class="p-3.5">ID & Pemesan</th>
                                     <th class="p-3.5">Kelas & No. HP</th>
                                     <th class="p-3.5">Detail Pesanan & Kustomisasi</th>
-                                    <th class="p-3.5">Metode & Total</th>
-                                    <th class="p-3.5">Status & Poin Reward</th>
-                                    <th class="p-3.5 text-center">Aksi WA</th>
+                                    <th class="p-3.5">Metode & Total Transaksi</th>
+                                    <th class="p-3.5">Status & Reward Poin</th>
+                                    <th class="p-3.5 text-center">Aksi WA & Hapus</th>
                                 </tr>
                             </thead>
                             <tbody id="ordersTableBody" class="divide-y divide-slate-100">
@@ -319,8 +319,8 @@
                 <!-- TAB 2: PENGATURAN TOKO (TOGGLE QRIS) -->
                 <div id="adminTabSettings" class="hidden space-y-6">
                     <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl max-w-xl">
-                        <h3 class="font-bold text-slate-800 text-lg mb-2">Pengaturan Fitur Pembayaran</h3>
-                        <p class="text-xs text-slate-500 mb-6">Nyalakan atau matikan opsi pembayaran QRIS/Transfer untuk pelanggan secara realtime.</p>
+                        <h3 class="font-bold text-slate-800 text-lg mb-2">Pengaturan Fitur Pembayaran QRIS</h3>
+                        <p class="text-xs text-slate-500 mb-6">Nyalakan atau matikan opsi pembayaran QRIS Statis/Transfer untuk pelanggan secara realtime.</p>
                         
                         <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                             <div class="flex items-center space-x-3">
@@ -385,9 +385,9 @@
                                 <p class="text-[11px] text-amber-100 mt-1">Transaksi sukses terlayani</p>
                             </div>
                             <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white p-5 rounded-2xl shadow-sm">
-                                <p class="text-xs uppercase font-semibold text-purple-100">Total Poin Diberikan</p>
+                                <p class="text-xs uppercase font-semibold text-purple-100">Total Poin Disalurkan</p>
                                 <h3 id="reportTotalPointsAwarded" class="text-3xl font-heading font-black mt-2">0 Poin</h3>
-                                <p class="text-[11px] text-purple-100 mt-1">Reward loyalitas disalurkan</p>
+                                <p class="text-[11px] text-purple-100 mt-1">Termasuk Poin Receh QRIS</p>
                             </div>
                         </div>
 
@@ -415,7 +415,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 4: STOCKS & MENU MANAGEMENT (WITH EDIT PRICE) -->
+                <!-- TAB 4: STOCKS & MENU MANAGEMENT -->
                 <div id="adminTabStocks" class="hidden space-y-4">
                     <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-5">
                         <div class="flex justify-between items-center mb-4">
@@ -424,7 +424,7 @@
                                     <i class="fa-solid fa-boxes-stacked text-brand-darkgreen mr-2"></i>
                                     Kelola Menu, Harga & Stok Bahan Jus
                                 </h4>
-                                <p class="text-xs text-slate-500">Ubah harga jual (jika bahan baku naik) atau atur stok porsi.</p>
+                                <p class="text-xs text-slate-500">Ubah harga jual atau atur stok porsi jus.</p>
                             </div>
                             <button onclick="openAddMenuModal()" class="bg-brand-green hover:bg-emerald-600 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm">
                                 + Tambah Menu Baru
@@ -478,7 +478,7 @@
                                     <th class="p-3.5">Nomor WA / Email</th>
                                     <th class="p-3.5">Total Poin</th>
                                     <th class="p-3.5">Status Penukaran</th>
-                                    <th class="p-3.5 text-center">Aksi Verifikasi</th>
+                                    <th class="p-3.5 text-center">Aksi Edit Poin</th>
                                 </tr>
                             </thead>
                             <tbody id="pointsTableBody" class="divide-y divide-slate-100">
@@ -513,7 +513,7 @@
 
     </main>
 
-    <!-- FOOTER -->
+    <!-- FOOTER (Contains Subtle Secret Admin Entrance) -->
     <footer class="bg-slate-900 text-slate-400 mt-12 py-8 border-t border-slate-800 text-xs">
         <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
             <div>
@@ -527,18 +527,90 @@
             </div>
             <div>
                 <h5 class="font-bold text-white mb-2">Program Hadiah Poin</h5>
-                <p class="mb-1">Dapatkan 20 - 50 Poin setiap kali order selesai!</p>
+                <p class="mb-1">Dapatkan 20 - 50 Poin + Bonus Receh QRIS setiap order selesai!</p>
                 <p class="text-amber-400 font-semibold">1.000 Poin = Gratis 1 Jus Komplit (Jus + Susu + Keju)</p>
             </div>
         </div>
-        <div class="border-t border-slate-800 mt-6 pt-4 text-center text-slate-500">
-            &copy; 2026 Seger.in Juice Delivery. All rights reserved.
+        <div class="border-t border-slate-800 mt-6 pt-4 px-4 max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-slate-500">
+            <p>&copy; 2026 Seger.in Juice Delivery. All rights reserved.</p>
+            <!-- Subtle Secret Admin Entrance -->
+            <button onclick="openAdminLoginModal()" class="mt-2 sm:mt-0 text-slate-600 hover:text-slate-400 transition text-[11px] flex items-center space-x-1">
+                <i class="fa-solid fa-lock text-[10px]"></i>
+                <span>Portal Admin Toko</span>
+            </button>
         </div>
     </footer>
 
     <!-- MODALS & DRAWERS -->
 
-    <!-- USER ORDERS TRACKING MODAL -->
+    <!-- QRIS CHECKOUT MODAL (PRESISI RECEH 1-10 RS) -->
+    <div id="qrisCheckoutModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative my-6 text-center">
+            <button onclick="closeQrisCheckoutModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <div class="inline-flex p-3 rounded-2xl bg-blue-50 text-blue-600 mb-3">
+                <i class="fa-solid fa-qrcode text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-heading font-black text-slate-800">Pembayaran QRIS Presisi</h3>
+            <p class="text-xs text-slate-500 mt-1">Scan QRIS di bawah menggunakan GoPay, OVO, ShopeePay, DANA, atau M-Banking</p>
+
+            <!-- Static QRIS Graphic Card -->
+            <div class="my-5 p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col items-center">
+                <div class="bg-white p-3 rounded-xl shadow-md mb-3 border border-slate-100">
+                    <!-- SVG QR Code Placeholder -->
+                    <svg class="w-44 h-44" viewBox="0 0 100 100">
+                        <rect width="100" height="100" fill="#FFFFFF"/>
+                        <!-- QR Corner 1 -->
+                        <rect x="10" y="10" width="25" height="25" fill="#0F172A"/>
+                        <rect x="14" y="14" width="17" height="17" fill="#FFFFFF"/>
+                        <rect x="18" y="18" width="9" height="9" fill="#0F172A"/>
+                        <!-- QR Corner 2 -->
+                        <rect x="65" y="10" width="25" height="25" fill="#0F172A"/>
+                        <rect x="69" y="14" width="17" height="17" fill="#FFFFFF"/>
+                        <rect x="73" y="18" width="9" height="9" fill="#0F172A"/>
+                        <!-- QR Corner 3 -->
+                        <rect x="10" y="65" width="25" height="25" fill="#0F172A"/>
+                        <rect x="14" y="69" width="17" height="17" fill="#FFFFFF"/>
+                        <rect x="18" y="73" width="9" height="9" fill="#0F172A"/>
+                        <!-- Pattern dots -->
+                        <rect x="42" y="12" width="6" height="6" fill="#0F172A"/>
+                        <rect x="52" y="18" width="6" height="6" fill="#0F172A"/>
+                        <rect x="42" y="42" width="16" height="16" fill="#10B981"/>
+                        <rect x="65" y="45" width="8" height="8" fill="#0F172A"/>
+                        <rect x="78" y="60" width="12" height="12" fill="#0F172A"/>
+                        <rect x="45" y="70" width="10" height="10" fill="#0F172A"/>
+                        <rect x="62" y="75" width="8" height="12" fill="#0F172A"/>
+                    </svg>
+                </div>
+                <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Seger.in Official QRIS</p>
+            </div>
+
+            <!-- Amount & Copy Box -->
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl mb-4">
+                <p class="text-xs text-amber-800 font-semibold">Total Transfer Presisi (Wajib Pas):</p>
+                <div class="flex items-center justify-center space-x-2 my-1">
+                    <h2 id="qrisExactAmount" class="text-3xl font-heading font-black text-brand-orange">Rp 0</h2>
+                    <button onclick="copyQrisAmount()" class="bg-amber-200 hover:bg-amber-300 text-amber-900 text-xs font-bold px-2.5 py-1 rounded-lg transition" title="Salin Nominal">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+                <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200 mt-2 text-left">
+                    <p class="text-[11px] text-amber-900 leading-tight">
+                        <i class="fa-solid fa-circle-info text-amber-600 mr-1"></i>
+                        Transfer tepat <strong id="qrisRecehText">Rp 0</strong> agar pesanan terverifikasi instan. Kelebihan <strong id="qrisBonusRecehText">Rp 0</strong> otomatis masuk sebagai <strong id="qrisBonusPoinText">+0 Poin Loyalitas</strong> tambahan di akunmu!
+                    </p>
+                </div>
+            </div>
+
+            <button onclick="confirmQrisPaymentAndSubmit()" class="w-full bg-gradient-to-r from-brand-green to-emerald-600 hover:opacity-95 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition">
+                <i class="fa-solid fa-check-circle mr-1"></i> Saya Sudah Transfer & Simpan Pesanan
+            </button>
+        </div>
+    </div>
+
+    <!-- NATIVE IN-APP LIVE ORDER STATUS & TIMELINE MODAL -->
     <div id="userOrdersModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[85vh] flex flex-col">
             <button onclick="closeUserOrdersModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
@@ -553,7 +625,7 @@
         </div>
     </div>
 
-    <!-- PRODUCT CUSTOMIZATION MODAL -->
+    <!-- PRODUCT CUSTOMIZATION MODAL (SYNCED WITH TOPPING STOCKS) -->
     <div id="customizeModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative my-8">
             <button onclick="closeCustomizeModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
@@ -916,7 +988,7 @@
         </div>
     </div>
 
-    <!-- CART SIDE DRAWER WITH REALTIME DYNAMIC QRIS OPTION -->
+    <!-- CART SIDE DRAWER -->
     <div id="cartDrawer" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs hidden">
         <div class="absolute right-0 top-0 bottom-0 max-w-md w-full bg-white shadow-2xl flex flex-col justify-between transform transition-transform duration-300">
             
@@ -952,7 +1024,7 @@
                         </label>
                         <label id="qrisRadioOption" class="flex items-center space-x-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50">
                             <input type="radio" name="paymentMethod" id="qrisRadioInput" value="QRIS" class="text-brand-green focus:ring-brand-green">
-                            <span id="qrisRadioText" class="font-semibold text-slate-800">Transfer Bank / QRIS All Payment</span>
+                            <span id="qrisRadioText" class="font-semibold text-slate-800">Transfer Bank / QRIS Presisi (Kode Receh)</span>
                         </label>
                         <label class="flex items-center space-x-2 cursor-pointer p-1.5 rounded-lg hover:bg-slate-50">
                             <input type="radio" name="paymentMethod" value="E-Wallet" class="text-brand-green focus:ring-brand-green">
@@ -966,9 +1038,9 @@
                     <span id="cartTotalPrice" class="text-xl font-heading font-black text-brand-darkgreen">Rp 0</span>
                 </div>
 
-                <button onclick="submitOrder()" class="w-full bg-gradient-to-r from-brand-orange to-amber-500 hover:opacity-95 text-white font-bold py-3 rounded-2xl text-sm shadow-md transition flex items-center justify-center space-x-2">
-                    <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span>Kirim Pesanan (Simpan Database & WA)</span>
+                <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-brand-orange to-amber-500 hover:opacity-95 text-white font-bold py-3 rounded-2xl text-sm shadow-md transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-paper-plane text-base"></i>
+                    <span>Proses Checkout & Simpan Pesanan</span>
                 </button>
             </div>
         </div>
@@ -981,7 +1053,11 @@
     </div>
 
     <!-- APPLICATION LOGIC & FIREBASE INTEGRATION -->
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, addDoc, getDocs, increment, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         // FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBjs6W7r_MW_TVHDuaOa8ybHRxT4cDR_LY",
@@ -992,9 +1068,9 @@
             appId: "1:808276728764:web:dc6e5dc1991e1c9991e9b9"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
         // GLOBAL STATE
         let currentUser = null; 
@@ -1012,9 +1088,67 @@
         let previousOrderCount = 0;
         let selectedProductForCustomization = null;
 
+        // QRIS Pending Checkout State
+        let pendingQrisData = null;
+
         // Security State
         let failedAdminLoginAttempts = 0;
         let adminLoginLockoutTime = 0;
+
+        // EXPOSE FUNCTIONS TO WINDOW FOR INLINE ONCLICK EVENTS
+        window.showCatalogPage = showCatalogPage;
+        window.showAdminDashboard = showAdminDashboard;
+        window.openUserOrdersModal = openUserOrdersModal;
+        window.closeUserOrdersModal = closeUserOrdersModal;
+        window.openPointsModal = openPointsModal;
+        window.closePointsModal = closePointsModal;
+        window.toggleCartDrawer = toggleCartDrawer;
+        window.openLoginModal = openLoginModal;
+        window.closeLoginModal = closeLoginModal;
+        window.openAdminLoginModal = openAdminLoginModal;
+        window.closeAdminLoginModal = closeAdminLoginModal;
+        window.switchAuthTab = switchAuthTab;
+        window.handleGoogleSignIn = handleGoogleSignIn;
+        window.handleEmailAuth = handleEmailAuth;
+        window.handleAdminLogin = handleAdminLogin;
+        window.logout = logout;
+        window.openCustomizeModal = openCustomizeModal;
+        window.closeCustomizeModal = closeCustomizeModal;
+        window.confirmAddToCart = confirmAddToCart;
+        window.updateCartQty = updateCartQty;
+        window.proceedToCheckout = proceedToCheckout;
+        window.confirmQrisPaymentAndSubmit = confirmQrisPaymentAndSubmit;
+        window.closeQrisCheckoutModal = closeQrisCheckoutModal;
+        window.copyQrisAmount = copyQrisAmount;
+        window.openReviewModal = openReviewModal;
+        window.closeReviewModal = closeReviewModal;
+        window.setRating = setRating;
+        window.handleSubmitReview = handleSubmitReview;
+        window.copyReferralCode = copyReferralCode;
+        window.redeemFreeJuice = redeemFreeJuice;
+        window.switchAdminTab = switchAdminTab;
+        window.toggleQrisFeature = toggleQrisFeature;
+        window.setReportPreset = setReportPreset;
+        window.renderSalesReport = renderSalesReport;
+        window.printSalesReport = printSalesReport;
+        window.openAddMenuModal = openAddMenuModal;
+        window.closeAddMenuModal = closeAddMenuModal;
+        window.handleSaveNewMenu = handleSaveNewMenu;
+        window.deleteProduct = deleteProduct;
+        window.updateProductPriceAndStock = updateProductPriceAndStock;
+        window.openAddToppingModal = openAddToppingModal;
+        window.closeAddToppingModal = closeAddToppingModal;
+        window.handleSaveNewTopping = handleSaveNewTopping;
+        window.updateToppingStock = updateToppingStock;
+        window.deleteTopping = deleteTopping;
+        window.adminAdjustPoints = adminAdjustPoints;
+        window.openAddGalleryModal = openAddGalleryModal;
+        window.closeAddGalleryModal = closeAddGalleryModal;
+        window.handleSaveGallery = handleSaveGallery;
+        window.deleteGalleryItem = deleteGalleryItem;
+        window.updateOrderStatus = updateOrderStatus;
+        window.deleteOrder = deleteOrder;
+        window.scrollToMenu = scrollToMenu;
 
         window.onload = function() {
             initAuthListener();
@@ -1029,10 +1163,11 @@
         };
 
         function initAuthListener() {
-            auth.onAuthStateChanged(user => {
+            onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    db.collection('users').doc(user.uid).get().then(docSnap => {
-                        let profile = docSnap.exists ? docSnap.data() : {};
+                    try {
+                        const userDoc = await getDoc(doc(db, 'users', user.uid));
+                        let profile = userDoc.exists() ? userDoc.data() : {};
                         currentUser = {
                             uid: user.uid,
                             name: profile.name || user.displayName || "Siswa",
@@ -1043,23 +1178,30 @@
                             referredBy: profile.referredBy || null,
                             firstOrderCompleted: profile.firstOrderCompleted || false
                         };
-                        updateUserUI();
-                        updateCartBadge();
-                    });
+                    } catch (e) {
+                        currentUser = {
+                            uid: user.uid,
+                            name: user.displayName || "Siswa",
+                            class: "Siswa",
+                            phone: "08123456789",
+                            email: user.email,
+                            photoURL: user.photoURL
+                        };
+                    }
                 } else {
                     currentUser = null;
-                    updateUserUI();
-                    updateCartBadge();
                 }
+                updateUserUI();
+                updateCartBadge();
             });
         }
 
         function listenToSettingsCloud() {
-            db.collection('settings').doc('storeConfig').onSnapshot(doc => {
-                if (doc.exists) {
-                    isQrisEnabled = doc.data().qrisEnabled !== false;
+            onSnapshot(doc(db, 'settings', 'storeConfig'), (docSnap) => {
+                if (docSnap.exists()) {
+                    isQrisEnabled = docSnap.data().qrisEnabled !== false;
                 } else {
-                    db.collection('settings').doc('storeConfig').set({ qrisEnabled: true });
+                    setDoc(doc(db, 'settings', 'storeConfig'), { qrisEnabled: true });
                     isQrisEnabled = true;
                 }
                 applyQrisSettingsUI();
@@ -1083,7 +1225,7 @@
                 if (qrisOption) {
                     qrisOption.classList.remove('opacity-40', 'cursor-not-allowed');
                     qrisInput.disabled = false;
-                    qrisText.innerText = "Transfer Bank / QRIS All Payment";
+                    qrisText.innerText = "Transfer Bank / QRIS Presisi (Kode Receh)";
                 }
             } else {
                 if (statusLabel) {
@@ -1099,14 +1241,13 @@
             }
         }
 
-        function toggleQrisFeature(enabled) {
+        async function toggleQrisFeature(enabled) {
             if (!activeAdmin) {
                 showToast("Akses ditolak. Hanya Admin!", "error");
                 return;
             }
-            db.collection('settings').doc('storeConfig').set({ qrisEnabled: enabled }, { merge: true }).then(() => {
-                showToast(enabled ? "Fitur QRIS Diaktifkan!" : "Fitur QRIS Dinonaktifkan!");
-            });
+            await setDoc(doc(db, 'settings', 'storeConfig'), { qrisEnabled: enabled }, { merge: true });
+            showToast(enabled ? "Fitur QRIS Diaktifkan!" : "Fitur QRIS Dinonaktifkan!");
         }
 
         function switchAuthTab(mode) {
@@ -1132,40 +1273,39 @@
             }
         }
 
-        function handleGoogleSignIn() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then(result => {
+        async function handleGoogleSignIn() {
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
                 const user = result.user;
-                const userRef = db.collection('users').doc(user.uid);
-                
-                userRef.get().then(docSnap => {
-                    if (!docSnap.exists) {
-                        userRef.set({
-                            name: user.displayName,
-                            email: user.email,
-                            phone: "08814187481",
-                            class: "Siswa",
-                            firstOrderCompleted: false,
-                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        
-                        db.collection('points').doc(user.uid).set({
-                            points: 0,
-                            name: user.displayName,
-                            class: "Siswa",
-                            phone: "08814187481"
-                        });
-                    }
-                });
+                const userRef = doc(db, 'users', user.uid);
+                const userSnap = await getDoc(userRef);
 
+                if (!userSnap.exists()) {
+                    await setDoc(userRef, {
+                        name: user.displayName,
+                        email: user.email,
+                        phone: "08814187481",
+                        class: "Siswa",
+                        firstOrderCompleted: false,
+                        createdAt: serverTimestamp()
+                    });
+                    
+                    await setDoc(doc(db, 'points', user.uid), {
+                        points: 0,
+                        name: user.displayName,
+                        class: "Siswa",
+                        phone: "08814187481"
+                    });
+                }
                 closeLoginModal();
                 showToast(`Selamat datang, ${user.displayName}!`);
-            }).catch(err => {
+            } catch (err) {
                 showToast(`Gagal login Google: ${err.message}`, "error");
-            });
+            }
         }
 
-        function handleEmailAuth(e) {
+        async function handleEmailAuth(e) {
             e.preventDefault();
             const email = document.getElementById('inputEmail').value.trim();
             const password = document.getElementById('inputPassword').value.trim();
@@ -1176,7 +1316,8 @@
                 const studentClass = document.getElementById('inputClass').value.trim();
                 const refCode = document.getElementById('inputReferralCode').value.trim().toUpperCase();
 
-                auth.createUserWithEmailAndPassword(email, password).then(res => {
+                try {
+                    const res = await createUserWithEmailAndPassword(auth, email, password);
                     const newUid = res.user.uid;
                     let referredByUid = null;
 
@@ -1184,47 +1325,48 @@
                         referredByUid = refCode.replace('SEGER-', '').toLowerCase();
                     }
 
-                    db.collection('points').doc(newUid).set({
+                    await setDoc(doc(db, 'points', newUid), {
                         points: 0,
                         name: name,
                         class: studentClass,
                         phone: phone
                     });
 
-                    return db.collection('users').doc(newUid).set({
+                    await setDoc(doc(db, 'users', newUid), {
                         name: name,
                         class: studentClass,
                         phone: phone,
                         email: email,
                         referredBy: referredByUid,
                         firstOrderCompleted: false,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: serverTimestamp()
                     });
-                }).then(() => {
+
                     closeLoginModal();
                     showToast("Akun berhasil dibuat!");
-                }).catch(err => {
+                } catch (err) {
                     showToast(err.message, "error");
-                });
+                }
             } else {
-                auth.signInWithEmailAndPassword(email, password).then(() => {
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
                     closeLoginModal();
                     showToast("Berhasil login!");
-                }).catch(err => {
+                } catch (err) {
                     showToast("Email/Password salah", "error");
-                });
+                }
             }
         }
 
         function listenToProductsCloud() {
-            db.collection('products').onSnapshot(snapshot => {
+            onSnapshot(collection(db, 'products'), (snapshot) => {
                 if (snapshot.empty) {
                     seedInitialProducts();
                     return;
                 }
                 products = [];
-                snapshot.forEach(doc => {
-                    products.push({ id: doc.id, ...doc.data() });
+                snapshot.forEach(docSnap => {
+                    products.push({ id: docSnap.id, ...docSnap.data() });
                 });
                 renderProductGrid();
                 renderStockControls();
@@ -1232,20 +1374,20 @@
         }
 
         function listenToToppingsCloud() {
-            db.collection('toppings').onSnapshot(snapshot => {
+            onSnapshot(collection(db, 'toppings'), (snapshot) => {
                 if (snapshot.empty) {
                     seedInitialToppings();
                     return;
                 }
                 toppings = [];
-                snapshot.forEach(doc => {
-                    toppings.push({ id: doc.id, ...doc.data() });
+                snapshot.forEach(docSnap => {
+                    toppings.push({ id: docSnap.id, ...docSnap.data() });
                 });
                 renderToppingControls();
             });
         }
 
-        function seedInitialProducts() {
+        async function seedInitialProducts() {
             const defaultProducts = [
                 {
                     name: "Jus Buah Naga",
@@ -1275,28 +1417,32 @@
                     imageUrl: "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&w=600&q=80"
                 }
             ];
-
-            defaultProducts.forEach(p => db.collection('products').add(p));
+            for (const p of defaultProducts) {
+                await addDoc(collection(db, 'products'), p);
+            }
         }
 
-        function seedInitialToppings() {
+        async function seedInitialToppings() {
             const defaultToppings = [
-                { name: "Tanpa Topping (Original)", price: 0, stock: 999 },
                 { name: "Keju Melimpah", price: 2000, stock: 50 },
                 { name: "Susu Kental Manis", price: 1000, stock: 50 },
                 { name: "Chia Seed Sehat", price: 3000, stock: 30 },
                 { name: "Cincau Hitam Segar", price: 2000, stock: 40 }
             ];
-
-            defaultToppings.forEach(t => db.collection('toppings').add(t));
+            for (const t of defaultToppings) {
+                await addDoc(collection(db, 'toppings'), t);
+            }
         }
 
         function listenToOrdersCloud() {
-            db.collection('orders').onSnapshot(snapshot => {
+            onSnapshot(collection(db, 'orders'), (snapshot) => {
                 orders = [];
-                snapshot.forEach(doc => {
-                    orders.push({ docId: doc.id, ...doc.data() });
+                snapshot.forEach(docSnap => {
+                    orders.push({ docId: docSnap.id, ...docSnap.data() });
                 });
+
+                // Sort orders by timestamp if available or client-side sort
+                orders.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 if (activeAdmin && orders.length > previousOrderCount && previousOrderCount !== 0) {
                     playOrderNotificationSound();
@@ -1307,6 +1453,10 @@
                 renderOrdersTable();
                 if (!document.getElementById('adminTabReports').classList.contains('hidden')) {
                     renderSalesReport();
+                }
+                // Refresh open user orders modal if open
+                if (!document.getElementById('userOrdersModal').classList.contains('hidden')) {
+                    openUserOrdersModal();
                 }
             });
         }
@@ -1335,20 +1485,20 @@
         }
 
         function listenToReviewsCloud() {
-            db.collection('reviews').onSnapshot(snapshot => {
+            onSnapshot(collection(db, 'reviews'), (snapshot) => {
                 reviews = [];
-                snapshot.forEach(doc => {
-                    reviews.push({ id: doc.id, ...doc.data() });
+                snapshot.forEach(docSnap => {
+                    reviews.push({ id: docSnap.id, ...docSnap.data() });
                 });
                 renderReviews();
             });
         }
 
         function listenToPointsCloud() {
-            db.collection('points').onSnapshot(snapshot => {
+            onSnapshot(collection(db, 'points'), (snapshot) => {
                 pointsData = {};
-                snapshot.forEach(doc => {
-                    pointsData[doc.id] = doc.data();
+                snapshot.forEach(docSnap => {
+                    pointsData[docSnap.id] = docSnap.data();
                 });
                 renderPointsTable();
                 updateUserUI();
@@ -1356,10 +1506,10 @@
         }
 
         function listenToGalleryCloud() {
-            db.collection('celebrities').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            onSnapshot(collection(db, 'celebrities'), (snapshot) => {
                 celebrities = [];
-                snapshot.forEach(doc => {
-                    celebrities.push({ id: doc.id, ...doc.data() });
+                snapshot.forEach(docSnap => {
+                    celebrities.push({ id: docSnap.id, ...docSnap.data() });
                 });
                 renderUserGallery();
                 renderAdminGalleryControls();
@@ -1438,6 +1588,23 @@
             selectedProductForCustomization = product;
             const container = document.getElementById('customizeModalBody');
 
+            // Render Toppings with real-time stock check
+            const toppingOptions = toppings.map(top => {
+                const isTopOut = (top.stock || 0) <= 0;
+                return `
+                    <label class="flex items-center justify-between p-2 rounded-xl border ${isTopOut ? 'bg-slate-100 border-slate-200 opacity-60 cursor-not-allowed' : 'bg-slate-50 border-slate-200 cursor-pointer hover:border-brand-green'}">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-medium text-xs ${isTopOut ? 'line-through text-slate-400' : 'text-slate-800'}">${top.name}</span>
+                            ${isTopOut ? '<span class="text-[9px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-bold">Habis</span>' : ''}
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-brand-orange font-bold text-xs">+Rp ${top.price.toLocaleString('id-ID')}</span>
+                            <input type="checkbox" value="${top.id}" data-name="${top.name}" data-price="${top.price}" ${isTopOut ? 'disabled' : ''} class="custToppingCB rounded text-brand-green">
+                        </div>
+                    </label>
+                `;
+            }).join('');
+
             container.innerHTML = `
                 <div class="text-center mb-5">
                     <h3 class="text-xl font-heading font-black text-slate-800">Kustomisasi ${product.name}</h3>
@@ -1471,9 +1638,7 @@
                                 <input type="radio" name="custSize" value="Reguler" checked class="text-brand-green">
                             </label>
                             <label class="border border-slate-200 p-2.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-brand-green">
-                                <div>
-                                    <span class="font-bold block">Large (+Rp 3.000)</span>
-                                </div>
+                                <span class="font-bold block">Large (+Rp 3.000)</span>
                                 <input type="radio" name="custSize" value="Large" class="text-brand-green">
                             </label>
                         </div>
@@ -1482,18 +1647,7 @@
                     <div>
                         <label class="block font-bold text-slate-700 uppercase mb-1.5"><i class="fa-solid fa-cheese text-amber-500 mr-1"></i>Tambah Topping Add-ons</label>
                         <div class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                            ${toppings.map(top => {
-                                if (top.stock <= 0) return '';
-                                return `
-                                    <label class="flex items-center justify-between p-2 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer">
-                                        <span class="font-medium">${top.name}</span>
-                                        <div class="flex items-center space-x-2">
-                                            <span class="text-brand-orange font-bold">+Rp ${top.price.toLocaleString('id-ID')}</span>
-                                            <input type="checkbox" value="${top.id}" data-name="${top.name}" data-price="${top.price}" class="custToppingCB rounded text-brand-green">
-                                        </div>
-                                    </label>
-                                `;
-                            }).join('')}
+                            ${toppingOptions || '<p class="text-slate-400 text-xs">Belum ada pilihan topping.</p>'}
                         </div>
                     </div>
                 </div>
@@ -1526,14 +1680,14 @@
             checkboxes.forEach(cb => {
                 const price = parseInt(cb.getAttribute('data-price')) || 0;
                 const name = cb.getAttribute('data-name');
-                selectedToppingObjs.push(name);
+                selectedToppingObjs.push({ id: cb.value, name: name, price: price });
                 toppingsTotalPrice += price;
             });
 
-            const toppingText = selectedToppingObjs.length > 0 ? selectedToppingObjs.join(', ') : 'Original (Tanpa Topping)';
+            const toppingText = selectedToppingObjs.length > 0 ? selectedToppingObjs.map(t => t.name).join(', ') : 'Original (Tanpa Topping)';
             const unitPrice = product.price + sizeExtraPrice + toppingsTotalPrice;
 
-            const cartItemId = `${product.id}_${sugar}_${ice}_${sizeRadio}_${selectedToppingObjs.join('-')}`;
+            const cartItemId = `${product.id}_${sugar}_${ice}_${sizeRadio}_${selectedToppingObjs.map(t=>t.id).join('-')}`;
             const existing = cart.find(item => item.cartItemId === cartItemId);
 
             if (existing) {
@@ -1546,6 +1700,7 @@
                     sugar: sugar,
                     ice: ice,
                     size: sizeRadio,
+                    toppings: selectedToppingObjs,
                     toppingName: toppingText,
                     price: unitPrice,
                     qty: 1
@@ -1560,7 +1715,7 @@
         function openAddMenuModal() { document.getElementById('addMenuModal').classList.remove('hidden'); }
         function closeAddMenuModal() { document.getElementById('addMenuModal').classList.add('hidden'); }
 
-        function handleSaveNewMenu(e) {
+        async function handleSaveNewMenu(e) {
             e.preventDefault();
             const name = document.getElementById('newMenuName').value.trim();
             const price = parseInt(document.getElementById('newMenuPrice').value) || 0;
@@ -1570,43 +1725,44 @@
             const benefit = document.getElementById('newMenuBenefit').value.trim();
             const desc = document.getElementById('newMenuDesc').value.trim();
 
-            db.collection('products').add({
-                name, price, category, stock, imageUrl, benefit, desc,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            try {
+                await addDoc(collection(db, 'products'), {
+                    name, price, category, stock, imageUrl, benefit, desc,
+                    createdAt: serverTimestamp()
+                });
                 closeAddMenuModal();
                 showToast("Menu baru berhasil disimpan ke Database Cloud!");
-            }).catch(err => {
+            } catch (err) {
                 showToast(`Gagal menyimpan: ${err.message}`, "error");
-            });
+            }
         }
 
-        function deleteProduct(productId) {
+        async function deleteProduct(productId) {
             if (confirm("Yakin ingin menghapus menu ini dari database?")) {
-                db.collection('products').doc(productId).delete().then(() => {
-                    showToast("Menu dihapus.");
-                });
+                await deleteDoc(doc(db, 'products', productId));
+                showToast("Menu dihapus.");
             }
         }
 
         function openAddToppingModal() { document.getElementById('addToppingModal').classList.remove('hidden'); }
         function closeAddToppingModal() { document.getElementById('addToppingModal').classList.add('hidden'); }
 
-        function handleSaveNewTopping(e) {
+        async function handleSaveNewTopping(e) {
             e.preventDefault();
             const name = document.getElementById('newToppingName').value.trim();
             const price = parseInt(document.getElementById('newToppingPrice').value) || 0;
             const stock = parseInt(document.getElementById('newToppingStock').value) || 0;
 
-            db.collection('toppings').add({
-                name, price, stock,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            try {
+                await addDoc(collection(db, 'toppings'), {
+                    name, price, stock,
+                    createdAt: serverTimestamp()
+                });
                 closeAddToppingModal();
                 showToast("Topping baru berhasil disimpan!");
-            }).catch(err => {
+            } catch (err) {
                 showToast(`Gagal menyimpan: ${err.message}`, "error");
-            });
+            }
         }
 
         function renderToppingControls() {
@@ -1635,18 +1791,16 @@
             }).join('');
         }
 
-        function updateToppingStock(toppingId) {
+        async function updateToppingStock(toppingId) {
             const newVal = parseInt(document.getElementById(`toppingStockInput_${toppingId}`).value) || 0;
-            db.collection('toppings').doc(toppingId).update({ stock: newVal }).then(() => {
-                showToast("Stok topping diperbarui!");
-            });
+            await updateDoc(doc(db, 'toppings', toppingId), { stock: newVal });
+            showToast("Stok topping diperbarui!");
         }
 
-        function deleteTopping(toppingId) {
+        async function deleteTopping(toppingId) {
             if (confirm("Yakin ingin menghapus topping ini?")) {
-                db.collection('toppings').doc(toppingId).delete().then(() => {
-                    showToast("Topping dihapus.");
-                });
+                await deleteDoc(doc(db, 'toppings', toppingId));
+                showToast("Topping dihapus.");
             }
         }
 
@@ -1730,7 +1884,8 @@
             }
         }
 
-        function submitOrder() {
+        // UPGRADED CHECKOUT FLOW WITH QRIS UNIQUE NOMINAL CONVERSION
+        function proceedToCheckout() {
             if (cart.length === 0) {
                 showToast("Keranjang belanjaan kosong!", "error");
                 return;
@@ -1743,7 +1898,57 @@
 
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
             const notes = document.getElementById('orderNotes').value.trim();
-            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const baseTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            if (paymentMethod === 'QRIS') {
+                // Generate random unique digits 1 - 10 IDR
+                const bonusPoin = Math.floor(Math.random() * 10) + 1;
+                const exactTotal = baseTotal + bonusPoin;
+
+                pendingQrisData = {
+                    baseTotal: baseTotal,
+                    bonusPoin: bonusPoin,
+                    total: exactTotal,
+                    paymentMethod: 'QRIS Presisi',
+                    notes: notes
+                };
+
+                document.getElementById('qrisExactAmount').innerText = `Rp ${exactTotal.toLocaleString('id-ID')}`;
+                document.getElementById('qrisRecehText').innerText = `Rp ${exactTotal.toLocaleString('id-ID')}`;
+                document.getElementById('qrisBonusRecehText').innerText = `Rp ${bonusPoin}`;
+                document.getElementById('qrisBonusPoinText').innerText = `+${bonusPoin} Poin Loyalitas`;
+
+                toggleCartDrawer();
+                document.getElementById('qrisCheckoutModal').classList.remove('hidden');
+            } else {
+                saveOrderToCloud({
+                    baseTotal: baseTotal,
+                    bonusPoin: 0,
+                    total: baseTotal,
+                    paymentMethod: paymentMethod,
+                    notes: notes
+                });
+            }
+        }
+
+        function closeQrisCheckoutModal() {
+            document.getElementById('qrisCheckoutModal').classList.add('hidden');
+        }
+
+        function copyQrisAmount() {
+            if (!pendingQrisData) return;
+            const textToCopy = pendingQrisData.total.toString();
+            navigator.clipboard.writeText(textToCopy);
+            showToast(`Nominal Rp ${pendingQrisData.total.toLocaleString('id-ID')} disalin!`);
+        }
+
+        function confirmQrisPaymentAndSubmit() {
+            if (!pendingQrisData) return;
+            saveOrderToCloud(pendingQrisData);
+            closeQrisCheckoutModal();
+        }
+
+        async function saveOrderToCloud(paymentDetails) {
             const todayStr = new Date().toISOString().split('T')[0];
 
             const newOrder = {
@@ -1753,48 +1958,51 @@
                 customerClass: currentUser.class,
                 customerPhone: currentUser.phone,
                 items: [...cart],
-                total: totalAmount,
-                paymentMethod: paymentMethod,
-                notes: notes || 'Tanpa Catatan',
+                baseTotal: paymentDetails.baseTotal,
+                bonusPoin: paymentDetails.bonusPoin || 0,
+                total: paymentDetails.total,
+                paymentMethod: paymentDetails.paymentMethod,
+                notes: paymentDetails.notes || 'Tanpa Catatan',
                 status: 'Menunggu',
                 pointsAwarded: 0,
                 dateStr: todayStr,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                timestamp: serverTimestamp(),
                 timeString: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB'
             };
 
-            db.collection('orders').add(newOrder).then(() => {
-                cart.forEach(cItem => {
+            try {
+                await addDoc(collection(db, 'orders'), newOrder);
+
+                // Update Drink Stocks & Topping Stocks in Firestore
+                for (const cItem of cart) {
                     const p = products.find(prod => prod.id === cItem.id);
                     if (p) {
-                        const newStock = Math.max(0, p.stock - cItem.qty);
-                        db.collection('products').doc(p.id).update({ stock: newStock });
+                        const newStock = Math.max(0, (p.stock || 0) - cItem.qty);
+                        await updateDoc(doc(db, 'products', p.id), { stock: newStock });
                     }
-                });
-
-                let waMsg = `*PESANAN BARU SEGER.IN*\n`;
-                waMsg += `ID: ${newOrder.id}\n`;
-                waMsg += `Nama: ${newOrder.customerName}\n`;
-                waMsg += `Kelas: ${newOrder.customerClass}\n`;
-                waMsg += `No HP: ${newOrder.customerPhone}\n\n`;
-                waMsg += `*Detail Pesanan:*\n`;
-                cart.forEach(i => {
-                    waMsg += `- ${i.name} (${i.size}) [${i.sugar}, ${i.ice}, ${i.toppingName}] (${i.qty}x) = Rp ${(i.price * i.qty).toLocaleString('id-ID')}\n`;
-                });
-                waMsg += `\n*Pembayaran:* ${paymentMethod}\n`;
-                waMsg += `*Total:* Rp ${totalAmount.toLocaleString('id-ID')}\n`;
-                waMsg += `*Catatan:* ${newOrder.notes}\n\n`;
-                waMsg += `Mohon diproses ya admin! Terima kasih.`;
-
-                const targetWaUrl = `https://wa.me/628814187481?text=${encodeURIComponent(waMsg)}`;
+                    if (cItem.toppings && cItem.toppings.length > 0) {
+                        for (const topItem of cItem.toppings) {
+                            const topDoc = toppings.find(t => t.id === topItem.id);
+                            if (topDoc) {
+                                const newTopStock = Math.max(0, (topDoc.stock || 0) - cItem.qty);
+                                await updateDoc(doc(db, 'toppings', topDoc.id), { stock: newTopStock });
+                            }
+                        }
+                    }
+                }
 
                 cart = [];
+                pendingQrisData = null;
                 updateCartBadge();
-                toggleCartDrawer();
+                if (!document.getElementById('cartDrawer').classList.contains('hidden')) {
+                    toggleCartDrawer();
+                }
 
-                showToast("Pesanan tersimpan di cloud! Meluncur ke WA...");
-                window.open(targetWaUrl, '_blank');
-            });
+                showToast("Pesanan berhasil disimpan di Cloud!");
+                openUserOrdersModal();
+            } catch (err) {
+                showToast(`Gagal menyimpan pesanan: ${err.message}`, "error");
+            }
         }
 
         function openUserOrdersModal() {
@@ -1811,8 +2019,18 @@
                     if (o.status === "Siap Diantar") stepIndex = 3;
                     if (o.status === "Selesai") stepIndex = 4;
 
+                    const waMsg = encodeURIComponent(
+                        `*NOTIFIKASI PESANAN SEGER.IN*\n` +
+                        `ID: ${o.id}\n` +
+                        `Nama: ${o.customerName} (${o.customerClass})\n` +
+                        `Total: Rp ${o.total.toLocaleString('id-ID')}\n` +
+                        `Metode: ${o.paymentMethod}\n` +
+                        `Mohon info progres pesanan saya, terima kasih!`
+                    );
+                    const waUrl = `https://wa.me/628814187481?text=${waMsg}`;
+
                     return `
-                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-xs">
                             <div class="flex justify-between items-center mb-3">
                                 <span class="font-mono text-xs font-bold text-slate-500">${o.id}</span>
                                 <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700">
@@ -1820,6 +2038,7 @@
                                 </span>
                             </div>
 
+                            <!-- Timeline Steps -->
                             <div class="my-4 px-2">
                                 <div class="flex items-center justify-between text-[10px] text-center font-bold mb-2">
                                     <div class="${stepIndex >= 1 ? 'step-active' : 'step-inactive'} w-1/4">Diterima</div>
@@ -1837,9 +2056,16 @@
                             <div class="text-xs text-slate-700 font-medium space-y-1 my-2 bg-white p-3 rounded-xl border border-slate-100">
                                 ${o.items.map(i => `<div>• ${i.name} (${i.size || 'Reguler'}) - ${i.sugar || 'Normal'} x${i.qty}</div>`).join('')}
                             </div>
-                            <div class="flex justify-between items-center mt-3 pt-2 border-t border-slate-200/60 text-[11px] text-slate-400">
-                                <span>${o.timeString || ''}</span>
-                                <span class="font-black text-brand-darkgreen text-sm">Rp ${o.total.toLocaleString('id-ID')}</span>
+                            
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-3 pt-2 border-t border-slate-200/60 gap-2">
+                                <div class="text-[11px] text-slate-400">
+                                    <span>${o.timeString || ''}</span>
+                                    <span class="font-black text-brand-darkgreen text-sm block">Rp ${o.total.toLocaleString('id-ID')}</span>
+                                </div>
+                                <a href="${waUrl}" target="_blank" class="w-full sm:w-auto bg-emerald-100 hover:bg-emerald-200 text-brand-darkgreen font-bold text-[11px] px-3 py-1.5 rounded-xl transition inline-flex items-center justify-center space-x-1">
+                                    <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                                    <span>Kirim Notifikasi WA (Opsional)</span>
+                                </a>
                             </div>
                         </div>
                     `;
@@ -1907,23 +2133,26 @@
             }
         }
 
-        function handleSubmitReview(e) {
+        async function handleSubmitReview(e) {
             e.preventDefault();
             const content = document.getElementById('inputReviewContent').value.trim();
             if (!content) return;
 
-            db.collection('reviews').add({
-                userUid: currentUser.uid,
-                userName: currentUser.name,
-                userClass: currentUser.class,
-                rating: currentRatingInput,
-                content: content,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            try {
+                await addDoc(collection(db, 'reviews'), {
+                    userUid: currentUser.uid,
+                    userName: currentUser.name,
+                    userClass: currentUser.class,
+                    rating: currentRatingInput,
+                    content: content,
+                    createdAt: serverTimestamp()
+                });
                 closeReviewModal();
                 document.getElementById('inputReviewContent').value = '';
                 showToast("Terima kasih atas ulasan kamu!");
-            });
+            } catch (err) {
+                showToast(err.message, "error");
+            }
         }
 
         function renderUserGallery() {
@@ -1981,7 +2210,7 @@
         function openAddGalleryModal() { document.getElementById('addGalleryModal').classList.remove('hidden'); }
         function closeAddGalleryModal() { document.getElementById('addGalleryModal').classList.add('hidden'); }
 
-        function handleSaveGallery(e) {
+        async function handleSaveGallery(e) {
             e.preventDefault();
             if (!activeAdmin) {
                 showToast("Hanya admin terdaftar yang bisa menambah galeri!", "error");
@@ -1993,28 +2222,28 @@
             const imageUrl = document.getElementById('galleryImageUrl').value.trim();
             const note = document.getElementById('galleryArtistNote').value.trim();
 
-            db.collection('celebrities').add({
-                name, role, imageUrl, note,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            try {
+                await addDoc(collection(db, 'celebrities'), {
+                    name, role, imageUrl, note,
+                    createdAt: serverTimestamp()
+                });
                 closeAddGalleryModal();
                 e.target.reset();
                 showToast("Foto artis berhasil ditambahkan ke Galeri!");
-            }).catch(err => {
+            } catch (err) {
                 showToast(`Gagal menyimpan: ${err.message}`, "error");
-            });
+            }
         }
 
-        function deleteGalleryItem(id) {
+        async function deleteGalleryItem(id) {
             if (!activeAdmin) {
                 showToast("Hanya admin yang bisa menghapus galeri!", "error");
                 return;
             }
 
             if (confirm("Yakin ingin menghapus foto artis ini dari galeri?")) {
-                db.collection('celebrities').doc(id).delete().then(() => {
-                    showToast("Foto artis berhasil dihapus dari galeri.");
-                });
+                await deleteDoc(doc(db, 'celebrities', id));
+                showToast("Foto artis berhasil dihapus dari galeri.");
             }
         }
 
@@ -2066,7 +2295,7 @@
         }
 
         function logout() {
-            auth.signOut();
+            signOut(auth);
             activeAdmin = null;
             localStorage.removeItem('segerin_admin');
             updateUserUI();
@@ -2119,7 +2348,8 @@
             }
         }
 
-        function updateOrderStatus(docId, newStatus) {
+        // UPGRADED ORDER STATUS CHANGE WITH BASE REWARD + BONUS RECEH POIN INCREMENT
+        async function updateOrderStatus(docId, newStatus) {
             const order = orders.find(o => o.docId === docId);
             if (!order) return;
 
@@ -2128,57 +2358,64 @@
 
             if (newStatus === 'Selesai' && prevStatus !== 'Selesai') {
                 if (pointsAwarded === 0) {
-                    pointsAwarded = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
+                    const baseReward = Math.floor(Math.random() * (50 - 20 + 1)) + 20; // 20-50 pts
+                    const extraRecehPoin = order.bonusPoin || 0; // Receh from QRIS (e.g. +7)
+                    pointsAwarded = baseReward + extraRecehPoin;
 
                     const userUid = order.userUid;
                     if (userUid) {
-                        const currentPt = (pointsData[userUid] && pointsData[userUid].points) || 0;
-                        db.collection('points').doc(userUid).set({
-                            points: currentPt + pointsAwarded,
-                            name: order.customerName,
-                            class: order.customerClass,
-                            phone: order.customerPhone
-                        }, { merge: true });
+                        const userPointsRef = doc(db, 'points', userUid);
+                        const pointsSnap = await getDoc(userPointsRef);
 
-                        db.collection('users').doc(userUid).get().then(uDoc => {
-                            if (uDoc.exists) {
-                                const uData = uDoc.data();
-                                if (!uData.firstOrderCompleted) {
-                                    db.collection('users').doc(userUid).update({ firstOrderCompleted: true });
+                        if (pointsSnap.exists()) {
+                            await updateDoc(userPointsRef, {
+                                points: increment(pointsAwarded)
+                            });
+                        } else {
+                            await setDoc(userPointsRef, {
+                                points: pointsAwarded,
+                                name: order.customerName,
+                                class: order.customerClass,
+                                phone: order.customerPhone
+                            });
+                        }
 
-                                    if (uData.referredBy) {
-                                        const referrerPrefix = uData.referredBy;
-                                        db.collection('points').get().then(snap => {
-                                            snap.forEach(pDoc => {
-                                                if (pDoc.id.toLowerCase().startsWith(referrerPrefix.toLowerCase())) {
-                                                    const refCurrentPt = pDoc.data().points || 0;
-                                                    db.collection('points').doc(pDoc.id).update({
-                                                        points: refCurrentPt + 50
-                                                    });
-                                                }
+                        // Referral Check on first completed order
+                        const userDocRef = doc(db, 'users', userUid);
+                        const userSnap = await getDoc(userDocRef);
+                        if (userSnap.exists()) {
+                            const uData = userSnap.data();
+                            if (!uData.firstOrderCompleted) {
+                                await updateDoc(userDocRef, { firstOrderCompleted: true });
+
+                                if (uData.referredBy) {
+                                    const referrerPrefix = uData.referredBy.toLowerCase();
+                                    const allPoints = await getDocs(collection(db, 'points'));
+                                    allPoints.forEach(async (pDoc) => {
+                                        if (pDoc.id.toLowerCase().startsWith(referrerPrefix)) {
+                                            await updateDoc(doc(db, 'points', pDoc.id), {
+                                                points: increment(50)
                                             });
-                                        });
-                                    }
+                                        }
+                                    });
                                 }
                             }
-                        });
+                        }
                     }
                 }
             }
 
-            db.collection('orders').doc(docId).update({
+            await updateDoc(doc(db, 'orders', docId), {
                 status: newStatus,
                 pointsAwarded: pointsAwarded
-            }).then(() => {
-                showToast("Status pesanan diperbarui!");
             });
+            showToast("Status pesanan & Poin Loyalitas diperbarui!");
         }
 
-        function deleteOrder(docId) {
+        async function deleteOrder(docId) {
             if (confirm("Hapus pesanan ini?")) {
-                db.collection('orders').doc(docId).delete().then(() => {
-                    showToast("Pesanan dihapus.");
-                });
+                await deleteDoc(doc(db, 'orders', docId));
+                showToast("Pesanan dihapus.");
             }
         }
 
@@ -2223,7 +2460,7 @@
             showToast("Kode referral berhasil disalin!");
         }
 
-        function redeemFreeJuice() {
+        async function redeemFreeJuice() {
             const userUid = currentUser.uid;
             const currentPt = (pointsData[userUid] && pointsData[userUid].points) || 0;
 
@@ -2232,10 +2469,9 @@
                 return;
             }
 
-            db.collection('points').doc(userUid).update({
-                points: currentPt - 1000
-            }).then(() => {
-                return db.collection('orders').add({
+            try {
+                await updateDoc(doc(db, 'points', userUid), { points: increment(-1000) });
+                await addDoc(collection(db, 'orders'), {
                     id: 'REDEEM-' + Date.now().toString().slice(-5),
                     userUid: userUid,
                     customerName: currentUser.name,
@@ -2252,19 +2488,23 @@
                         price: 0,
                         qty: 1
                     }],
+                    baseTotal: 0,
+                    bonusPoin: 0,
                     total: 0,
                     paymentMethod: "Kupon Poin (Gratis)",
                     notes: "PENUKARAN 1.000 POIN REWARD",
                     status: "Menunggu",
                     pointsAwarded: 0,
                     dateStr: new Date().toISOString().split('T')[0],
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    timestamp: serverTimestamp(),
                     timeString: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB'
                 });
-            }).then(() => {
                 closePointsModal();
-                showToast("Voucher Penukaran Berhasil Dibuat!");
-            });
+                showToast("Kupon Penukaran Berhasil Dibuat!");
+                openUserOrdersModal();
+            } catch (err) {
+                showToast(err.message, "error");
+            }
         }
 
         function switchAdminTab(tabName) {
@@ -2492,6 +2732,9 @@
                 if (order.status === 'Siap Diantar') statusBadgeClass = 'bg-purple-100 text-purple-800';
                 if (order.status === 'Selesai') statusBadgeClass = 'bg-emerald-100 text-emerald-800';
 
+                const waPhone = formatWaNumber(order.customerPhone);
+                const waText = encodeURIComponent(`Halo ${order.customerName}, pesanan jus Seger.in kamu (${order.id}) statusnya: *${order.status}*`);
+
                 return `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="p-3.5">
@@ -2508,6 +2751,7 @@
                         </td>
                         <td class="p-3.5">
                             <span class="font-bold text-brand-darkgreen block text-xs">Rp ${order.total.toLocaleString('id-ID')}</span>
+                            ${order.bonusPoin > 0 ? `<span class="text-[9px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded">Receh: +${order.bonusPoin}</span>` : ''}
                             <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded inline-block my-0.5">${order.paymentMethod || 'COD'}</span>
                             <span class="text-[10px] text-slate-400 italic block">" ${order.notes} "</span>
                         </td>
@@ -2521,7 +2765,7 @@
                             ${order.pointsAwarded > 0 ? `<span class="block text-[10px] text-amber-600 font-bold"><i class="fa-solid fa-star text-amber-500"></i> +${order.pointsAwarded} Poin</span>` : ''}
                         </td>
                         <td class="p-3.5 text-center space-x-1">
-                            <a href="https://wa.me/${formatWaNumber(order.customerPhone)}?text=Halo%20${encodeURIComponent(order.customerName)},%20pesanan%20jus%20Seger.in%20kamu%20statusnya:%20*${encodeURIComponent(order.status)}*" 
+                            <a href="https://wa.me/${waPhone}?text=${waText}" 
                                target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg text-xs inline-flex items-center justify-center shadow-xs">
                                 <i class="fa-brands fa-whatsapp"></i>
                             </a>
@@ -2566,16 +2810,15 @@
             }).join('');
         }
 
-        function updateProductPriceAndStock(productId) {
+        async function updateProductPriceAndStock(productId) {
             const newPrice = parseInt(document.getElementById(`priceInput_${productId}`).value) || 0;
             const newStock = parseInt(document.getElementById(`stockInput_${productId}`).value) || 0;
 
-            db.collection('products').doc(productId).update({ 
+            await updateDoc(doc(db, 'products', productId), { 
                 price: newPrice,
                 stock: newStock 
-            }).then(() => {
-                showToast("Harga & Stok berhasil diperbarui!");
             });
+            showToast("Harga & Stok berhasil diperbarui!");
         }
 
         function renderPointsTable() {
@@ -2613,13 +2856,12 @@
             }).join('');
         }
 
-        function adminAdjustPoints(uid) {
+        async function adminAdjustPoints(uid) {
             const currentPt = pointsData[uid] ? pointsData[uid].points : 0;
             const newPt = prompt(`Masukkan jumlah poin baru:`, currentPt);
             if (newPt !== null && !isNaN(newPt)) {
-                db.collection('points').doc(uid).update({ points: parseInt(newPt) }).then(() => {
-                    showToast("Poin diperbarui oleh admin.");
-                });
+                await updateDoc(doc(db, 'points', uid), { points: parseInt(newPt) });
+                showToast("Poin diperbarui oleh admin.");
             }
         }
 
@@ -2680,7 +2922,7 @@
             toast.classList.remove('hidden');
             setTimeout(() => {
                 toast.classList.add('hidden');
-            }, 3000);
+            }, 3200);
         }
     </script> 
 </body>
