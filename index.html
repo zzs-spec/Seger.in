@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seger.in - Fresh Juice & Loyalty Rewards</title>
+    
+    <!-- Favicon Custom Jus Seger.in (Mengganti Ikon Bumi) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='100%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%2310B981'/%3E%3Cstop offset='100%25' stop-color='%23FBBF24'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Cpath d='M38 12l6-4 2 3-5 4z' fill='%23FFF'/%3E%3Cpath d='M20 22h24l-3 28a4 4 0 0 1-4 4H27a4 4 0 0 1-4-4l-3-28z' fill='%23FFF' opacity='0.95'/%3E%3Cpath d='M22 30h20l-2 18a2 2 0 0 1-2 2H26a2 2 0 0 1-2-2l-2-18z' fill='%23F97316'/%3E%3Ccircle cx='44' cy='22' r='7' fill='%23FBBF24' stroke='%23FFF' stroke-width='2'/%3E%3C/svg%3E">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome 6 Icons -->
@@ -60,10 +64,13 @@
     <header class="sticky top-0 z-40 glass border-b border-emerald-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
             
-            <!-- Brand Logo -->
+            <!-- Brand Logo Seger.in -->
             <div class="flex items-center space-x-3 cursor-pointer" onclick="showCatalogPage()">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-green to-brand-yellow flex items-center justify-center text-white text-xl shadow-md transform hover:rotate-12 transition">
-                    <i class="fa-solid fa-wine-glass-stripe"></i>
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-green via-emerald-500 to-brand-yellow flex items-center justify-center text-white text-xl shadow-md transform hover:rotate-12 transition relative">
+                    <i class="fa-solid fa-martini-glass-citrus"></i>
+                    <span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-brand-orange rounded-full border-2 border-white flex items-center justify-center">
+                        <i class="fa-solid fa-leaf text-[7px] text-white"></i>
+                    </span>
                 </div>
                 <div>
                     <h1 class="font-heading text-2xl font-black text-brand-darkgreen tracking-tight">
@@ -276,6 +283,9 @@
                     </button>
                     <button id="tabBtnGallery" onclick="switchAdminTab('gallery')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
                         <i class="fa-solid fa-camera-retro mr-2"></i>Kelola Galeri Artis
+                    </button>
+                    <button id="tabBtnReviews" onclick="switchAdminTab('reviews')" class="py-3 px-5 text-xs sm:text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
+                        <i class="fa-solid fa-comments mr-2"></i>Kelola Ulasan
                     </button>
                 </div>
 
@@ -536,6 +546,39 @@
                         </div>
 
                         <div id="adminGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 8: KELOLA ULASAN & TESTIMONI (MODERASI ADMIN) -->
+                <div id="adminTabReviews" class="hidden space-y-4">
+                    <div class="bg-red-50/60 border border-red-200 rounded-2xl p-5">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800 mb-1 flex items-center">
+                                    <i class="fa-solid fa-shield-halved text-red-600 mr-2"></i>
+                                    Moderasi Ulasan & Testimoni Pelanggan
+                                </h4>
+                                <p class="text-xs text-slate-500">Hapus ulasan buruk, spam, atau fitnah yang sudah terlanjur masuk di database.</p>
+                            </div>
+                            <span class="bg-emerald-100 text-brand-darkgreen text-[11px] font-bold px-3 py-1 rounded-full">
+                                <i class="fa-solid fa-filter mr-1"></i> Filter Otomatis Anti-Fitnah Aktif
+                            </span>
+                        </div>
+
+                        <div class="overflow-x-auto bg-white rounded-2xl border border-slate-200">
+                            <table class="w-full text-left text-sm text-slate-600">
+                                <thead class="bg-slate-50 text-slate-700 text-xs uppercase font-bold border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3.5">Pengirim & Kelas</th>
+                                        <th class="p-3.5">Rating</th>
+                                        <th class="p-3.5">Isi Ulasan / Testimoni</th>
+                                        <th class="p-3.5 text-center">Aksi Moderasi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminReviewsTableBody" class="divide-y divide-slate-100">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -1045,7 +1088,7 @@
         </div>
     </div>
 
-    <!-- REVIEW / TESTIMONIAL MODAL -->
+    <!-- REVIEW / TESTIMONIAL MODAL (DENGAN FILTER ANTI-FITNAH OTOMATIS) -->
     <div id="reviewModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative">
             <button onclick="closeReviewModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
@@ -1061,18 +1104,23 @@
             <form onsubmit="handleSubmitReview(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Rating Bintang</label>
-                    <div class="flex justify-center space-x-2 text-2xl text-slate-300" id="starRatingInput">
-                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(1)"></i>
-                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(2)"></i>
-                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(3)"></i>
-                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(4)"></i>
-                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-400" onclick="setRating(5)"></i>
+                    <div class="flex justify-center space-x-2 text-2xl text-amber-400" id="starRatingInput">
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-500" onclick="setRating(1)"></i>
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-500" onclick="setRating(2)"></i>
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-500" onclick="setRating(3)"></i>
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-500" onclick="setRating(4)"></i>
+                        <i class="fa-solid fa-star cursor-pointer hover:text-amber-500" onclick="setRating(5)"></i>
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Ulasan / Kesan Pesan</label>
-                    <textarea id="inputReviewContent" rows="3" required placeholder="Jusnya manis alami, kejunyah melimpah banget..." 
+                    <textarea id="inputReviewContent" rows="3" required placeholder="Jusnya manis alami, kejunya melimpah banget..." 
                               class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-400 focus:outline-none"></textarea>
+                    <p class="text-[10px] text-slate-400 mt-1 flex items-center">
+                        <i class="fa-solid fa-shield-halved text-brand-green mr-1"></i> Dilindungi filter otomatis anti-fitnah, ujaran kebencian, dan kata kasar.
+                    </p>
+                </div>
+                <div id="reviewFilterError" class="hidden text-xs text-red-600 bg-red-50 p-3 rounded-xl border border-red-200 font-semibold">
                 </div>
                 <button type="submit" class="w-full bg-brand-orange hover:bg-orange-600 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
                     Kirim Ulasan Saya <i class="fa-solid fa-paper-plane ml-1"></i>
@@ -1284,6 +1332,7 @@
         window.closeReviewModal = closeReviewModal;
         window.setRating = setRating;
         window.handleSubmitReview = handleSubmitReview;
+        window.deleteReview = deleteReview;
         window.copyReferralCode = copyReferralCode;
         window.redeemFreeJuice = redeemFreeJuice;
         window.switchAdminTab = switchAdminTab;
@@ -1787,7 +1836,9 @@
                 snapshot.forEach(docSnap => {
                     reviews.push({ id: docSnap.id, ...docSnap.data() });
                 });
+                reviews.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                 renderReviews();
+                renderAdminReviewsTable();
             });
         }
 
@@ -2470,7 +2521,9 @@
                 await addDoc(collection(db, 'orders'), orderObject);
                 cart = [];
                 updateCartBadge();
-                toggleCartDrawer();
+                if (!document.getElementById('cartDrawer').classList.contains('hidden')) {
+                    toggleCartDrawer();
+                }
                 showToast("Pesanan kamu berhasil dikirim & disimpan!");
                 openUserOrdersModal();
             } catch (err) {
@@ -2644,7 +2697,7 @@
                     });
 
                     // Check for referral bonus credit
-                    const userSnap = await getDoc(doc(doc(db, 'users', order.userUid)));
+                    const userSnap = await getDoc(doc(db, 'users', order.userUid));
                     if (userSnap.exists()) {
                         const uData = userSnap.data();
                         if (uData.referredBy && !uData.firstOrderCompleted) {
@@ -2762,6 +2815,46 @@
             window.print();
         }
 
+        // =========================================================================
+        // SISTEM ULASAN, FILTER ANTI-FITNAH OTOMATIS, & MODERASI ADMIN
+        // =========================================================================
+        const BLOCKED_WORDS = [
+            // Kata-kata fitnah & pencemaran nama baik produk
+            'fitnah', 'penipu', 'nipu', 'bohong', 'palsu', 'oplosan', 'beracun', 'racun',
+            'basi', 'busuk', 'kadaluarsa', 'kedaluwarsa', 'kotor', 'jorok', 'menjijikkan',
+            'jijik', 'sampah', 'limbah', 'cair banget', 'air doang', 'gak layak', 'tidak layak',
+            'sakit perut', 'mencret', 'diare', 'keracunan', 'scam', 'hoax', 'hoaks', 'haram',
+            'najis', 'curang', 'maling', 'pencuri', 'korup',
+            // Kata-kata kasar / makian / SARA
+            'anjing', 'anjir', 'anjay', 'babi', 'bangsat', 'bajingan', 'brengsek', 'kontol',
+            'memek', 'jembut', 'ngentot', 'pantek', 'pukimak', 'jancok', 'cok', 'asu',
+            'goblog', 'goblok', 'tolol', 'bego', 'idiot', 'bodoh', 'dungu', 'sialan',
+            'setan', 'iblis', 'keparat', 'tai', 'taik', 'berak', 'bacot', 'congok', 'lonte',
+            'pelacur', 'sundal', 'pecun', 'bencong', 'banci'
+        ];
+
+        function checkDefamationOrToxic(text) {
+            // Normalisasi teks: huruf kecil & hapus simbol/angka penyamaran (misal b@si -> basi, t0lol -> tolol)
+            const normalized = text.toLowerCase()
+                .replace(/[@4]/g, 'a')
+                .replace(/[3]/g, 'e')
+                .replace(/[1!]/g, 'i')
+                .replace(/[0]/g, 'o')
+                .replace(/[$5]/g, 's')
+                .replace(/[7]/g, 't')
+                .replace(/[^a-z\s]/g, ' ');
+
+            const collapsed = normalized.replace(/\s+/g, '');
+
+            for (const word of BLOCKED_WORDS) {
+                const wordRegex = new RegExp(`\\b${word}\\b`, 'i');
+                if (wordRegex.test(normalized) || (word.length >= 5 && collapsed.includes(word.replace(/\s+/g, '')))) {
+                    return word;
+                }
+            }
+            return null;
+        }
+
         function renderReviews() {
             const container = document.getElementById('reviewsContainer');
             if (!container) return;
@@ -2787,12 +2880,73 @@
             `).join('');
         }
 
+        function renderAdminReviewsTable() {
+            const tbody = document.getElementById('adminReviewsTableBody');
+            if (!tbody) return;
+
+            if (reviews.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="p-8 text-center text-slate-400 text-xs font-medium">
+                            Belum ada ulasan pelanggan di database.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = reviews.map(r => {
+                const isLowRating = (r.rating || 5) <= 2;
+                return `
+                    <tr class="hover:bg-slate-50 transition ${isLowRating ? 'bg-red-50/40' : ''}">
+                        <td class="p-3.5">
+                            <span class="font-bold text-slate-800 text-xs block">${r.userName || 'Siswa'}</span>
+                            <span class="text-[10px] text-slate-500">${r.userClass || 'Umum'}</span>
+                        </td>
+                        <td class="p-3.5">
+                            <div class="text-amber-400 text-xs whitespace-nowrap">
+                                ${'<i class="fa-solid fa-star"></i>'.repeat(r.rating || 5)}
+                            </div>
+                            ${isLowRating ? '<span class="text-[10px] text-red-600 font-bold">Rating Rendah</span>' : ''}
+                        </td>
+                        <td class="p-3.5 text-xs text-slate-700 italic max-w-md">
+                            "${r.content}"
+                        </td>
+                        <td class="p-3.5 text-center">
+                            <button onclick="deleteReview('${r.id}')" class="bg-red-100 hover:bg-red-600 text-red-600 hover:text-white font-bold text-xs px-3 py-2 rounded-xl transition shadow-xs flex items-center space-x-1.5 mx-auto" title="Hapus Ulasan Ini">
+                                <i class="fa-solid fa-trash-can"></i>
+                                <span>Hapus Ulasan</span>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function deleteReview(reviewId) {
+            if (!activeAdmin) {
+                showToast("Akses ditolak. Hanya Admin yang bisa menghapus ulasan!", "error");
+                return;
+            }
+            if (confirm("Yakin ingin menghapus ulasan/testimoni ini secara permanen dari database?")) {
+                try {
+                    await deleteDoc(doc(db, 'reviews', reviewId));
+                    showToast("Ulasan berhasil dihapus dari database!");
+                } catch (err) {
+                    showToast(`Gagal menghapus ulasan: ${err.message}`, "error");
+                }
+            }
+        }
+
         function openReviewModal() {
             if (!currentUser) {
                 openLoginModal();
                 showToast("Silakan login untuk memberikan testimoni!", "error");
                 return;
             }
+            const errBox = document.getElementById('reviewFilterError');
+            if (errBox) errBox.classList.add('hidden');
+            setRating(5);
             document.getElementById('reviewModal').classList.remove('hidden');
         }
 
@@ -2813,7 +2967,21 @@
         async function handleSubmitReview(e) {
             e.preventDefault();
             const content = document.getElementById('inputReviewContent').value.trim();
+            const errBox = document.getElementById('reviewFilterError');
             if (!content) return;
+
+            // Pengecekan Filter Otomatis Anti-Fitnah & Kata Kasar
+            const flaggedWord = checkDefamationOrToxic(content);
+            if (flaggedWord) {
+                if (errBox) {
+                    errBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> Ulasan ditolak otomatis oleh sistem karena mengandung kata yang terindikasi fitnah/tidak pantas (<strong>"${flaggedWord}"</strong>). Gunakan bahasa yang sopan dan objektif.`;
+                    errBox.classList.remove('hidden');
+                }
+                showToast("Ulasan ditolak oleh filter anti-fitnah!", "error");
+                return;
+            }
+
+            if (errBox) errBox.classList.add('hidden');
 
             try {
                 await addDoc(collection(db, 'reviews'), {
@@ -2826,7 +2994,7 @@
                 });
                 closeReviewModal();
                 document.getElementById('inputReviewContent').value = '';
-                showToast("Terima kasih atas ulasan kamu!");
+                showToast("Terima kasih atas ulasan positif kamu!");
             } catch (err) {
                 showToast(`Gagal mengirim ulasan: ${err.message}`, "error");
             }
@@ -2990,7 +3158,7 @@
         }
 
         function switchAdminTab(tabName) {
-            const tabs = ['orders', 'settings', 'reports', 'stocks', 'toppings', 'points', 'gallery'];
+            const tabs = ['orders', 'settings', 'reports', 'stocks', 'toppings', 'points', 'gallery', 'reviews'];
             tabs.forEach(t => {
                 const capitalT = t.charAt(0).toUpperCase() + t.slice(1);
                 const btn = document.getElementById(`tabBtn${capitalT}`);
@@ -3007,6 +3175,7 @@
 
             if (tabName === 'reports') renderSalesReport();
             if (tabName === 'points') renderPointsTable();
+            if (tabName === 'reviews') renderAdminReviewsTable();
         }
 
         function logout() {
